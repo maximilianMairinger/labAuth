@@ -41,6 +41,8 @@
         "extended-dom": "^3.0.6",
         "fast-decode-uri-component": "^1.0.1",
         "front-db": "^1.1.10",
+        "moment": "^2.24.0",
+        "moment-timezone": "^0.5.27",
         "sweetalert2": "^9.7.2",
         "xrray": "^4.6.4"
     }

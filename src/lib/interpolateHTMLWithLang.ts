@@ -1,4 +1,4 @@
-const lang = require("./../../res/lang/eng.json")
+const lang = require("./../../res/lang/ger.json")
 
 const bracketOpen = "[";
 const bracketClose = "]";
@@ -25,7 +25,7 @@ function interpolateHTMLWithLang(html: string) {
 }
 
 
-function resolveLang(key: string) {
+export function resolveLang(key: string) {
   let l = lang
   key.split(".").ea((e) => {
     l = l[e]
