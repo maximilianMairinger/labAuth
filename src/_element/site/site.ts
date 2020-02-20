@@ -14,6 +14,11 @@ function getNow() {
   
 }
 
+
+import * as cardReader from "./../../lib/card-reader"
+
+cardReader.addListener(console.log)
+
 console.log(getNow())
 
 const studentRegistered = (() => {
