@@ -26,10 +26,10 @@ const studentRegistered = (() => {
   const text1 = resolveLang("succ_registered_head_1")
   const text2 = resolveLang("succ_registered_head_2")
   return function studentRegistered(name: string) {
-    let now = new Date()
+    let now = getNow()
     Swal.fire({
       title,
-      text: name + text1 + getNow() + text2,
+      text: name + text1 + now + text2,
       timer: 2000,
       showCancelButton: false,
       showConfirmButton: false,

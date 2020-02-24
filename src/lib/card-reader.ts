@@ -1,10 +1,28 @@
 let subscription = []
 
 let input = document.createElement("input")
+let hide = document.createElement("hide-input")
+
+input.css({
+    position: "absolute",
+    top: 0,
+    left: 0
+})
+
+hide.css({
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: 200,
+    height: 200,
+    background: "white",
+    zIndex: 100
+})
+
 
 
 //@ts-ignore
-document.body.append(input)
+document.body.append(input, hide)
 input.focus()
 input.addEventListener("blur", () => {
     input.focus();

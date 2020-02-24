@@ -9,12 +9,10 @@ export async function init() {
   await polyfill()
   global()
 
-
+  
   let site = new Site()
 
-  document.querySelector("c-init").emptyNodes()
-  
-  document.body.html("").append(site)
+  document.body.append(site)
 
 
 
