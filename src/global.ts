@@ -1,4 +1,5 @@
 import polyfill from "extended-dom"
+import "xrray"
 
 
 export default async function() {

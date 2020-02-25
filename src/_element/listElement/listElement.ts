@@ -18,4 +18,5 @@ export default class ListElement extends Element {
   }
 }
 
+//@ts-ignore
 window.customElements.define('c-list-element', ListElement);

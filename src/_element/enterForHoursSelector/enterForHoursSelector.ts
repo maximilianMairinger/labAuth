@@ -15,7 +15,7 @@ export default class EnterForHoursSelector extends Element {
 
     let elements = this.childs()
     elements.on("click", () => {
-      elements.
+      elements
     })
 
   }
@@ -28,4 +28,5 @@ export default class EnterForHoursSelector extends Element {
   }
 }
 
+//@ts-ignore
 window.customElements.define('c-enter-for-hours-selector', EnterForHoursSelector);
