@@ -2,35 +2,32 @@ import Element from "../element"
 import delay from "delay"
 import { ElementList } from "extended-dom"
 import { resolveLang } from "../../lib/interpolateHTMLWithLang"
-import * as moment from "moment"
-
+import * as cardReader from "./../../lib/card-reader"
 import Swal from 'sweetalert2'
+import EnterForHoursSelector from "../enterForHoursSelector/enterForHoursSelector"
 
-moment.locale()
-console.log()
+
 
 
 function getNow() {
-  
+  return new Date().toLocaleTimeString().substr(0, 5)
 }
 
 
-import * as cardReader from "./../../lib/card-reader"
+
 
 cardReader.addListener(console.log)
 
-console.log(getNow())
-
 const studentRegistered = (() => {
   const title = resolveLang("succ_registered_head")
-  const text1 = resolveLang("succ_registered_head_1")
-  const text2 = resolveLang("succ_registered_head_2")
+  const text1 = resolveLang("succ_registered_long_1")
+  const text2 = resolveLang("succ_registered_long_2")
   return function studentRegistered(name: string) {
     let now = getNow()
     Swal.fire({
       title,
-      text: name + text1 + now + text2,
-      timer: 2000,
+      html: new EnterForHoursSelector(4),
+      timer: 50000000,
       showCancelButton: false,
       showConfirmButton: false,
       icon: "success"
@@ -38,11 +35,7 @@ const studentRegistered = (() => {
   }
 })();
 
-delay(200).then(() => {
-
-  studentRegistered("Maximilian Mairinger")
-})
-
+studentRegistered("Maximilian Mairinger")
 
 export default class Site extends Element {
 

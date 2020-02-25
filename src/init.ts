@@ -1,21 +1,13 @@
-import polyfill from "extended-dom"
-import "xrray"
 import global from "./global"
-import Site from "./_element/site/site"
+
 
 
 
 export async function init() {
-  await polyfill()
-  global()
-
+  await global()
   
-  let site = new Site()
-
-  document.body.append(site)
-
-
-
+  const main = (await import("./main")).default
+  main()
 }
   
   
