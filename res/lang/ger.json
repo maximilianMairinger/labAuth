@@ -2,5 +2,7 @@
   "greeting": "Hallo ",
   "succRegistrationFor": "Du wurdest für  ",
   "hrsIn": " stunden in ",
-  "reg": " angemeldet."
+  "reg": " angemeldet.",
+  "username": "Username",
+  "password": "Passwort"
 }

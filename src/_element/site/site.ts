@@ -4,6 +4,7 @@ import * as cardReader from "./../../lib/card-reader"
 import Swal from 'sweetalert2'
 import EnterForHoursSelector from "../enterForHoursSelector/enterForHoursSelector"
 import studentRegistered from "./popups/registered"
+import login from "./popups/login"
 
 
 
@@ -12,8 +13,9 @@ import studentRegistered from "./popups/registered"
 
 
 cardReader.addListener(console.log)
+cardReader.disable()
 
-studentRegistered("Maximilian Mairinger", 3, "Medt")
+login("Maximilian Mairinger", 3, "Medt")
 
 export default class Site extends Element {
 

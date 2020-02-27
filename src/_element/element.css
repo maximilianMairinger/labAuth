@@ -9,7 +9,7 @@
 
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  background: var(--minor);
+  background: white;
 }
 
 :host(:focus){
@@ -24,7 +24,7 @@
 }
 
 ::selection {
-  background: var(--selection)
+  background: rgba(0, 0, 0, 0.15);
 }
 
 element-body {
@@ -33,6 +33,6 @@ element-body {
   display: block;
   font-family: inherit;
   position: absolute;
-  color: var(--text);
+  color: rgb(53, 53, 53);
   transition: .3s color;
 }
