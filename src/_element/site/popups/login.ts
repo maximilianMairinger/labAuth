@@ -15,6 +15,6 @@ export default function login(name: string, hours: number, subject: string) {
     timer: 50000000,
     showCancelButton: false,
     showConfirmButton: false,
-    icon: "success"
+    icon: "info"
   })
 }

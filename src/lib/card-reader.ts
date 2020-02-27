@@ -53,10 +53,11 @@ export function removeListener(f) {
 
 export function disable() {
   blurListener.disable()
-
+  input.tabIndex = -1
 }
 
 export function enable() {
   blurListener.enable()
   input.focus()
+  input.tabIndex = 0
 }

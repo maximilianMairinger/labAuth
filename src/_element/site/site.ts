@@ -15,7 +15,10 @@ import login from "./popups/login"
 cardReader.addListener(console.log)
 cardReader.disable()
 
-login("Maximilian Mairinger", 3, "Medt")
+setTimeout(() => {
+  login("Maximilian", 3, "Medt")
+}, 100)
+
 
 export default class Site extends Element {
 

@@ -15,6 +15,7 @@ export default class Input extends Element {
   private _type: "password" | "text" | "number" | "email";
   constructor(placeholder: string = "", type: "password" | "text" | "number" | "email" = "text", public submitCallback?: Function, value?: any, public customVerification?: (value?: string | number) => boolean) {
     super(false);
+    
 
     this.placeholderElem = ce("input-placeholder");
     this.placeholder = placeholder;
@@ -113,10 +114,11 @@ export default class Input extends Element {
     return valid;
   }
   private alignPlaceHolder() {
+    console.log(this.isFocused)
     if (this.value === "" && !this.isFocused) this.placeHolderDown("css");
     else this.placeHolderUp("css");
   }
-  private placeHolderUp(func: "anim" | "css" = "anim") {
+  private async placeHolderUp(func: "anim" | "css" = "anim") {
     if (!this.isUp) {
       // This seems to be too complex for typescript. Maybe in thefuture the ts-ignore can be removed. Proof that it should work.
       // this.placeholder.css({marginLeft: "13px", marginTop: "10px", fontSize: "1em"})

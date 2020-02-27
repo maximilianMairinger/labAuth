@@ -1,5 +1,6 @@
 import Element from "../element"
 import "./../input/input"
+import Input from "./../input/input"
 
 
 
@@ -8,8 +9,14 @@ import "./../input/input"
 export default class Login extends Element {
 
   constructor() {
-    super(false)
+    super(false);
 
+    //@ts-ignore
+    (this.q("c-input").first as Input).placeHolderUp("css");
+    
+    setTimeout(() => {
+      (this.q("c-input").first as Input).focus();
+    }, 16)
   }
 
   stl() {
