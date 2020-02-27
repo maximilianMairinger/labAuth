@@ -38,7 +38,7 @@
     "dependencies": {
         "ajaon": "^1.0.0",
         "delay": "^4.3.0",
-        "extended-dom": "^3.0.9",
+        "extended-dom": "^3.0.10",
         "fast-decode-uri-component": "^1.0.1",
         "front-db": "^1.1.10",
         "moment": "^2.24.0",

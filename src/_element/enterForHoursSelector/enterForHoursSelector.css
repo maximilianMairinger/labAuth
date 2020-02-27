@@ -1,5 +1,13 @@
 :host {
   display: inline-block;
+  text-emphasis: center;
+}
+
+hour-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
 }
 
 hour-box {
@@ -8,10 +16,15 @@ hour-box {
   width: 50px;
   height: 30px;
   background: rgb(233, 233, 233);
-  margin: 5px 2px;
+  margin: 0 2px;
   transition: background-color .2s;
 }
 
 hour-box.active {
-  background: rgb(74, 153, 0);
+  background: rgb(165, 220, 134);
+}
+
+text-display {
+  margin-top: 5px;
+  display: block;
 }
