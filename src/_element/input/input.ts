@@ -70,6 +70,19 @@ export default class Input extends Element {
     if (value !== undefined) this.value = value;
   }
 
+  private isDisabled = false
+  public disable() {
+    if (this.isDisabled) return
+    this.isDisabled = true
+    this.allElems.addClass("disabled")
+  }
+
+  public enable() {
+    if (!this.isDisabled) return
+    this.isDisabled = false
+    this.allElems.removeClass("disabled")
+  }
+
   private listeners: Map<(value: string, e: InputEvent) => void, (e: InputEvent) => void> = new Map()
   public onChange(f: (value: string, e: InputEvent) => void) {
     let inner = (e: InputEvent) => {

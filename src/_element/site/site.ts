@@ -16,7 +16,7 @@ cardReader.addListener(console.log)
 cardReader.disable()
 
 setTimeout(() => {
-  login("Maximilian", 3, "Medt")
+  login()
 }, 100)
 
 

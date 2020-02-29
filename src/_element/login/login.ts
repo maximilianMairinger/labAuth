@@ -27,12 +27,14 @@ export default class Login extends Element {
     pwd.onChange((val) => {
       if (this.usernameChangeCb) this.passwordChangeCb(val)
     })
-    usr.submitCallback = () => {
+    
+
+    let submit = () => {
+      
       if (this.submitCb) this.submitCb(usr.value, pwd.value)
     }
-    pwd.submitCallback = () => {
-      if (this.submitCb) this.submitCb(usr.value, pwd.value)
-    }
+    usr.submitCallback = submit
+    pwd.submitCallback = submit
 
     usr.on("keydown", (e) => {
       if (e.key === "Tab") {

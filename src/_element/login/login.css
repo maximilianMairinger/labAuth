@@ -1,10 +1,36 @@
 :host {
-  display: inline-block;
+  display: block;
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+input-container {
   display: flex;
   justify-content: center;
+  width: calc(100% - 10px);
+  margin: 0 5px;
 }
 
 c-input {
   width: 300px;
+  margin: 5px;
+}
 
+c-input:nth-of-type(1) {
+  margin-left: 0px;
+}
+
+c-input:nth-of-type(2) {
+  margin-right: 0px;
+}
+
+logon-heading {
+  display: block;
+  font-size: 35px;
+  font-weight: bold;
+  text-align: left;
+  
+  margin: 0 5px;
+  margin-bottom: 15px;
+  
 }

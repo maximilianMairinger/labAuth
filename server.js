@@ -18,7 +18,11 @@ app.get('*', (req, res) => {
   sendFile(res, "index.html")
 });
 
-
+app.post("/LDAPAuth", (req, res) => {
+  setTimeout(() => {
+    res.send('{"valid": true, "data": {"fullName": "Maximilian Mairinger"}}')
+  }, 5000)
+})
 
 
 app.listen(port);
