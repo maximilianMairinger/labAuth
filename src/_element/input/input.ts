@@ -3,7 +3,6 @@ import { ElementList } from "extended-dom"
 
 var emailValidationRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-// Note: on(input)
 
 export default class Input extends Element {
   private placeholderElem: HTMLElement;
@@ -69,6 +68,21 @@ export default class Input extends Element {
 
     if (value !== undefined) this.value = value;
   }
+
+  private listeners: Map<(value: string) => void, () => void> = new Map()
+  public onChange(f: (value: string) => void) {
+    let inner = () => {
+      f(this.value)
+    }
+    this.listeners.set(f, inner)
+    this.input.on("input", inner)
+  }
+  public offChange(f: (value: string) => void) {
+    this.input.off("input", this.listeners.get(f))
+    this.listeners.delete(f)
+  }
+
+
   public set placeholder(to: string) {
     this.placeholderElem.html(to);
   }

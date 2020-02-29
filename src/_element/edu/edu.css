@@ -1,0 +1,166 @@
+#edu {
+  position: relative;
+  width: 427px;
+  height: 257px;
+  overflow: hidden;
+  display: inline-block
+}
+.Rectangle_2_j {
+  position: absolute;
+  overflow: visible;
+  width: 427px;
+  height: 257px;
+  left: 0px;
+  top: 0px;
+}
+#edu_card {
+  position: absolute;
+  left: 19px;
+  top: 7px;
+  overflow: visible;
+  width: 135px;
+  white-space: nowrap;
+  text-align: left;
+  font-family: Overpass;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 33px;
+  color: rgba(0,0,0,1);
+}
+#tgm___HTBLuVA_Wien_XX_1200_Wie {
+  position: absolute;
+  left: 20px;
+  top: 47px;
+  overflow: visible;
+  width: 165px;
+  white-space: nowrap;
+  text-align: left;
+  font-family: Overpass;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  color: rgba(0,0,0,1);
+}
+#Maximilian_Mairinger {
+  position: absolute;
+  left: 19px;
+  top: 86px;
+  overflow: visible;
+  width: 143px;
+  white-space: nowrap;
+  text-align: left;
+  font-family: Overpass;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  color: rgba(0,0,0,1);
+}
+img-user {
+  position: absolute;
+  width: 90px;
+  height: 124px;
+  left: 19px;
+  top: 113px;
+  overflow: visible;
+  background: url("./user.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+#Username__mmairinger {
+  position: absolute;
+  left: 126px;
+  top: 118px;
+  overflow: visible;
+  width: 131px;
+  white-space: nowrap;
+  text-align: left;
+  font-family: Overpass;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  color: rgba(0,0,0,1);
+}
+#Geburtsdatum__29_2_2000 {
+  position: absolute;
+  left: 127px;
+  top: 142px;
+  overflow: visible;
+  width: 144px;
+  white-space: nowrap;
+  text-align: left;
+  font-family: Overpass;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  color: rgba(0,0,0,1);
+}
+#G_ltig_bis__29_08_2030 {
+  position: absolute;
+  left: 127px;
+  top: 159px;
+  overflow: visible;
+  width: 124px;
+  white-space: nowrap;
+  text-align: left;
+  font-family: Overpass;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  color: rgba(0,0,0,1);
+}
+#Wohnort_ {
+  position: absolute;
+  left: 125px;
+  top: 203px;
+  overflow: visible;
+  width: 54px;
+  white-space: nowrap;
+  text-align: left;
+  font-family: Overpass;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  color: rgba(0,0,0,1);
+}
+#ID2424_Wien {
+  position: absolute;
+  left: 125px;
+  top: 220px;
+  overflow: visible;
+  width: 62px;
+  white-space: nowrap;
+  text-align: left;
+  font-family: Overpass;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  color: rgba(0,0,0,1);
+}
+img-austria {
+  position: absolute;
+  width: 65px;
+  height: 68px;
+  left: 300px;
+  top: 17px;
+  background: url("./austria.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+#stripe {
+  position: absolute;
+  width: 15px;
+  height: 257px;
+  left: 395px;
+  top: 0px;
+  overflow: visible;
+}
+.Rectangle_4_w {
+  position: absolute;
+  overflow: visible;
+  width: 15px;
+  height: 257px;
+  left: 0px;
+  top: 0px;
+}
