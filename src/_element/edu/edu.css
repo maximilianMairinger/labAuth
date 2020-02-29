@@ -48,7 +48,7 @@
 #Maximilian_Mairinger {
   position: absolute;
   left: 19px;
-  top: 86px;
+  top: 90px;
   overflow: visible;
   width: 143px;
   white-space: nowrap;
@@ -159,12 +159,59 @@ img-austria {
   left: 395px;
   top: 0px;
   overflow: visible;
+  background: linear-gradient(#cfcfcf 0%, #a2a6b1 100%);
 }
-.Rectangle_4_w {
-  position: absolute;
-  overflow: visible;
-  width: 15px;
-  height: 257px;
-  left: 0px;
-  top: 0px;
+
+.edu-container-side {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+}
+
+.edu-card-side {
+  margin: 20px 0;
+  color: white;
+  height: 40px;
+  width: 40px;
+  font-size: 10px;
+  transform: rotate(90deg);
+  transform-origin: 12.5px 0;
+}
+
+.edu-card-side.b {
+  transform: rotate(270deg) translateX(-25px);
+  transform-origin: 2.5px 0;
+}
+
+.edu-card-side:nth-child(1) {
+  color: #98E4E4;
+}
+
+.edu-card-side:nth-child(2) {
+  color: #9DE1C3;
+}
+
+.edu-card-side:nth-child(3) {
+  color: #ACDF9E;
+}
+
+.edu-card-side:nth-child(4) {
+  color: #CBD5A4;
+}
+
+.edu-card-side:nth-child(5) {
+  color: #DAB5A3;
+}
+
+#Username__mmairinger span {
+  width: 250px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#Maximilian_Mairinger span {
+  letter-spacing: 2px;
 }
