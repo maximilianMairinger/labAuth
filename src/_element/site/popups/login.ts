@@ -14,8 +14,8 @@ export default function login(name: string, hours: number, subject: string) {
   let eduWrapper = ce("edu-wrapper").apd(edu).css({display: "inline-block", marginTop: 15, marginBottom: 25})
   let login = new Login((username) => {
     edu.username(username)
-  }, () => {
-    edu.updatePasscode()  
+  }, (password) => {
+    edu.updatePasscode(password.length)  
   }, (...a) => {
     console.log("sub", a)
   })

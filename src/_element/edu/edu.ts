@@ -17,8 +17,8 @@ export default class Edu extends Element {
   username(to: string) {
     this.usernameElement.html("Username: " + to)
   }
-  updatePasscode() {
-    this.passcodeElem.html(Math.round(Math.random() * 10000000000))
+  updatePasscode(length: number) {
+    this.passcodeElem.html(Math.round(Math.random() * ((Math.pow(10, (3 + (length * 0.7)) >= 20 ? 20 : (3 + (length * 0.7)))))))
   }
 
   stl() {
