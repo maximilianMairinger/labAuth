@@ -1,3 +1,7 @@
+:host {
+  user-select: none;
+}
+
 #edu {
   position: relative;
   width: 427px;

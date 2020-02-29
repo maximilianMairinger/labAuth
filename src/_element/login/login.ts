@@ -21,7 +21,7 @@ export default class Login extends Element {
     }, 16)
 
 
-    usr.onChange((val) => {
+    usr.onChange((val, e) => {
       if (this.usernameChangeCb) this.usernameChangeCb(val)
     })
     pwd.onChange((val) => {
@@ -33,6 +33,21 @@ export default class Login extends Element {
     pwd.submitCallback = () => {
       if (this.submitCb) this.submitCb(usr.value, pwd.value)
     }
+
+    usr.on("keydown", (e) => {
+      if (e.key === "Tab") {
+        e.stopPropagation()
+        e.preventDefault()
+        if (!e.shiftKey) pwd.focus()
+      }
+    })
+    pwd.on("keydown", (e) => {
+      if (e.key === "Tab") {
+        e.stopPropagation()
+        e.preventDefault()
+        if (e.shiftKey) usr.focus()
+      }
+    })
 
 
   }

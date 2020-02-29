@@ -14,6 +14,7 @@ export default class Input extends Element {
   private _type: "password" | "text" | "number" | "email";
   constructor(placeholder: string = "", type: "password" | "text" | "number" | "email" = "text", public submitCallback?: Function, value?: any, public customVerification?: (value?: string | number) => boolean) {
     super(false);
+    this.tabIndex = 0;
     
 
     this.placeholderElem = ce("input-placeholder");
@@ -69,10 +70,10 @@ export default class Input extends Element {
     if (value !== undefined) this.value = value;
   }
 
-  private listeners: Map<(value: string) => void, () => void> = new Map()
-  public onChange(f: (value: string) => void) {
-    let inner = () => {
-      f(this.value)
+  private listeners: Map<(value: string, e: InputEvent) => void, (e: InputEvent) => void> = new Map()
+  public onChange(f: (value: string, e: InputEvent) => void) {
+    let inner = (e: InputEvent) => {
+      f(this.value, e)
     }
     this.listeners.set(f, inner)
     this.input.on("input", inner)
