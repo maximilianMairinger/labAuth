@@ -11,6 +11,8 @@ export default class Input extends Element {
   private isFocused: boolean = false;
   private allElems: ElementList;
 
+  private enterAlreadyPressed = false;
+
   private _type: "password" | "text" | "number" | "email";
   constructor(placeholder: string = "", type: "password" | "text" | "number" | "email" = "text", public submitCallback?: Function, value?: any, public customVerification?: (value?: string | number) => boolean) {
     super(false);
@@ -71,11 +73,11 @@ export default class Input extends Element {
       if (this.value === "") this.placeHolderDown();
     });
 
-    let alreadyPressed = false;
+    
 
     this.input.on("keydown", ({key}) => {
-      if (key === "Enter" && this.submitCallback !== undefined) if (!alreadyPressed){
-        alreadyPressed = true;
+      if (key === "Enter" && this.submitCallback !== undefined) if (!this.enterAlreadyPressed){
+        this.enterAlreadyPressed = true;
         this.submitCallback(this.value);
       }
     });
@@ -84,7 +86,7 @@ export default class Input extends Element {
     })
     this.input.on("keyup", ({key}) => {
       if (key === "Enter") {
-        alreadyPressed = false;
+        this.enterAlreadyPressed = false;
       }
     });
 
@@ -110,6 +112,7 @@ export default class Input extends Element {
     let foc = this.isFocused
     this.input.disabled = true
     if (foc) this.focus()
+    this.enterAlreadyPressed = false
   }
 
   public enable() {

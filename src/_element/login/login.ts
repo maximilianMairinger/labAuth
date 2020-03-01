@@ -1,17 +1,23 @@
 import Element from "../element"
 import "./../input/input"
 import Input from "./../input/input"
+import { ElementList } from "extended-dom";
 
 
 
 
 
 export default class Login extends Element {
+  private inputs = this.q("c-input") as ElementList<Input>
   constructor(public usernameChangeCb?: (value: string) => void, public passwordChangeCb?: (value: string) => void, public submitCb?: (username: string, password: string) => void) {
     super(false);
 
     let usr = this.q("c-input#usr").first as Input
     let pwd = this.q("c-input#pwd").first as Input
+
+    usr.customVerification = (e) => {
+      return !e.toString().includes("@")
+    }
 
     //@ts-ignore
     usr.placeHolderUp("css");
@@ -51,7 +57,13 @@ export default class Login extends Element {
       }
     })
 
+  }
 
+  disableInputs() {
+    this.inputs.Inner("disable", [])
+  }
+  enableInputs() {
+    this.inputs.Inner("enable", [])
   }
 
   stl() {

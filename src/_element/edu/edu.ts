@@ -1,5 +1,4 @@
 import Element from "../element"
-import { Data } from "front-db";
 import * as randomDate from "random-date-generator"
 
 
@@ -25,6 +24,9 @@ export default class Edu extends Element {
   private fullNameElem = this.q("#Maximilian_Mairinger span")
   private luckyDayElem = this.q("#G_ltig_bis__29_08_2030 span")
   private validUntilElem = this.q("#Geburtsdatum__29_2_2000 span")
+  private fullNameOverlay = this.q("#FullnameOverlay")
+  private moveFullName = this.q("#moveFullName")
+  private spinner = this.q("#loadingSpinner")
   constructor() {
     super(false);
     
@@ -52,27 +54,55 @@ export default class Edu extends Element {
   employeeType(to: string) {
     this.validUntilElem.text("Inhaber: " + to)
   }
-  private dotAnimInterval: NodeJS.Timeout;
+
   authentication() {
     this.fullNameElem.text("Authenticating...")
-    let dots = "..."
-    this.dotAnimInterval = setInterval(() => {
-      if (dots.length === 3) dots = ""
-      dots += "."
-      this.fullNameElem.text("Authenticating" + dots)
-      
-    }, 400)
+    this.fullNameOverlay.css("opacity", 1)
+
+    this.fullNameOverlay.anim([
+      {translateX: 0, offset: 0},
+      {translateX: 10, offset: .9},
+      {translateX: 0}
+    ], {duration: 900, easing: "linear", iterations: Infinity})
+    
+
+    this.spinner.anim([
+      {opacity: 0, offset: 0},
+      {opacity: 0, offset: .8},
+      {opacity: 1}
+    ], 1000)
+    this.spinner.anim([
+      {rotateZ: 0, offset: 0},
+      {rotateZ: 360}
+    ], {duration: 1000, iterations: Infinity, easing: "linear"})
+
+
+    this.moveFullName.anim([
+      {translateX: 0, offset: 0},
+      {translateX: 0, offset: .5},
+      {translateX: 15}
+    ], 1000)
   }
 
   doneAuthentication() {
-    clearInterval(this.dotAnimInterval)
+    this.fullNameOverlay.css("opacity", 0)
+    this.fullNameOverlay.anim({translateX: 0})
+    this.moveFullName.anim({translateX: 0}, 300)
+    this.spinner.anim({opacity: 0}).then(() => this.spinner.anim({rotateZ: 0}))
+    
   }
 
   setStudent() {
     this.eduTeacher.anim({opacity: 0})
+    let c = this.fullNameOverlay.childs()
+    c.first.css("background", "linear-gradient(90deg, rgba(83, 80, 74, 0), rgba(236, 168, 56, 1))")
+    c[1].css("background", "rgb(236, 168, 56)")
   }
   setTeacher() {
     this.eduTeacher.anim({opacity: 1})
+    let c = this.fullNameOverlay.childs()
+    c.first.css("background", "linear-gradient(90deg, rgba(77, 191, 238, 0), rgba(77, 191, 238, 1))")
+    c[1].css("background", "rgb(77, 191, 238)")
   }
 
   stl() {

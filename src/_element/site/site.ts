@@ -16,6 +16,7 @@ cardReader.addListener(console.log)
 cardReader.disable()
 
 setTimeout(() => {
+  //studentRegistered("Maximilian Mairinger", 3, "Medt")
   login()
 }, 100)
 

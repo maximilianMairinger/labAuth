@@ -32,8 +32,10 @@ export default function login() {
   }, async (username, password) => {
     if (alreadyAuthenticating) return
     alreadyAuthenticating = true
+    login.disableInputs()
     edu.authentication()
     let res = await ajax.post("LDAPAuth", {username, password}) as LDAPAuthRes
+    login.enableInputs()
     edu.doneAuthentication()
     alreadyAuthenticating = false
 
