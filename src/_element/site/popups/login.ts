@@ -27,6 +27,7 @@ export default function login() {
   let login = new Login((username) => {
     edu.username(username)
   }, (password) => {
+
     edu.updatePasscode(password.length)  
   }, async (username, password) => {
     if (alreadyAuthenticating) return

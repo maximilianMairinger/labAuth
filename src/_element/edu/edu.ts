@@ -23,8 +23,8 @@ export default class Edu extends Element {
   private usernameElement = this.q("#Username__mmairinger span")
   private passcodeElem = this.q("#ID2424_Wien span")
   private fullNameElem = this.q("#Maximilian_Mairinger span")
-  private luckyDayElem = this.q("#Geburtsdatum__29_2_2000 span")
-  private validUntilElem = this.q("#G_ltig_bis__29_08_2030 span")
+  private luckyDayElem = this.q("#G_ltig_bis__29_08_2030 span")
+  private validUntilElem = this.q("#Geburtsdatum__29_2_2000 span")
   constructor() {
     super(false);
     
