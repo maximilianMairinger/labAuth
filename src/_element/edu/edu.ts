@@ -82,6 +82,8 @@ export default class Edu extends Element {
       {translateX: 0, offset: .5},
       {translateX: 15}
     ], 1000)
+
+    this.addClass("big")
   }
 
   doneAuthentication() {
@@ -89,7 +91,7 @@ export default class Edu extends Element {
     this.fullNameOverlay.anim({translateX: 0})
     this.moveFullName.anim({translateX: 0}, 300)
     this.spinner.anim({opacity: 0}).then(() => this.spinner.anim({rotateZ: 0}))
-    
+    this.removeClass("big")
   }
 
   setStudent() {
