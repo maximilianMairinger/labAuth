@@ -10,10 +10,12 @@ import ajax from "./../../../lib/ajax"
 interface LDAPAuthRes {
   valid: boolean
   data: {
-    fullName: string
+    fullName: string,
+    class: string
   }
 }
 
+const teacherAPIString = "lehrer"
 
 const greeting = resolveLang("greeting")
 
@@ -37,7 +39,15 @@ export default function login() {
     if (res.valid) {
       edu.fullName(res.data.fullName)
       edu.luckyDay()
-      edu.validUntil(new Date())
+      
+      if (res.data.class === teacherAPIString) {
+        edu.setTeacher()
+        edu.employeeType("Lehrer")
+      }
+      else {
+        edu.setStudent()
+        edu.employeeType("Schüler")
+      }
     }
     else {
       edu.fullName("Authentication faild")

@@ -2,12 +2,22 @@
   user-select: none;
 }
 
+#edu-teacher {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: linear-gradient(#4dd8ee 0%, #1691e8 100%)
+}
+
 #edu {
   position: relative;
   width: 427px;
   height: 257px;
   overflow: hidden;
-  display: inline-block
+  display: inline-block;
+  background: linear-gradient(#eeb14d 0%, #e89a16 100%);
+  border-radius: 10px;
 }
 .Rectangle_2_j {
   position: absolute;

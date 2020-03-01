@@ -19,6 +19,7 @@ function prittyDate(date: Date = randomDate.getRandomDate() as Date, year = fals
 }
 
 export default class Edu extends Element {
+  private eduTeacher = this.q("#edu-teacher")
   private usernameElement = this.q("#Username__mmairinger span")
   private passcodeElem = this.q("#ID2424_Wien span")
   private fullNameElem = this.q("#Maximilian_Mairinger span")
@@ -48,8 +49,8 @@ export default class Edu extends Element {
   luckyDay() {
     this.luckyDayElem.text("Glückstag: " + prittyDate())
   }
-  validUntil(to: Date | string) {
-    this.validUntilElem.text("Gültig bis: " + (typeof to === "string" ? to as string : prittyDate(to as Date, true)))
+  employeeType(to: string) {
+    this.validUntilElem.text("Inhaber: " + to)
   }
   private dotAnimInterval: NodeJS.Timeout;
   authentication() {
@@ -65,6 +66,13 @@ export default class Edu extends Element {
 
   doneAuthentication() {
     clearInterval(this.dotAnimInterval)
+  }
+
+  setStudent() {
+    this.eduTeacher.anim({opacity: 0})
+  }
+  setTeacher() {
+    this.eduTeacher.anim({opacity: 1})
   }
 
   stl() {
