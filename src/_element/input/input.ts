@@ -26,16 +26,48 @@ export default class Input extends Element {
     this.input = ce("input");
     this.type = type;
 
-    //Validation
+    // ----- Validation start
+    let listener = this.input.ls("input", () => {
+      let valid = this.validate()
+
+      if (valid) {
+        this.showInvalidation(false)
+        listener.disable()
+      }
+    }, false)
+
     this.input.on("blur", (e) => {
-      this.showInvalidation(!this.validate());
+      let valid = this.validate()
+      
+      if (!valid) {
+        this.showInvalidation(true)
+        listener.enable()
+      }
     });
 
-    this.input.on("focus", () => {
-      this.showInvalidation(false);
+
+    // ----- Validation end
+  
+
+    let mousedown = false
+    this.input.on('mousedown', () => {
+      mousedown = true
+    });
+
+    this.input.on("focus", (e) => {
+      if (!mousedown) {
+        if (this.input.value !== "") this.input.select()  
+      }
+    })
+    this.input.on("blur", () => {
+      mousedown = false
+    })
+
+    this.on("focus", () => {
+      this.input.focus()
       this.placeHolderUp();
     });
-    this.input.on("blur", () => {
+    this.on("blur", () => {
       if (this.value === "") this.placeHolderDown();
     });
 
@@ -75,12 +107,17 @@ export default class Input extends Element {
     if (this.isDisabled) return
     this.isDisabled = true
     this.allElems.addClass("disabled")
+    let foc = this.isFocused
+    this.input.disabled = true
+    if (foc) this.focus()
   }
 
   public enable() {
     if (!this.isDisabled) return
     this.isDisabled = false
     this.allElems.removeClass("disabled")
+    this.input.disabled = false
+    if (this.isFocused) this.input.focus()
   }
 
   private listeners: Map<(value: string, e: InputEvent) => void, (e: InputEvent) => void> = new Map()
@@ -120,9 +157,6 @@ export default class Input extends Element {
     if (emptyAllowed) return valid;
     return this.value !== "" && valid;
   }
-  public focus() {
-    this.input.focus();
-  }
   public get value(): any {
     let v = this.input.value;
     if (this.type === "number") {
@@ -142,7 +176,6 @@ export default class Input extends Element {
     return valid;
   }
   private alignPlaceHolder() {
-    console.log(this.isFocused)
     if (this.value === "" && !this.isFocused) this.placeHolderDown("css");
     else this.placeHolderUp("css");
   }
@@ -165,8 +198,8 @@ export default class Input extends Element {
       this.placeholderElem.css("cursor", "text");
     }
   }
-  private showInvalidation(is: boolean = true) {
-    if (is) {
+  public showInvalidation(valid: boolean = true) {
+    if (valid) {
       this.title = "Invalid input";
       this.allElems.addClass("invalid");
     }
