@@ -27,9 +27,12 @@ export default class Edu extends Element {
   private fullNameOverlay = this.q("#FullnameOverlay")
   private moveFullName = this.q("#moveFullName")
   private spinner = this.q("#loadingSpinner")
-  constructor() {
+  constructor(expectedUser: "teacher" | "student" = "student") {
     super(false);
     
+
+    if (expectedUser === "teacher") this.setTeacher()
+    else if (expectedUser === "student") this.setStudent()
   }
 
   username(to: string) {

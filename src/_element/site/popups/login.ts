@@ -17,12 +17,10 @@ interface LDAPAuthRes {
 
 const teacherAPIString = "lehrer"
 
-const greeting = resolveLang("greeting")
-
 export default function login() {
   let alreadyAuthenticating = false
 
-  let edu = new Edu()
+  let edu = new Edu("teacher")
   let eduWrapper = ce("edu-wrapper").apd(edu).css({display: "inline-block", marginTop: 15, marginBottom: 5})
   let login = new Login((username) => {
     edu.username(username)
@@ -54,6 +52,7 @@ export default function login() {
     }
     else {
       edu.fullName("Authentication faild")
+      login.invalidate()
     }
 
   })

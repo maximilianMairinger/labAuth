@@ -36,7 +36,6 @@ export default class Login extends Element {
     
 
     let submit = () => {
-      
       if (this.submitCb) this.submitCb(usr.value, pwd.value)
     }
     usr.submitCallback = submit
@@ -57,6 +56,16 @@ export default class Login extends Element {
       }
     })
 
+  }
+  
+  invalidate() {
+    this.inputs.Inner("showInvalidation", [true])
+
+    let f = () => {
+      this.inputs.Inner("showInvalidation", [false])
+      this.inputs.Inner("offChange", [f])  
+    }
+    this.inputs.Inner("onChange", [f])
   }
 
   disableInputs() {

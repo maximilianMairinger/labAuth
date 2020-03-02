@@ -145,6 +145,7 @@ img-user {
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
+  border-radius: 3px;
 }
 #Username__mmairinger {
   position: absolute;
