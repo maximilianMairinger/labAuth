@@ -63,5 +63,7 @@ export default function login() {
     timer: 50000000,
     showCancelButton: false,
     showConfirmButton: false,
+    allowEscapeKey : false,
+    allowOutsideClick: false
   })
 }

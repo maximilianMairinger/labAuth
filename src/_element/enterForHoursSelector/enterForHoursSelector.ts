@@ -6,21 +6,18 @@ function getNow() {
   return new Date().toLocaleTimeString().substr(0, 5)
 }
 
-const suc = resolveLang("succRegistrationFor")
-const hrsIn = resolveLang("hrsIn")
-const reg = resolveLang("reg")
 
 export default class EnterForHoursSelector extends Element {
   private textElem = ce("text-display")
   
 
-  constructor(max: number, subject: string) {
+  constructor(max: number, subject: string, current?: number) {
     super(false)
 
     this.apd(
       this.textElem
     )
-    this.textElem.html(suc + max + hrsIn + subject + reg)
+    
 
     let hrWrapper = ce("hour-wrapper")
     this.apd(hrWrapper)
@@ -32,8 +29,26 @@ export default class EnterForHoursSelector extends Element {
     }
 
     let elements = hrWrapper.childs()
-    elements.addClass("active")
+    
 
+    if (current !== undefined) {
+      this.textElem.html("Möchtest du dich von den letzen " + (max - current) + " Stunden abmelden?")
+
+
+      elements.length = current
+      elements.addClass("active")
+      let toBechangedElements = hrWrapper.childs()
+      for (let i = 0; i < current; i++) {
+        toBechangedElements.rmI(0)  
+      }
+      toBechangedElements.ea((elem) => {
+        elem.addClass("toBeChanged")
+      })
+    }
+    else {
+      this.textElem.html("Du wurdest für " + max + " Stunden in " + subject + " angemeldet.")
+      elements.addClass("active")
+    }
   }
 
   stl() {

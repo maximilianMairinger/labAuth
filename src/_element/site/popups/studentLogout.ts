@@ -4,14 +4,14 @@ import Swal from 'sweetalert2'
 import EnterForHoursSelector from "../../enterForHoursSelector/enterForHoursSelector"
 
 
-export default function studentRegistered(name: string, hours: number, subject: string) {
+export default function studentRegistered(name: string, max: number, subject: string, current: number) {
   Swal.fire({
     title: "Hallo " + name,
-    html: new EnterForHoursSelector(hours, subject, ),
+    html: new EnterForHoursSelector(max, subject, current),
     timer: 50000000,
     showCancelButton: false,
     showConfirmButton: false,
-    icon: "success",
+    icon: "warning",
     allowEscapeKey : false,
     allowOutsideClick: false
   })

@@ -24,7 +24,13 @@ hour-box.active {
   background: rgb(165, 220, 134);
 }
 
+hour-box.toBeChanged {
+  background: rgb(208, 237, 192);
+}
+
 text-display {
   margin-top: 5px;
   display: block;
 }
+
+

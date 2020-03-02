@@ -4,6 +4,7 @@ import * as cardReader from "./../../lib/card-reader"
 import Swal from 'sweetalert2'
 import EnterForHoursSelector from "../enterForHoursSelector/enterForHoursSelector"
 import studentRegistered from "./popups/registered"
+import studentLogout from "./popups/studentLogout"
 import login from "./popups/login"
 
 
@@ -17,7 +18,7 @@ cardReader.disable()
 
 setTimeout(() => {
   //studentRegistered("Maximilian Mairinger", 3, "Medt")
-  login()
+  studentLogout("Maximilian Mairinger", 4, "Medt", 1)
 }, 100)
 
 
