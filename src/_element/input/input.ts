@@ -131,7 +131,7 @@ export default class Input extends Element {
     this.listeners.set(f, inner)
     this.input.on("input", inner)
   }
-  public offChange(f: (value: string) => void) {
+  public offChange(f: (value: string, e: InputEvent) => void) {
     this.input.off("input", this.listeners.get(f))
     this.listeners.delete(f)
   }

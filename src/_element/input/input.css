@@ -37,16 +37,13 @@ input-placeholder {
   opacity: .3;
 }
 
-
-
-
 input {
   color: inherit;
   background: white;
   border: 1px solid rgba(0,0,0,.1);
 }
 
-:host(:focus-within) input {
+:host(:focus-within) input:not(.invalid) {
   border: 1px solid grey;
 }
 
