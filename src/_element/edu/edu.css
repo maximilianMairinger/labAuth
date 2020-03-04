@@ -3,16 +3,28 @@
   display: inline-block;
   width: 427px;
   height: 257px;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 2px 2px 5px 0 #00000042;
-  transition: transform .5s, box-shadow .5s;
 }
 
-:host(.big) {
+#edu.big {
   transform: scale(1.025);
   box-shadow: 4px 4px 5px 0 #3a393921;
 }
+
+
+#edu {
+  overflow: hidden;
+  border-radius: 10px;
+  transition: transform .5s, box-shadow .5s;
+  box-shadow: 2px 2px 5px 0 #00000042;
+  position: relative;
+  width: 427px;
+  height: 257px;
+  overflow: hidden;
+  display: inline-block;
+  background: linear-gradient(#eeb14d 0%, #e89a16 100%);
+  color: black;
+}
+
 
 #edu-teacher {
   opacity: 0;
@@ -22,16 +34,7 @@
   background: linear-gradient(#4dd8ee 0%, #4d98ee 100%)
 }
 
-#edu {
-  box-shadow: 1px 1px 5px 0px #00000045;
-  position: relative;
-  width: 427px;
-  height: 257px;
-  overflow: hidden;
-  display: inline-block;
-  background: linear-gradient(#eeb14d 0%, #e89a16 100%);
-  color: black;
-}
+
 .Rectangle_2_j {
   position: absolute;
   overflow: visible;

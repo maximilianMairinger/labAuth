@@ -45,6 +45,7 @@
         "moment-timezone": "^0.5.27",
         "random-date-generator": "^1.0.2",
         "sweetalert2": "^9.7.2",
+        "waapi-easing": "^1.0.0",
         "xrray": "^4.6.4"
     }
 }

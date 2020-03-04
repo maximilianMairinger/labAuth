@@ -7,3 +7,31 @@ element-body {
 c-edu {
   transform: scale(.77);
 }
+
+hours-container {
+  display: inline-block;
+  position: absolute;
+  
+  transform: translateY(85px);
+}
+
+
+hour-box {
+  position: relative;
+  width: 50px;
+  height: 30px;
+  background: #D9D9D9;
+  margin: 0 2px;
+  display: inline-block;
+  transition: background-color .2s;
+  opacity: 0;
+  border-radius: 2px;
+}
+
+hour-box.active {
+  background: #79C865;
+}
+
+hour-box.toBeGone {
+  background: #B7D3B0;
+}

@@ -8,7 +8,6 @@ export default class LoginPanel extends Panel {
 
   constructor() {
     super()
-
     
   }
 

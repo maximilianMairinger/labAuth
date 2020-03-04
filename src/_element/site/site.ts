@@ -15,10 +15,15 @@ export default class Site extends Element {
     super()
 
     this.apd(this.manager)
+    let edu = new EduPanel("student")
+    
 
     //this.manager.setPanel({left: new InformPanel("LabAuth", "A teacher may log in with his edu.card to start the session."), right: new EduPanel("teacher")})
-    this.manager.setPanel({left: new LoginPanel(), right: new EduPanel("teacher")})
+    this.manager.setPanel({left: new InformPanel("LabAuth", "A teacher may log in with his edu.card to start the session."), right: edu})
     
+    setTimeout(() => {
+      edu.showHours(4)
+    }, 1000)
   }
 
   stl() {
