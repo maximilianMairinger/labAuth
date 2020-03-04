@@ -21,4 +21,6 @@ export default abstract class Panel extends Element {
   }
 }
 
+
+//@ts-ignore
 window.customElements.define('c-panel', Panel);

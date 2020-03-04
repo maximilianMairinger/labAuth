@@ -91,4 +91,5 @@ export default class EduPanel extends Panel {
   }
 }
 
+//@ts-ignore
 window.customElements.define('c-edu-panel', EduPanel);

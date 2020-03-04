@@ -30,4 +30,5 @@ export default class InformPanel extends Panel {
   }
 }
 
+//@ts-ignore
 window.customElements.define('c-inform-panel', InformPanel);
