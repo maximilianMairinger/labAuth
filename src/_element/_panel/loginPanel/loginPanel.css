@@ -1,0 +1,35 @@
+element-body {
+  display: flex;
+  align-items: center;
+}
+
+text-conatiner {
+  display: inline-block;
+  width: 210px;
+  margin-left: 50px;
+}
+
+text-heading {
+  position: relative;
+  float: left;
+  display: block;
+  font-size: 45px;
+  font-weight: bold;
+  margin-bottom: 22.5px;
+}
+
+c-input {
+  position: relative;
+  float: left;
+  display: block;
+  width: 100%;
+  margin: 9px 0;
+}
+
+c-input:first-of-type {
+  margin-top: 0;
+}
+
+c-input:last-of-type {
+  margin-bottom: 0;
+}
