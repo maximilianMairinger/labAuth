@@ -4,6 +4,8 @@ import { ElementList } from "extended-dom";
 import delay from "delay"
 import Easing from "waapi-easing"
 import { Data, DataArray } from "front-db";
+import Button from "./../../_button/_rippleButton/blockButton/blockButton"
+import animatedScrollTo from "animated-scroll-to"
 
 
 type Percent = number
@@ -22,8 +24,20 @@ export default class EduPanel extends Panel {
   private otherCardsContainer = this.q("other-cards-container").first
   private scrollContainer = this.q("scroll-conatiner").first
   private arrow = this.q("#arrow")
+
+  private buttons: ElementList<Button>
+  private cancButton: Button
+  private confButton: Button
   constructor(list: DataArray<Entry>) {
     super()
+
+    this.cancButton = new Button("Abort")
+    this.cancButton.id = "canc"
+    this.confButton = new Button("Confirm")
+    this.confButton.id = "conf"
+    this.buttons = new ElementList(this.cancButton, this.confButton)
+
+    this.elementBody.prepend(this.cancButton, this.confButton)
 
     this.mainCard = new Edu()
     this.mainCard.id = "mainCard"
@@ -42,10 +56,12 @@ export default class EduPanel extends Panel {
       if (lastPos === 0 && pos > 0) {
         //this.otherCardsContainer.anim({translateY: 1})
         this.arrow.anim({opacity: 0})
+        if (this.currentlyShowingConfirmOptions) this.buttons.anim({opacity: 0})
       }
       else if (lastPos > 0 && pos === 0) {
         //this.otherCardsContainer.anim({translateY: 125})
         this.arrow.anim({opacity: 1})
+        if (this.currentlyShowingConfirmOptions) this.buttons.anim({opacity: 1})
       }
 
       lastPos = pos
@@ -71,6 +87,28 @@ export default class EduPanel extends Panel {
     }, async () => {
       this.otherCardsContainer.html("")
     })
+  }
+
+  private currButtonCb: Function;
+  private currentlyShowingConfirmOptions: boolean = false
+  async displayConfimOptions(cb: (confirm: boolean) => void) {
+    this.currentlyShowingConfirmOptions = true
+    this.currButtonCb = (e) => {
+      cb(e.target === this.confButton)
+    }
+
+    this.buttons.Inner("addActivationCallback", [this.currButtonCb])
+
+    await animatedScrollTo(0, {
+      elementToScroll: this.scrollContainer,
+      speed: 1000
+    })
+
+  }
+  hideConfimOptions() {
+    this.currentlyShowingConfirmOptions = false
+    this.buttons.Inner("removeActivationCallback", [this.currButtonCb])
+    this.buttons.anim({opacity: 0})
   }
 
   async showHours(max: number, toBeGone: number = 0) {

@@ -26,6 +26,9 @@ export default class Site extends Element {
 
     this.apd(this.manager)
     let edu = new EduPanel(entries)
+    edu.displayConfimOptions((e) => {
+      console.log(e ? "confirm" : "cancel")
+    })
     
 
     //this.manager.setPanel({left: new InformPanel("LabAuth", "A teacher may log in with his edu.card to start the session."), right: new EduPanel("teacher")})

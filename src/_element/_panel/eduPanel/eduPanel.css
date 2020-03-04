@@ -62,7 +62,6 @@ hour-box.toBeGone {
   bottom: 20px;
 }
 
-
 other-cards-container {
   display: inline-block;
   width: min-content;
@@ -76,3 +75,18 @@ other-cards-container:last-child {
 #mainCard {
   margin-top: 184px;
 }
+
+c-block-button {
+  position: absolute;
+  bottom: 20px;
+  opacity: 0;
+}
+
+c-block-button#canc {
+  left: 20px
+}
+
+c-block-button#conf {
+  right: 20px
+}
+
