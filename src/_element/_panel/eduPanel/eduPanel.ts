@@ -21,6 +21,7 @@ export default class EduPanel extends Panel {
   private hoursContainer = this.q("hours-container")
   private otherCardsContainer = this.q("other-cards-container").first
   private scrollContainer = this.q("scroll-conatiner").first
+  private arrow = this.q("#arrow")
   constructor(list: DataArray<Entry>) {
     super()
 
@@ -30,28 +31,46 @@ export default class EduPanel extends Panel {
     this.scrollContainer.insertBefore(this.mainCard, this.otherCardsContainer)
 
 
+    let guide = new Data(0)
     let lastPos = 0;
     this.scrollContainer.on("scroll", (e) => {
       let pos = this.scrollContainer.scrollTop
 
+
+      guide.val = pos
+
       if (lastPos === 0 && pos > 0) {
-        this.otherCardsContainer.anim({translateY: 1})
+        //this.otherCardsContainer.anim({translateY: 1})
+        this.arrow.anim({opacity: 0})
       }
       else if (lastPos > 0 && pos === 0) {
-        this.otherCardsContainer.anim({translateY: 145})
+        //this.otherCardsContainer.anim({translateY: 125})
+        this.arrow.anim({opacity: 1})
       }
 
       lastPos = pos
     })
+    
+    this.otherCardsContainer.anim([{translateY: 125, offset: 0}, {translateY: 0}], {start: 0, end: 300}, guide)
 
+    list.forEach(async (e, i) => {
 
-    list.alter((e) => {
       let edu = new Edu()
+      
+
+      edu.css("opacity", 0)
 
       edu.username(e.current().username.val)
       edu.fullName(e.current().fullName.val)
-      this.otherCardsContainer.apd(edu)
-    }, true)
+      edu.luckyDay()
+      edu.employeeType("Student")
+      this.otherCardsContainer.insertBefore(edu, this.otherCardsContainer.childs()[i])
+
+      await edu.anim({opacity: 1})
+      
+    }, async () => {
+      this.otherCardsContainer.html("")
+    })
   }
 
   async showHours(max: number, toBeGone: number = 0) {

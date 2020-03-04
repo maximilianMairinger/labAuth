@@ -26,6 +26,7 @@ scroll-conatiner {
 
 c-edu {
   zoom: .77;
+  margin: 15px 0;
 }
 
 hours-container {
@@ -65,7 +66,11 @@ hour-box.toBeGone {
 other-cards-container {
   display: inline-block;
   width: min-content;
-  transform: translateY(145px);
+  transform: translateY(125px);
+}
+
+other-cards-container:last-child {
+  margin-bottom: 50px;
 }
 
 #mainCard {

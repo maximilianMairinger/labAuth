@@ -27,7 +27,7 @@ export default class Edu extends Element {
   private fullNameOverlay = this.q("#FullnameOverlay")
   private moveFullName = this.q("#moveFullName")
   private spinner = this.q("#loadingSpinner")
-  constructor(expectedUser: "teacher" | "student" = "student") {
+  constructor(expectedUser?: "teacher" | "student") {
     super(false);
     
 
@@ -52,10 +52,10 @@ export default class Edu extends Element {
     
   }
   luckyDay() {
-    this.luckyDayElem.text("Glückstag: " + prittyDate())
+    this.luckyDayElem.text("Lucky day: " + prittyDate())
   }
   employeeType(to: string) {
-    this.validUntilElem.text("Inhaber: " + to)
+    this.validUntilElem.text("Employee: " + to)
   }
 
   authentication() {
