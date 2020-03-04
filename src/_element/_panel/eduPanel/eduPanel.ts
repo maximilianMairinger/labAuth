@@ -20,6 +20,7 @@ export type Entry = {
 export default class EduPanel extends Panel {
   public preferedWidth: "big" | "small" | Percent
   public mainCard: Edu;
+  private mainBody = this.q("main-conatiner")
   private hoursContainer = this.q("hours-container")
   private otherCardsContainer = this.q("other-cards-container").first
   private scrollContainer = this.q("scroll-conatiner").first
@@ -28,6 +29,8 @@ export default class EduPanel extends Panel {
   private buttons: ElementList<Button>
   private cancButton: Button
   private confButton: Button
+
+  private scrollContainers = this.q("scroll-conatiner")
   constructor(list: DataArray<Entry>) {
     super()
 
@@ -44,7 +47,7 @@ export default class EduPanel extends Panel {
     this.confButton.id = "conf"
     this.buttons = new ElementList(this.cancButton, this.confButton)
 
-    this.apd(this.cancButton, this.confButton)
+    this.mainBody.apd(this.cancButton, this.confButton)
 
     this.mainCard = new Edu()
     this.mainCard.id = "mainCard"
