@@ -1,11 +1,31 @@
 element-body {
-  display: flex;
+  position: absolute;
   justify-content: center;
   align-items: center;
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+
+scroll-conatiner {
+  
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  overflow-y: auto;
+  width: 100%;
 }
 
 c-edu {
-  transform: scale(.77);
+  zoom: .77;
 }
 
 hours-container {
@@ -34,4 +54,20 @@ hour-box.active {
 
 hour-box.toBeGone {
   background: #B7D3B0;
+}
+
+#arrow {
+  position: absolute;
+  bottom: 20px;
+}
+
+
+other-cards-container {
+  display: inline-block;
+  width: min-content;
+  transform: translateY(145px);
+}
+
+#mainCard {
+  margin-top: 184px;
 }

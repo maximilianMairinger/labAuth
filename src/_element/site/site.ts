@@ -1,29 +1,39 @@
 import Element from "../element"
 import PanelManager from "../panelManager/panelManager"
 import InformPanel from "../_panel/informPanel/informPanel"
-import EduPanel from "../_panel/eduPanel/eduPanel"
+import EduPanel, { Entry } from "../_panel/eduPanel/eduPanel"
 import LoginPanel from "../_panel/loginPanel/loginPanel"
+import { Data, DataBase } from "front-db"
 
 
 
+//@ts-ignore
+let entries: DataArray<Entry> = new DataBase(new Data([])).asArray
 
+//@ts-ignore
+global.entries = entries
 
+entries.add({username: "mmairinger", fullName: "Maximilian Mairinger"})
+entries.add({username: "rschlager", fullName: "Raphael Schlager"})
+entries.add({username: "dzimmermann", fullName: "Daniel Zimmermann"})
 
 export default class Site extends Element {
   private manager = new PanelManager()
   constructor() {
     super()
 
+    
+
     this.apd(this.manager)
-    let edu = new EduPanel("student")
+    let edu = new EduPanel(entries)
     
 
     //this.manager.setPanel({left: new InformPanel("LabAuth", "A teacher may log in with his edu.card to start the session."), right: new EduPanel("teacher")})
     this.manager.setPanel({left: new InformPanel("LabAuth", "A teacher may log in with his edu.card to start the session."), right: edu})
     
-    setTimeout(() => {
-      edu.showHours(4)
-    }, 1000)
+    // setTimeout(() => {
+    //   edu.showHours(4)
+    // }, 1000)
   }
 
   stl() {
