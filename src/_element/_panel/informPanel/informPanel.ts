@@ -4,11 +4,22 @@ import Panel from "../panel"
 
 export default class InformPanel extends Panel {
   public preferedWidth: "small" = "small"
-  constructor() {
+
+  
+  private headingElem = this.q("text-heading")
+  private contentElem = this.q("text-paragraph")
+  constructor(heading: string, content: string) {
     super()
 
+    this.heading(heading)
+    this.content(content)
     
-    
+  }
+  heading(to: string) {
+    this.headingElem.text(to)
+  }
+  content(to: string) {
+    this.contentElem.text(to)
   }
 
   stl() {

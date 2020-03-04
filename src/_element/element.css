@@ -33,6 +33,7 @@ element-body {
   display: block;
   font-family: inherit;
   position: absolute;
-  color: rgb(53, 53, 53);
+  color: rgb(59, 59, 59);
   transition: .3s color;
+  letter-spacing: .5px;
 }

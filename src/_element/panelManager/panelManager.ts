@@ -22,12 +22,12 @@ export default class PanelManager extends Element {
   public setPanel(panel: PanelCombo) {
     if ("left" in panel) {
       this.left = panel.left
-      this.leftContainer.emptyNodes()
+      this.leftContainer.html("")
       this.leftContainer.apd(panel.left);
     }
     if ("right" in panel) {
       this.right = panel.right
-      this.rightContainer.emptyNodes()
+      this.rightContainer.html("")
       this.rightContainer.apd(panel.right)
     }
 

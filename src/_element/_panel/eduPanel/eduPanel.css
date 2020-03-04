@@ -1,0 +1,9 @@
+element-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+c-edu {
+  transform: scale(.77);
+}

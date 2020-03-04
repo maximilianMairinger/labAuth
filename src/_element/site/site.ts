@@ -1,5 +1,7 @@
 import Element from "../element"
 import PanelManager from "../panelManager/panelManager"
+import InformPanel from "../_panel/informPanel/informPanel"
+import EduPanel from "../_panel/eduPanel/eduPanel"
 
 
 
@@ -7,11 +9,13 @@ import PanelManager from "../panelManager/panelManager"
 
 
 export default class Site extends Element {
-
+  private manager = new PanelManager()
   constructor() {
     super()
 
-    this.apd(new PanelManager())
+    this.apd(this.manager)
+
+    this.manager.setPanel({left: new InformPanel("LabAuth", "A teacher may log in with his edu.card to start the session."), right: new EduPanel("teacher")})
     
   }
 

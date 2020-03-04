@@ -16,5 +16,5 @@ left-container {
 right-container {
   flex-grow: 1;
   width: auto;
-  background: rgba(0, 0, 0, 5%);
+  background: rgba(0, 0, 0, 3%);
 }
