@@ -31,13 +31,20 @@ export default class EduPanel extends Panel {
   constructor(list: DataArray<Entry>) {
     super()
 
+    this.arrow.on("mousedown", async (e) => {
+      await animatedScrollTo(350, {
+        elementToScroll: this.scrollContainer,
+        speed: 2000
+      })
+    })
+
     this.cancButton = new Button("Abort")
     this.cancButton.id = "canc"
     this.confButton = new Button("Confirm")
     this.confButton.id = "conf"
     this.buttons = new ElementList(this.cancButton, this.confButton)
 
-    this.elementBody.prepend(this.cancButton, this.confButton)
+    this.apd(this.cancButton, this.confButton)
 
     this.mainCard = new Edu()
     this.mainCard.id = "mainCard"
@@ -55,12 +62,12 @@ export default class EduPanel extends Panel {
 
       if (lastPos === 0 && pos > 0) {
         //this.otherCardsContainer.anim({translateY: 1})
-        this.arrow.anim({opacity: 0})
+        this.arrow.anim({opacity: 0}).then(() => this.arrow.hide())
         if (this.currentlyShowingConfirmOptions) this.buttons.anim({opacity: 0})
       }
       else if (lastPos > 0 && pos === 0) {
         //this.otherCardsContainer.anim({translateY: 125})
-        this.arrow.anim({opacity: 1})
+        this.arrow.show().anim({opacity: 1})
         if (this.currentlyShowingConfirmOptions) this.buttons.anim({opacity: 1})
       }
 
@@ -104,11 +111,13 @@ export default class EduPanel extends Panel {
       speed: 1000
     })
 
+    this.buttons.show().anim({opacity: 1})
+
   }
   hideConfimOptions() {
     this.currentlyShowingConfirmOptions = false
     this.buttons.Inner("removeActivationCallback", [this.currButtonCb])
-    this.buttons.anim({opacity: 0})
+    this.buttons.anim({opacity: 0}).then(() => this.buttons.hide())
   }
 
   async showHours(max: number, toBeGone: number = 0) {
