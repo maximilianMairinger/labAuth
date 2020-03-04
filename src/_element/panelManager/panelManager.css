@@ -1,0 +1,20 @@
+element-body {
+  display: flex;
+}
+
+.container {
+  height: 100%;
+  position: relative;
+  float: left;
+  display: block;
+}
+
+left-container {
+  width: 41.25%;
+}
+
+right-container {
+  flex-grow: 1;
+  width: auto;
+  background: rgba(0, 0, 0, 5%);
+}

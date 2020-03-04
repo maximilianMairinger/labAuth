@@ -20,7 +20,7 @@ app.get('*', (req, res) => {
 
 app.post("/LDAPAuth", (req, res) => {
   setTimeout(() => {
-    res.send('{"valid": false, "data": {"fullName": "Maximilian Mairinger", "class": "lehrer"}}')
+    res.send('{"valid": true, "data": {"fullName": "Maximilian Mairinger", "class": "lehrer"}}')
   }, 2000)
 })
 

@@ -1,25 +1,9 @@
 import Element from "../element"
-import { resolveLang } from "../../lib/interpolateHTMLWithLang"
-import * as cardReader from "./../../lib/card-reader"
-import Swal from 'sweetalert2'
-import EnterForHoursSelector from "../enterForHoursSelector/enterForHoursSelector"
-import studentRegistered from "./popups/registered"
-import studentLogout from "./popups/studentLogout"
-import login from "./popups/login"
+import PanelManager from "../panelManager/panelManager"
 
 
 
 
-
-
-
-cardReader.addListener(console.log)
-cardReader.disable()
-
-setTimeout(() => {
-  //studentRegistered("Maximilian Mairinger", 3, "Medt")
-  studentLogout("Maximilian Mairinger", 4, "Medt", 1)
-}, 100)
 
 
 export default class Site extends Element {
@@ -27,7 +11,7 @@ export default class Site extends Element {
   constructor() {
     super()
 
-    
+    this.apd(new PanelManager())
     
   }
 
