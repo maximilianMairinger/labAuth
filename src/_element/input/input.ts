@@ -4,9 +4,10 @@ import { ElementList } from "extended-dom"
 var emailValidationRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 
+
 export default class Input extends Element {
   private placeholderElem: HTMLElement;
-  private input: HTMLInputElement;
+  private input: HTMLInputElement = ce("input");
   private isUp: boolean = false;
   private isFocused: boolean = false;
   private allElems: ElementList;
@@ -16,17 +17,15 @@ export default class Input extends Element {
   private _type: "password" | "text" | "number" | "email";
   constructor(placeholder: string = "", type: "password" | "text" | "number" | "email" = "text", public submitCallback?: Function, value?: any, public customVerification?: (value?: string | number) => boolean) {
     super(false);
-    this.tabIndex = 0;
     
+    this.type = type;
 
     this.placeholderElem = ce("input-placeholder");
     this.placeholder = placeholder;
     this.placeholderElem.on("click", () => {
       this.input.focus();
     });
-
-    this.input = ce("input");
-    this.type = type;
+    
 
     // ----- Validation start
     let listener = this.input.ls("input", () => {
