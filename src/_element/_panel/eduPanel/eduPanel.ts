@@ -36,9 +36,9 @@ export default class EduPanel extends Panel {
     let easing = new Easing(0.485, 0.010, 0.155, 1);
 
     await Promise.all([
-      elements.anim({translateY: 20}, {duration: 700, easing: easing}),
+      elements.anim({translateY: 21}, {duration: 700, easing: easing}),
       elements.anim({opacity: 1}, {duration: 700, easing: "linear"}, 100),
-      this.card.anim({translateY: -20}, {duration: 700, easing: easing})
+      this.card.anim({translateY: -21}, {duration: 700, easing: easing})
     ])
     
     await delay(3000)
