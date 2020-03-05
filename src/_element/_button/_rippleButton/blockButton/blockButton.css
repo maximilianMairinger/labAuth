@@ -4,7 +4,7 @@
   height: 30px;
 }
 :host(:focus) {
-  transition: .4s;
+  transition: border .4s;
 }
 button-container {
   display: flex;
