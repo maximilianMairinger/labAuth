@@ -3,34 +3,39 @@ element-body {
   align-items: center;
 }
 
-text-conatiner {
-  display: inline-block;
-  width: 200px;
-  margin-left: 50px;
-}
-
 text-heading {
-  position: relative;
-  float: left;
   display: block;
-  margin-bottom: 2px;
-  font-size: 45px;
   font-weight: bold;
+  font-size: 45px;
+  margin-bottom: 7px;
+  transform: translateX(-32px);
 }
 
-text-paragraph {
-  position: relative;
-  float: left;
-  display: block;
-  margin-bottom: 10px;
-  line-height: 23px;
+text-conatiner  {
+  margin-left: 70px;
+  width: 400px;
 }
 
-bottom-stripe {
+c-setup-input {
+  position: absolute;
+  width: 100%;
+  display: none;
+}
+
+question-container {
+  display: block;
+  position: relative;
+  width: 260px;
+  min-height: 100.5px;
+}
+
+#back {
   position: relative;
   float: left;
-  display: block;
-  height: 3px;
-  width: 40px;
-  background: #3B3B3B;
+  margin-top: 13px;
+  margin-left: 6px;
+  opacity: 0;
+  transform: translateX(-10px);
+  cursor: pointer;
+  z-index: 1;
 }

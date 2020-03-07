@@ -1,0 +1,36 @@
+element-body {
+  display: flex;
+  align-items: center;
+}
+
+text-conatiner {
+  display: inline-block;
+}
+
+text-heading {
+  position: relative;
+  float: left;
+  display: block;
+  margin-bottom: 2px;
+  font-size: 45px;
+  font-weight: bold;
+}
+
+text-paragraph {
+  position: relative;
+  float: left;
+  display: block;
+  margin-bottom: 10px;
+  line-height: 23px;
+}
+
+c-input {
+  position: relative;
+  float: left;
+  display: block;
+  width: 200px;
+}
+
+highlight-text {
+  font-weight: bold;
+}

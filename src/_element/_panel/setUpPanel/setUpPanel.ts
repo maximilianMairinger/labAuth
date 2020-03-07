@@ -1,25 +1,125 @@
 import Panel from "../panel"
+import SetUpInput from "../../setUpInput/setUpInput"
+import Easing from "waapi-easing";
+import delay from "delay";
+import { ElementList } from "extended-dom";
+
 
 
 
 export default class SetUpPanel extends Panel {
-  public preferedWidth: "big" = "big"
+  public preferedWidth = 62.5
 
-  
+  private questionContainer = this.q("question-container")
   private headingElem = this.q("text-heading")
-  private contentElem = this.q("tex t-paragraph")
-  constructor(heading: string, content: string) {
+  private backElem = this.q("#back")
+  
+  constructor(addresser: string) {
     super()
 
-    this.heading(heading)
-    this.content(content)
+    this.headingElem.text("Hello " + addresser)
+
+    
+
+    let submitCb = (back = false) => {
+      let sib = back ? activeElement.previousSibling as HTMLElement : activeElement.nextSibling as HTMLElement
+      
+      
+      if (sib) {
+        let currentlyActive = activeElement
+
+
+        if (sib === inputs.first) this.hideBackButton()
+        else this.showBackButton()
+
+
+        if (back) {
+          currentlyActive.anim({translateX: -10, opacity: 0}, 500).then(() => currentlyActive.hide())
+          sib.css({translateX: 10, opacity: 0})
+          sib.show()
+          sib.focus()
+          sib.anim({translateX: .1}, 700)
+          delay(200).then(() => {
+            sib.anim({opacity: 1}, 500)
+          })
+        }
+        else {
+          currentlyActive.anim({translateX: 10, opacity: 0}, 500).then(() => currentlyActive.hide())
+          sib.css({translateX: -10, opacity: 0})
+          sib.show()
+          sib.focus()
+          sib.anim({translateX: .1}, 700)
+          delay(200).then(() => {
+            sib.anim({opacity: 1}, 500)
+          })
+        }
+        
+        activeElement = sib as SetUpInput
+        
+      }
+    }
+
+    this.backElem.on("mousedown", (e) => {
+      // Prevent blur of SetUpInput
+      e.preventDefault()
+      submitCb(true)
+    })
+
+    let inputs: ElementList<SetUpInput> = new ElementList(
+      new SetUpInput("Please tell us what <highlight-text>subject</highlight-text> you are currently teaching", (s) => {
+        console.log(s)
+      }),
+      new SetUpInput("Please tell us in which <highlight-text>faculty</highlight-text> you are teaching", (s) => {
+        console.log(s)
+      }),
+      new SetUpInput("Please tell us how many <highlight-text>hours</highlight-text> you are teaching", (s) => {
+        console.log(s)
+      })
+    )
+
+    inputs.ea((el) => {
+      el.submitCallback = () => {
+        submitCb()
+      }
+    })
+
+
+    inputs.on("keydown", (e) => {
+      if (e.key === "Tab") {
+        e.preventDefault()
+        submitCb(e.shiftKey)
+      }
+    })
+
+
+    let activeElement = inputs.first
+    inputs.first.show()
+    inputs.first.focus()
+
+
+    this.questionContainer.apd(...inputs)
+
+  }
+
+  private backButtonIsShown = false
+  private async showBackButton() {
+    if (this.backButtonIsShown) return
+    this.backButtonIsShown = true
+    await Promise.all([
+      this.backElem.anim({translateX: 1}, {duration: 700}),
+      delay(250).then(() => this.backElem.anim({opacity: 1}, {duration: 500})),
+      this.headingElem.anim({translateX: 1}, {duration: 700})
+    ])
     
   }
-  heading(to: string) {
-    this.headingElem.text(to)
-  }
-  content(to: string) {
-    this.contentElem.text(to)
+  private async hideBackButton() {
+    if (!this.backButtonIsShown) return
+    this.backButtonIsShown = false
+    await Promise.all([
+      this.backElem.anim({opacity: 0}, {duration: 300}),
+      this.backElem.anim({translateX: -10}, {duration: 500}),
+      this.headingElem.anim({translateX: -32}, {duration: 700})
+    ])
   }
 
   stl() {
