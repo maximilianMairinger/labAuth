@@ -10,6 +10,8 @@ import animatedScrollTo from "animated-scroll-to"
 
 type Percent = number
 
+let easing = new Easing(0.485, 0.010, 0.155, 1);
+
 
 export type Entry = {
   fullName: string,
@@ -194,20 +196,18 @@ export default class EduPanel extends Panel {
       this.hoursContainer.apd(...elements.add(ce("hour-box").addClass("toBeGone")))
     }
 
-    let easing = new Easing(0.485, 0.010, 0.155, 1);
-
     await Promise.all([
-      elements.anim({translateY: 21}, {duration: 700, easing: easing}),
+      elements.anim({translateY: 21}, {duration: 700, easing}),
       elements.anim({opacity: 1}, {duration: 700, easing: "linear"}, 100),
-      this.mainCard.anim({translateY: -21}, {duration: 700, easing: easing})
+      this.mainCard.anim({translateY: -21}, {duration: 700, easing})
     ])
     if (this.showHrsCancled) return this.showHrsCancled = false
     
     await delay(3000)
     if (this.showHrsCancled) return this.showHrsCancled = false
     await Promise.all([
-      this.mainCard.anim({translateY: 0}, {duration: 700, easing: easing}),
-      elements.anim({translateY: 0}, {duration: 700, easing: easing}).then(() => elements.remove())
+      this.mainCard.anim({translateY: 0}, {duration: 700, easing}),
+      elements.anim({translateY: 0}, {duration: 700, easing}).then(() => elements.remove())
     ])
     this.showingHours = false
     this.showHrsCancled = false
@@ -220,12 +220,11 @@ export default class EduPanel extends Panel {
 
     this.showHrsCancled = true
 
-    let easing = new Easing(0.485, 0.010, 0.155, 1);
     let elements = this.hoursContainer.childs()
 
     await Promise.all([
-      this.mainCard.anim({translateY: 0}, {duration: 2000, easing: easing}),
-      elements.anim({opacity: 0}, {duration: 150, easing: easing}).then(() => elements.hide())
+      this.mainCard.anim({translateY: 0}, {duration: 2000, easing}),
+      elements.anim({opacity: 0}, {duration: 150, easing}).then(() => elements.hide())
     ])
 
     this.showingHours = false
