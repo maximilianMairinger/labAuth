@@ -23,20 +23,21 @@ export default class EduPanel extends Panel {
   private mainBody = this.q("main-conatiner")
   private hoursContainer = this.q("hours-container")
   private otherCardsContainer = this.q("other-cards-container").first
-  private scrollContainer = this.q("scroll-conatiner").first
+  private cardsContainer = this.q("scroll-conatiner.cards").first
+  private tableContainer = this.q("scroll-conatiner.table").first
+  private tableRoot = this.q("table-root").first
   private arrow = this.q("#arrow")
 
   private buttons: ElementList<Button>
   private cancButton: Button
   private confButton: Button
 
-  private scrollContainers = this.q("scroll-conatiner")
   constructor(list: DataArray<Entry>) {
     super()
 
     this.arrow.on("mousedown", async (e) => {
       await animatedScrollTo(350, {
-        elementToScroll: this.scrollContainer,
+        elementToScroll: this.cardsContainer,
         speed: 2000
       })
     })
@@ -52,13 +53,13 @@ export default class EduPanel extends Panel {
     this.mainCard = new Edu()
     this.mainCard.id = "mainCard"
 
-    this.scrollContainer.insertBefore(this.mainCard, this.otherCardsContainer)
+    this.cardsContainer.insertBefore(this.mainCard, this.otherCardsContainer)
 
 
     let guide = new Data(0)
     let lastPos = 0;
-    this.scrollContainer.on("scroll", (e) => {
-      let pos = this.scrollContainer.scrollTop
+    this.cardsContainer.on("scroll", (e) => {
+      let pos = this.cardsContainer.scrollTop
 
 
       guide.val = pos
@@ -86,17 +87,34 @@ export default class EduPanel extends Panel {
 
       edu.css("opacity", 0)
 
-      edu.username(e.current().username.val)
-      edu.fullName(e.current().fullName.val)
+      let currentData = e.current()
+
+      edu.username(currentData.username.val)
+      edu.fullName(currentData.fullName.val)
       edu.luckyDay()
       edu.employeeType("Student")
       this.otherCardsContainer.insertBefore(edu, this.otherCardsContainer.childs()[i])
 
       await edu.anim({opacity: 1})
+
+
+
+
+      let row = ce("table-row")
+      this.tableRoot.apd(row)
+
+      row.apd(ce("table-col").html(currentData.username.val))
+      .apd(ce("table-col").html(currentData..val))
       
     }, async () => {
       this.otherCardsContainer.html("")
+      this.tableRoot.html("")
     })
+
+
+
+    
+    
   }
 
   private currButtonCb: Function;
@@ -110,7 +128,7 @@ export default class EduPanel extends Panel {
     this.buttons.Inner("addActivationCallback", [this.currButtonCb])
 
     await animatedScrollTo(0, {
-      elementToScroll: this.scrollContainer,
+      elementToScroll: this.cardsContainer,
       speed: 1000
     })
 
