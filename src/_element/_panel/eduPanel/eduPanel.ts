@@ -64,6 +64,9 @@ export default class EduPanel extends Panel {
 
       guide.val = pos
 
+
+      this.cancelShowHours()
+
       if (lastPos === 0 && pos > 0) {
         //this.otherCardsContainer.anim({translateY: 1})
         this.arrow.anim({opacity: 0}).then(() => this.arrow.hide())
@@ -165,8 +168,22 @@ export default class EduPanel extends Panel {
     this.buttons.anim({opacity: 0}).then(() => this.buttons.hide())
   }
 
+  private showHrsCancled = false
+  private showingHours = false
   async showHours(max: number, toBeGone: number = 0) {
-    this.hoursContainer.html("")
+    
+    if (this.cardsContainer.scrollTop !== 0) {
+      await animatedScrollTo(0, {
+        elementToScroll: this.cardsContainer,
+        speed: 2000,
+        cancelOnUserAction: false,
+      })
+      await delay(100)
+    }
+
+
+    
+    this.showingHours = true
     let active = max - toBeGone
     let elements: ElementList = new ElementList()
     for (let i = 0; i < active; i++) {
@@ -184,15 +201,37 @@ export default class EduPanel extends Panel {
       elements.anim({opacity: 1}, {duration: 700, easing: "linear"}, 100),
       this.mainCard.anim({translateY: -21}, {duration: 700, easing: easing})
     ])
+    if (this.showHrsCancled) return this.showHrsCancled = false
     
     await delay(3000)
+    if (this.showHrsCancled) return this.showHrsCancled = false
     await Promise.all([
       this.mainCard.anim({translateY: 0}, {duration: 700, easing: easing}),
-      elements.anim({translateY: 0}, {duration: 700, easing: easing}).then(() => elements.hide())
+      elements.anim({translateY: 0}, {duration: 700, easing: easing}).then(() => elements.remove())
     ])
-
+    this.showingHours = false
+    this.showHrsCancled = false
   }
 
+  private alreadyCanc = false
+  async cancelShowHours() {
+    console.log(this.showingHours)
+    if (this.alreadyCanc || !this.showingHours) return
+    this.alreadyCanc = true
+
+    this.showHrsCancled = true
+
+    let easing = new Easing(0.485, 0.010, 0.155, 1);
+    let elements = this.hoursContainer.childs()
+
+    await Promise.all([
+      this.mainCard.anim({translateY: 0}, {duration: 2000, easing: easing}),
+      elements.anim({opacity: 0}, {duration: 150, easing: easing}).then(() => elements.hide())
+    ])
+
+    this.showingHours = false
+    this.alreadyCanc = false
+  }
 
   stl() {
     return require("./eduPanel.css").toString()

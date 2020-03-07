@@ -33,7 +33,10 @@ export default class Site extends Element {
 
     //this.manager.setPanel({left: new InformPanel("LabAuth", "A teacher may log in with his edu.card to start the session."), right: new EduPanel("teacher")})
     this.manager.setPanel({left: new InformPanel("LabAuth", "A teacher may log in with his edu.card to start the session."), right: edu})
-  
+    
+    setTimeout(() => {
+      edu.showHours(4)
+    }, 2000)
   }
 
   stl() {
