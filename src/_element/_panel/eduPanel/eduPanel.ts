@@ -106,12 +106,10 @@ export default class EduPanel extends Panel {
 
 
 
-      let row = ce("table-row")
-      this.tableRoot.apd(row)
       
-      row.apd(ce("table-col").text(currentData.username.val))
+      this.tableRoot.apd(ce("table-col").text(currentData.username.val))
       let entryCol = ce("table-col")
-      row.apd(entryCol)
+      this.tableRoot.apd(entryCol)
 
       e.ref("registered").asArray.forEach((reg) => {
         let entryBox = ce("hour-box")
@@ -122,11 +120,12 @@ export default class EduPanel extends Panel {
           else {
             entryBox.removeClass("active")
           }
-          
         })
         entryCol.apd(entryBox)
       }, () => {
         entryCol.html("")
+      }, () => {
+        entryCol.childs().css("opacity", 1)
       })
       
       
