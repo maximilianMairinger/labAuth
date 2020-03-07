@@ -215,7 +215,6 @@ export default class EduPanel extends Panel {
 
   private alreadyCanc = false
   async cancelShowHours() {
-    console.log(this.showingHours)
     if (this.alreadyCanc || !this.showingHours) return
     this.alreadyCanc = true
 
