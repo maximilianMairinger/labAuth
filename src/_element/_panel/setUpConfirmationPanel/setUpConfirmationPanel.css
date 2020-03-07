@@ -1,0 +1,47 @@
+element-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-wrap: wrap;
+}
+
+text-container {
+  display: inline-block;
+
+}
+
+text-heading {
+  font-weight: bold;
+  font-size: 35px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+text-content {
+  display: inline-block;
+  width: 200px;
+}
+
+.hightlight {
+  font-weight: bold;
+}
+
+c-block-button {
+  position: absolute;
+}
+
+c-block-button {
+  position: absolute;
+  bottom: 20px;
+}
+
+c-block-button.abort {
+  left: 20px
+}
+
+c-block-button.confirm {
+  right: 20px
+}
+
+
