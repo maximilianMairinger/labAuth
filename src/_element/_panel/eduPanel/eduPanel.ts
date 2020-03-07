@@ -80,7 +80,9 @@ export default class EduPanel extends Panel {
     
     this.otherCardsContainer.anim([{translateY: 125, offset: 0}, {translateY: 0}], {start: 0, end: 300}, guide)
 
-    list.forEach(async (e, i) => {
+
+
+    list.forEach((e, i) => {
 
       let edu = new Edu()
       
@@ -88,23 +90,46 @@ export default class EduPanel extends Panel {
       edu.css("opacity", 0)
 
       let currentData = e.current()
+      e.get("username", (username) => {
+        edu.username(username)
+      })
+      e.get("fullName", (fullName) => {
+        edu.fullName(fullName)
+      })
 
-      edu.username(currentData.username.val)
-      edu.fullName(currentData.fullName.val)
       edu.luckyDay()
       edu.employeeType("Student")
       this.otherCardsContainer.insertBefore(edu, this.otherCardsContainer.childs()[i])
 
-      await edu.anim({opacity: 1})
+      edu.anim({opacity: 1})
 
 
 
 
       let row = ce("table-row")
       this.tableRoot.apd(row)
+      
+      row.apd(ce("table-col").text(currentData.username.val))
+      let entryCol = ce("table-col")
+      row.apd(entryCol)
 
-      row.apd(ce("table-col").html(currentData.username.val))
-      .apd(ce("table-col").html(currentData..val))
+      e.ref("registered").asArray.forEach((reg) => {
+        let entryBox = ce("hour-box")
+        reg.get("", (e) => {
+          if (e) {
+            entryBox.addClass("active")
+          }
+          else {
+            entryBox.removeClass("active")
+          }
+          
+        })
+        entryCol.apd(entryBox)
+      }, () => {
+        entryCol.html("")
+      })
+      
+      
       
     }, async () => {
       this.otherCardsContainer.html("")
