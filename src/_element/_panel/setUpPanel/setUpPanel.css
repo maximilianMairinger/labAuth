@@ -1,0 +1,36 @@
+element-body {
+  display: flex;
+  align-items: center;
+}
+
+text-conatiner {
+  display: inline-block;
+  width: 200px;
+  margin-left: 50px;
+}
+
+text-heading {
+  position: relative;
+  float: left;
+  display: block;
+  margin-bottom: 2px;
+  font-size: 45px;
+  font-weight: bold;
+}
+
+text-paragraph {
+  position: relative;
+  float: left;
+  display: block;
+  margin-bottom: 10px;
+  line-height: 23px;
+}
+
+bottom-stripe {
+  position: relative;
+  float: left;
+  display: block;
+  height: 3px;
+  width: 40px;
+  background: #3B3B3B;
+}
