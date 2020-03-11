@@ -3,7 +3,9 @@ import PanelManager from "../panelManager/panelManager"
 import InformPanel from "../_panel/informPanel/informPanel"
 import EduPanel, { Entry } from "../_panel/eduPanel/eduPanel"
 import LoginPanel from "../_panel/loginPanel/loginPanel"
-import { Data, DataBase } from "front-db"
+
+import SetUpPanel from "../_panel/setUpPanel/setUpPanel"
+import SetUpConfirmationPanel from "../_panel/setUpConfirmationPanel/setUpConfirmationPanel"
 
 
 
@@ -17,12 +19,24 @@ export default class Site extends Element {
     
 
     //this.manager.setPanel({left: new InformPanel("LabAuth", "A teacher may log in with his edu.card to start the session."), right: new EduPanel("teacher")})
-    this.manager.setPanel("edu", "left")
-    this.manager.setPanel("info", "right")
+    this.manager.setPanel("setUpPanel", "left")
+    this.manager.setPanel("setUpConfirmationPanel", "right")
     
+
+    this.elementBody.apd(this.manager)
+    
+    // let edu = new EduPanel(entries)
+    // edu.displayConfimOptions((e) => {
+    //   console.log(e ? "confirm" : "cancel")
+    // })
+    
+    // this.manager.setPanel({left: new InformPanel("LabAuth", "A teacher may log in with his edu.card to start the session."), right: edu})
     // setTimeout(() => {
     //   edu.showHours(4)
-    // }, 1000)
+    // }, 2000)
+
+    
+    
   }
 
   stl() {

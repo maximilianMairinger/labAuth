@@ -3,6 +3,9 @@ import Panel from "../_panel/panel";
 import EduPanel from "../_panel/eduPanel/eduPanel";
 import InformPanel from "../_panel/informPanel/informPanel";
 import LoginPanel from "../_panel/loginPanel/loginPanel";
+import { Data, DataBase } from "front-db"
+import SetUpConfirmationPanel from "../_panel/setUpConfirmationPanel/setUpConfirmationPanel";
+import SetUpPanel from "../_panel/setUpPanel/setUpPanel";
 
 
 type Percent = number
@@ -13,14 +16,16 @@ type PanelCombo = {left: Panel, right: Panel} | {left: Panel} | {right: Panel}
 //@ts-ignore
 let entries: DataArray<Entry> = new DataBase(new Data([])).asArray
 
-entries.add({username: "mmairinger", fullName: "Maximilian Mairinger"})
-entries.add({username: "rschlager", fullName: "Raphael Schlager"})
-entries.add({username: "dzimmermann", fullName: "Daniel Zimmermann"})
+entries.add({username: "mmairinger", fullName: "Maximilian Mairinger", registered: [true, true, true, true]})
+entries.add({username: "rschlager", fullName: "Raphael Schlager", registered: [true, true, true, true]})
+entries.add({username: "dzimmermann", fullName: "Daniel Zimmermann", registered: [true, true, true, true]})
 
 type PanelIndex = {
   edu: EduPanel,
   info: InformPanel,
-  login: LoginPanel
+  login: LoginPanel,
+  setUpConfirmationPanel: SetUpConfirmationPanel,
+  setUpPanel: SetUpPanel
 }
 
 
@@ -34,7 +39,11 @@ export default class PanelManager extends Element {
   public panelIndex: PanelIndex = {
     edu: new EduPanel(entries),
     info: new InformPanel("Inform", "Content"),
-    login: new LoginPanel()
+    login: new LoginPanel(),
+    setUpConfirmationPanel: new SetUpConfirmationPanel(() => {
+      console.log("confirm")
+    }),
+    setUpPanel: new SetUpPanel("Dole")
   }
 
   constructor() {
@@ -47,12 +56,12 @@ export default class PanelManager extends Element {
     if (side === "left") {
       this.left = this.panelIndex[panel]
       this.leftContainer.html("")
-      this.leftContainer.apd(panel);
+      this.leftContainer.apd(this.left);
     }
     if (side === "right") {
       this.right = this.panelIndex[panel]
       this.rightContainer.html("")
-      this.rightContainer.apd(panel)
+      this.rightContainer.apd(this.right)
     }
 
     if (this.left.preferedWidth === "big") {

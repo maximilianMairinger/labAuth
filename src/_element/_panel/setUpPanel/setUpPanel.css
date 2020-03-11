@@ -1,0 +1,41 @@
+element-body {
+  display: flex;
+  align-items: center;
+}
+
+text-heading {
+  display: block;
+  font-weight: bold;
+  font-size: 45px;
+  margin-bottom: 7px;
+  transform: translateX(-32px);
+}
+
+text-conatiner  {
+  margin-left: 70px;
+  width: 400px;
+}
+
+c-setup-input {
+  position: absolute;
+  width: 100%;
+  display: none;
+}
+
+question-container {
+  display: block;
+  position: relative;
+  width: 260px;
+  min-height: 100.5px;
+}
+
+#back {
+  position: relative;
+  float: left;
+  margin-top: 13px;
+  margin-left: 6px;
+  opacity: 0;
+  transform: translateX(-10px);
+  cursor: pointer;
+  z-index: 1;
+}

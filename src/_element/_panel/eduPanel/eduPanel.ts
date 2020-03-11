@@ -10,6 +10,8 @@ import animatedScrollTo from "animated-scroll-to"
 
 type Percent = number
 
+let easing = new Easing(0.485, 0.010, 0.155, 1);
+
 
 export type Entry = {
   fullName: string,
@@ -64,6 +66,9 @@ export default class EduPanel extends Panel {
 
       guide.val = pos
 
+
+      this.cancelShowHours()
+
       if (lastPos === 0 && pos > 0) {
         //this.otherCardsContainer.anim({translateY: 1})
         this.arrow.anim({opacity: 0}).then(() => this.arrow.hide())
@@ -80,7 +85,9 @@ export default class EduPanel extends Panel {
     
     this.otherCardsContainer.anim([{translateY: 125, offset: 0}, {translateY: 0}], {start: 0, end: 300}, guide)
 
-    list.forEach(async (e, i) => {
+
+
+    list.forEach((e, i) => {
 
       let edu = new Edu()
       
@@ -88,23 +95,45 @@ export default class EduPanel extends Panel {
       edu.css("opacity", 0)
 
       let currentData = e.current()
+      e.get("username", (username) => {
+        edu.username(username)
+      })
+      e.get("fullName", (fullName) => {
+        edu.fullName(fullName)
+      })
 
-      edu.username(currentData.username.val)
-      edu.fullName(currentData.fullName.val)
       edu.luckyDay()
       edu.employeeType("Student")
       this.otherCardsContainer.insertBefore(edu, this.otherCardsContainer.childs()[i])
 
-      await edu.anim({opacity: 1})
+      edu.anim({opacity: 1})
 
 
 
 
-      let row = ce("table-row")
-      this.tableRoot.apd(row)
+      
+      this.tableRoot.apd(ce("table-col").text(currentData.username.val))
+      let entryCol = ce("table-col")
+      this.tableRoot.apd(entryCol)
 
-      row.apd(ce("table-col").html(currentData.username.val))
-      .apd(ce("table-col").html(currentData..val))
+      e.ref("registered").asArray.forEach((reg) => {
+        let entryBox = ce("hour-box")
+        reg.get("", (e) => {
+          if (e) {
+            entryBox.addClass("active")
+          }
+          else {
+            entryBox.removeClass("active")
+          }
+        })
+        entryCol.apd(entryBox)
+      }, () => {
+        entryCol.html("")
+      }, () => {
+        entryCol.childs().css("opacity", 1)
+      })
+      
+      
       
     }, async () => {
       this.otherCardsContainer.html("")
@@ -141,8 +170,22 @@ export default class EduPanel extends Panel {
     this.buttons.anim({opacity: 0}).then(() => this.buttons.hide())
   }
 
+  private showHrsCancled = false
+  private showingHours = false
   async showHours(max: number, toBeGone: number = 0) {
-    this.hoursContainer.html("")
+    
+    if (this.cardsContainer.scrollTop !== 0) {
+      await animatedScrollTo(0, {
+        elementToScroll: this.cardsContainer,
+        speed: 2000,
+        cancelOnUserAction: false,
+      })
+      await delay(100)
+    }
+
+
+    
+    this.showingHours = true
     let active = max - toBeGone
     let elements: ElementList = new ElementList()
     for (let i = 0; i < active; i++) {
@@ -153,22 +196,40 @@ export default class EduPanel extends Panel {
       this.hoursContainer.apd(...elements.add(ce("hour-box").addClass("toBeGone")))
     }
 
-    let easing = new Easing(0.485, 0.010, 0.155, 1);
-
     await Promise.all([
-      elements.anim({translateY: 21}, {duration: 700, easing: easing}),
+      elements.anim({translateY: 21}, {duration: 700, easing}),
       elements.anim({opacity: 1}, {duration: 700, easing: "linear"}, 100),
-      this.mainCard.anim({translateY: -21}, {duration: 700, easing: easing})
+      this.mainCard.anim({translateY: -21}, {duration: 700, easing})
     ])
+    if (this.showHrsCancled) return this.showHrsCancled = false
     
     await delay(3000)
+    if (this.showHrsCancled) return this.showHrsCancled = false
     await Promise.all([
-      this.mainCard.anim({translateY: 0}, {duration: 700, easing: easing}),
-      elements.anim({translateY: 0}, {duration: 700, easing: easing}).then(() => elements.hide())
+      this.mainCard.anim({translateY: 0}, {duration: 700, easing}),
+      elements.anim({translateY: 0}, {duration: 700, easing}).then(() => elements.remove())
     ])
-
+    this.showingHours = false
+    this.showHrsCancled = false
   }
 
+  private alreadyCanc = false
+  async cancelShowHours() {
+    if (this.alreadyCanc || !this.showingHours) return
+    this.alreadyCanc = true
+
+    this.showHrsCancled = true
+
+    let elements = this.hoursContainer.childs()
+
+    await Promise.all([
+      this.mainCard.anim({translateY: 0}, {duration: 2000, easing}),
+      elements.anim({opacity: 0}, {duration: 150, easing}).then(() => elements.hide())
+    ])
+
+    this.showingHours = false
+    this.alreadyCanc = false
+  }
 
   stl() {
     return require("./eduPanel.css").toString()

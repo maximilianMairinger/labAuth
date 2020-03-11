@@ -13,6 +13,9 @@ export default class InformPanel extends Panel {
 
     this.heading(heading)
     this.content(content)
+
+
+    this.heading("New Heading")
     
   }
   heading(to: string) {

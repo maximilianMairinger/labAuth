@@ -5,8 +5,6 @@ element-body {
 
 text-conatiner {
   display: inline-block;
-  width: 200px;
-  margin-left: 50px;
 }
 
 text-heading {
@@ -24,14 +22,15 @@ text-paragraph {
   display: block;
   margin-bottom: 10px;
   line-height: 23px;
-  min-width: 170px;
 }
 
-bottom-stripe {
+c-input {
   position: relative;
   float: left;
   display: block;
-  height: 3px;
-  width: 40px;
-  background: #3B3B3B;
+  width: 200px;
+}
+
+highlight-text {
+  font-weight: bold;
 }

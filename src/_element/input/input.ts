@@ -15,7 +15,7 @@ export default class Input extends Element {
   private enterAlreadyPressed = false;
 
   private _type: "password" | "text" | "number" | "email";
-  constructor(placeholder: string = "", type: "password" | "text" | "number" | "email" = "text", public submitCallback?: Function, value?: any, public customVerification?: (value?: string | number) => boolean) {
+  constructor(placeholder: string = "", type: "password" | "text" | "number" | "email" = "text", public submitCallback?: (value: string, e: KeyboardEvent) => void, value?: any, public customVerification?: (value?: string | number) => boolean) {
     super(false);
     
     this.type = type;
@@ -62,6 +62,7 @@ export default class Input extends Element {
     })
     this.input.on("blur", () => {
       mousedown = false
+      this.enterAlreadyPressed = false
     })
 
     this.on("focus", () => {
@@ -71,13 +72,11 @@ export default class Input extends Element {
     this.on("blur", () => {
       if (this.value === "") this.placeHolderDown();
     });
-
     
-
-    this.input.on("keydown", ({key}) => {
-      if (key === "Enter" && this.submitCallback !== undefined) if (!this.enterAlreadyPressed){
+    this.input.on("keydown", (e) => {
+      if (e.key === "Enter" && this.submitCallback !== undefined) if (!this.enterAlreadyPressed) {
         this.enterAlreadyPressed = true;
-        this.submitCallback(this.value);
+        this.submitCallback(this.value, e);
       }
     });
     this.input.on("keydown", (e: any) => {
@@ -112,6 +111,10 @@ export default class Input extends Element {
     this.input.disabled = true
     if (foc) this.focus()
     this.enterAlreadyPressed = false
+  }
+
+  public focus() {
+    this.input.focus()
   }
 
   public enable() {
