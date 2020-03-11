@@ -14,8 +14,8 @@ export default class Button extends Element {
   constructor(activationCallback?: Function, protected readonly enabled: boolean = true, focusOnHover: boolean = false, public tabIndex: number = 0, public obtainDefault: boolean = false, public preventFocus = false, blurOnMouseOut: boolean = false) {
     super();
 
-    if (enabled) this.enable()
-    else this.disable()
+    if (enabled) this.enableForce(true)
+    else this.enableForce(true)
 
     this.preferedTabIndex = this.tabIndex
 
@@ -57,19 +57,27 @@ export default class Button extends Element {
     this.focusOnHover = focusOnHover;
     this.blurOnMouseOut = blurOnMouseOut;
   }
-  public enable(prevFocus: boolean = false) {
+  private enableForce(prevFocus: boolean) {
     //@ts-ignore
     this.enabled = true
     this.tabIndex = this.preferedTabIndex
     this.addClass("enabled");
     if (!prevFocus) this.focus()
   }
-  public disable(prevBlur: boolean = false) {
+  public enable(prevFocus: boolean = true) {
+    if (this.enabled) return
+    this.enableForce(prevFocus)
+  }
+  private disableForce(prevBlur: boolean) {
     //@ts-ignore
     this.enabled = false
     this.tabIndex = undefined
     this.removeClass("enabled");
     if (!prevBlur) this.blur()
+  }
+  public disable(prevBlur: boolean = false) {
+    if (!this.enabled) return
+    this.disableForce(prevBlur)
   }
   public set blurOnMouseOut(to: boolean) {
     if (to) this.mouseOutListener.enable();
