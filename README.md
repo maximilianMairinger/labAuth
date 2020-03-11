@@ -23,7 +23,7 @@ Then copy the following files to a webserver:
  * index.html (to `/`)
  * server.js (to `/`)
  
-Finally start server.js
+Finally start `server.js` on the webserver
 
 ```
  $ node server
