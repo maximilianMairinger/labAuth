@@ -52,14 +52,20 @@ export default class PanelManager extends Element {
 
   public setPanel(panel: keyof PanelIndex, side: "left" | "right") {
     if (side === "left") {
+      let lastLeft = this.left
       this.left = this.panelIndex[panel]
       this.leftContainer.html("")
       this.leftContainer.apd(this.left);
+      this.left.activate()
+      if (lastLeft) lastLeft.deactivate()
     }
     if (side === "right") {
+      let lastRight = this.right
       this.right = this.panelIndex[panel]
       this.rightContainer.html("")
       this.rightContainer.apd(this.right)
+      this.right.activate()
+      if (lastRight) lastRight.deactivate()
     }
 
     if (this.left.preferedWidth === "big") {

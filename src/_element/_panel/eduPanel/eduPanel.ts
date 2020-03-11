@@ -77,7 +77,7 @@ export default class EduPanel extends Panel {
       }
       else if (lastPos > 0 && pos === 0) {
         //this.otherCardsContainer.anim({translateY: 125})
-        this.arrow.show().anim({opacity: 1})
+        if (this.expectedCard !== "teacher") this.arrow.show().anim({opacity: 1})
         if (this.currentlyShowingConfirmOptions) this.buttons.anim({opacity: 1})
       }
 
@@ -148,16 +148,25 @@ export default class EduPanel extends Panel {
   }
 
   private expectedCard: "student" | "teacher"
-  public expectedStudent() {
+  public expectStudent() {
     this.expectedCard = "student"
     this.mainCard.expectStudent()
     this.showScrollDown()
     this.enableTable()
   }
-  public expectedTeacher() {
+  public async expectTeacher() {
     this.expectedCard = "teacher"
-    this.mainCard.expectTeacher()
+    
     this.hideConfimOptions()
+    if (this.active) {
+      await animatedScrollTo(0, {
+        elementToScroll: this.cardsContainer,
+        speed: 1000
+      })
+      await delay(100)
+    }
+    
+    this.mainCard.expectTeacher()
     this.hideScrollDown()
     this.disableTable()
   }

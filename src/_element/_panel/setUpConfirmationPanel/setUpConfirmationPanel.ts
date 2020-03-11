@@ -26,7 +26,7 @@ export default class SetUpConfirmationPanel extends Panel {
     this.abortButton.addActivationCallback(() => {
       manager.panelIndex.info.heading("LabAuth")
       manager.panelIndex.info.content("A teacher may log in with his edu.card to start the session.")
-      manager.panelIndex.edu.expectedTeacher()
+      manager.panelIndex.edu.expectTeacher()
       manager.setPanel("info", "left")
       manager.setPanel("edu", "right")
     })
@@ -34,7 +34,7 @@ export default class SetUpConfirmationPanel extends Panel {
     this.confirmButton.addActivationCallback(() => {
       manager.panelIndex.info.heading("LabAuth")
       manager.panelIndex.info.content("You may sigh into <text-hightlight>Medt</text-hightlight> here. To sign out register your card again.")
-      manager.panelIndex.edu.expectedStudent()
+      manager.panelIndex.edu.expectStudent()
       manager.setPanel("info", "left")
       manager.setPanel("edu", "right")
     })
