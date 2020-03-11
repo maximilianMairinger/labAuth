@@ -2,17 +2,27 @@
 
 ## Contribute
 
+Fistly install all dependencies
+
+```
+ $ npm i
+```
+
 ### Develop commands
+
+Watch and build all src files with sourcemaps
 
 ```
  $ npm run dev
 ```
 
+Serve the frontend
+
 ```
  $ node server
 ```
 
-## Deploy
+### Deploy
 
 ```
  $ npm run build
