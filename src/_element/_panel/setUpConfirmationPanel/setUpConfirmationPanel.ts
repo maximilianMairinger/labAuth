@@ -44,6 +44,9 @@ export default class SetUpConfirmationPanel extends Panel {
 
     this.updateButtonsMaybe()
   }
+  public activationCallback(active: boolean): void {
+    throw new Error("Method not implemented.");
+  }
   private subjectOK = false
   subject(s: string) {
     this.subjectOK = !!s

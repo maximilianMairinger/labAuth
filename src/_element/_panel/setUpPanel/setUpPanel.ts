@@ -9,6 +9,9 @@ import PanelManager from "../../panelManager/panelManager";
 
 
 export default class SetUpPanel extends Panel {
+  public activationCallback(active: boolean): void {
+    throw new Error("Method not implemented.");
+  }
   public preferedWidth = 62.5
 
   private questionContainer = this.q("question-container")

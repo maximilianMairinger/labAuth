@@ -146,12 +146,40 @@ export default class EduPanel extends Panel {
     
     
   }
+  public activationCallback(active: boolean): void {
+    if (active) {
+
+    }
+  }
 
   public expectedStudent() {
     this.mainCard.expectStudent()
+    this.showScrollDown()
+    this.enableTable()
   }
   public expectedTeacher() {
     this.mainCard.expectTeacher()
+    this.hideConfimOptions()
+    this.hideScrollDown()
+    this.disableTable()
+  }
+
+  private async showScrollDown() {
+    this.arrow.show()
+    this.cardsContainer.css("overflowY", "auto")
+    await this.arrow.anim({opacity: 1})
+  }
+  private async hideScrollDown() {
+    this.cardsContainer.css("overflowY", "hidden")
+    await this.arrow.anim({opacity: 0})
+    this.arrow.hide()
+  }
+
+  private async enableTable() {
+    this.elementBody.css("overflowX", "auto")
+  }
+  private async disableTable() {
+    this.elementBody.css("overflowX", "hidden")
   }
 
   private currButtonCb: Function;

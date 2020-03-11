@@ -12,6 +12,7 @@ export default abstract class Panel extends Element {
     
     
   }
+  public abstract activationCallback(active: boolean): void
 
   stl() {
     return require("./panel.css").toString()

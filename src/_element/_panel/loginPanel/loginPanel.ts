@@ -11,7 +11,9 @@ export default class LoginPanel extends Panel {
     super()
     
   }
-
+  public activationCallback(active: boolean): void {
+    throw new Error("Method not implemented.");
+  }
 
   stl() {
     return require("./loginPanel.css").toString()
