@@ -146,18 +146,16 @@ export default class EduPanel extends Panel {
     
     
   }
-  public activationCallback(active: boolean): void {
-    if (active) {
 
-    }
-  }
-
+  private expectedCard: "student" | "teacher"
   public expectedStudent() {
+    this.expectedCard = "student"
     this.mainCard.expectStudent()
     this.showScrollDown()
     this.enableTable()
   }
   public expectedTeacher() {
+    this.expectedCard = "teacher"
     this.mainCard.expectTeacher()
     this.hideConfimOptions()
     this.hideScrollDown()

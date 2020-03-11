@@ -19,9 +19,6 @@ export default class InformPanel extends Panel {
     this.heading("New Heading")
     
   }
-  public activationCallback(active: boolean): void {
-    throw new Error("Method not implemented.");
-  }
   heading(to: string) {
     this.headingElem.text(to)
   }
