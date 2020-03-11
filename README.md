@@ -24,6 +24,8 @@ Serve the frontend
 
 ### Deploy
 
+Build src to dist
+
 ```
  $ npm run build
 ```
