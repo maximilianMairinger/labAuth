@@ -22,3 +22,9 @@ Then copy the following files to a webserver:
  * Everything in `/dist` (into `/dist`)
  * index.html (to `/`)
  * server.js (to `/`)
+ 
+Finally start server.js
+
+```
+ $ node server
+```
