@@ -1,10 +1,28 @@
 import Element from "../element"
 import Panel from "../_panel/panel";
+import EduPanel from "../_panel/eduPanel/eduPanel";
+import InformPanel from "../_panel/informPanel/informPanel";
+import LoginPanel from "../_panel/loginPanel/loginPanel";
 
 
 type Percent = number
 
 type PanelCombo = {left: Panel, right: Panel} | {left: Panel} | {right: Panel}
+
+
+//@ts-ignore
+let entries: DataArray<Entry> = new DataBase(new Data([])).asArray
+
+entries.add({username: "mmairinger", fullName: "Maximilian Mairinger"})
+entries.add({username: "rschlager", fullName: "Raphael Schlager"})
+entries.add({username: "dzimmermann", fullName: "Daniel Zimmermann"})
+
+type PanelIndex = {
+  edu: EduPanel,
+  info: InformPanel,
+  login: LoginPanel
+}
+
 
 export default class PanelManager extends Element {
   private leftContainer = this.q("left-container")
@@ -12,23 +30,29 @@ export default class PanelManager extends Element {
 
   private left: Panel
   private right: Panel
+
+  public panelIndex: PanelIndex = {
+    edu: new EduPanel(entries),
+    info: new InformPanel("Inform", "Content"),
+    login: new LoginPanel()
+  }
+
   constructor() {
     super()
 
     
-    
   }
 
-  public setPanel(panel: PanelCombo) {
-    if ("left" in panel) {
-      this.left = panel.left
+  public setPanel(panel: keyof PanelIndex, side: "left" | "right") {
+    if (side === "left") {
+      this.left = this.panelIndex[panel]
       this.leftContainer.html("")
-      this.leftContainer.apd(panel.left);
+      this.leftContainer.apd(panel);
     }
-    if ("right" in panel) {
-      this.right = panel.right
+    if (side === "right") {
+      this.right = this.panelIndex[panel]
       this.rightContainer.html("")
-      this.rightContainer.apd(panel.right)
+      this.rightContainer.apd(panel)
     }
 
     if (this.left.preferedWidth === "big") {

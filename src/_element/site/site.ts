@@ -7,15 +7,7 @@ import { Data, DataBase } from "front-db"
 
 
 
-//@ts-ignore
-let entries: DataArray<Entry> = new DataBase(new Data([])).asArray
 
-//@ts-ignore
-global.entries = entries
-
-entries.add({username: "mmairinger", fullName: "Maximilian Mairinger"})
-entries.add({username: "rschlager", fullName: "Raphael Schlager"})
-entries.add({username: "dzimmermann", fullName: "Daniel Zimmermann"})
 
 export default class Site extends Element {
   private manager = new PanelManager()
@@ -24,15 +16,9 @@ export default class Site extends Element {
 
     
 
-    this.apd(this.manager)
-    let edu = new EduPanel(entries)
-    edu.displayConfimOptions((e) => {
-      console.log(e ? "confirm" : "cancel")
-    })
-    
-
     //this.manager.setPanel({left: new InformPanel("LabAuth", "A teacher may log in with his edu.card to start the session."), right: new EduPanel("teacher")})
-    this.manager.setPanel({left: new InformPanel("LabAuth", "A teacher may log in with his edu.card to start the session."), right: edu})
+    this.manager.setPanel("edu", "left")
+    this.manager.setPanel("info", "right")
     
     // setTimeout(() => {
     //   edu.showHours(4)
