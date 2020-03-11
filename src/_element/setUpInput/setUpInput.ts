@@ -8,8 +8,10 @@ export default class SetUpInput extends Element {
   private inputElem = this.q("c-input").first as Input
   private questionElem = this.q("text-paragraph")
   
-  constructor(question: string, public changeCallback?: (content: string, e: InputEvent) => void, public submitCallback?: (content: string, e: KeyboardEvent) => void) {
+  constructor(question: string, public changeCallback?: (content: string, e: InputEvent) => void, public submitCallback?: (content: string, e: KeyboardEvent) => void, type: "number" | "password" | "text" | "email" = "text") {
     super(false)
+
+    this.inputElem.type = type
     
     this.questionElem.html(question)
 

@@ -22,7 +22,7 @@ export default class SetUpPanel extends Panel {
 
     
 
-    let submitCb = (back = false) => {
+    let submitCb = async (back = false) => {
       let sib = back ? activeElement.previousSibling as HTMLElement : activeElement.nextSibling as HTMLElement
       
       
@@ -58,6 +58,15 @@ export default class SetUpPanel extends Panel {
         activeElement = sib as SetUpInput
         
       }
+      else {
+        if (back) {
+          await activeElement.anim({translateX: -2})
+          await activeElement.anim({translateX: .1})
+        }
+        else {
+          manager.panelIndex.setUpConfirmationPanel.hightlightConfirmButton()
+        }
+      }
     }
 
     this.backElem.on("mousedown", (e) => {
@@ -68,14 +77,14 @@ export default class SetUpPanel extends Panel {
 
     let inputs: ElementList<SetUpInput> = new ElementList(
       new SetUpInput("Please tell us what <highlight-text>subject</highlight-text> you are currently teaching", (s) => {
-        console.log(s)
+        manager.panelIndex.setUpConfirmationPanel.subject(s)
       }),
       new SetUpInput("Please tell us in which <highlight-text>faculty</highlight-text> you are teaching", (s) => {
-        console.log(s)
+        manager.panelIndex.setUpConfirmationPanel.faculty(s)
       }),
       new SetUpInput("Please tell us how many <highlight-text>hours</highlight-text> you are teaching", (s) => {
-        console.log(s)
-      })
+        manager.panelIndex.setUpConfirmationPanel.hours(s)
+      }, undefined, "number")
     )
 
     inputs.ea((el) => {

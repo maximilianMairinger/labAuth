@@ -1,6 +1,8 @@
 import Panel from "../panel"
 import Button from "./../../_button/_rippleButton/blockButton/blockButton"
 import PanelManager from "../../panelManager/panelManager"
+import delay from "delay"
+import { ElementList } from "extended-dom"
 
 
 
@@ -13,6 +15,7 @@ export default class SetUpConfirmationPanel extends Panel {
   private hoursElem = this.q("hours-text")
 
   private confirmButton: Button
+  private abortButton: Button
   constructor(manager: PanelManager, public confirmCallback?: (confirmation: boolean) => void) {
     super()
 
@@ -21,26 +24,40 @@ export default class SetUpConfirmationPanel extends Panel {
       if (this.confirmCallback) this.confirmCallback(e.target === this.confirmButton)
     }
 
-    let abortButton = new Button("Abort", cb).addClass("abort")
+    this.abortButton = new Button("Abort", cb).addClass("abort")
     this.confirmButton = new Button("Sure", cb).addClass("confirm")
 
-    this.apd(abortButton, this.confirmButton)
+
+    this.apd(this.abortButton, this.confirmButton)
 
 
-    this.hightlightConfirmButton()
 
   }
+  private subjectOK = false
   subject(s: string) {
-    this.subjectElem.text(s)
+    this.subjectOK = !!s
+    this.subjectElem.text(s || "no Subject")
+    this.updateButtonsMaybe()
   }
+  private facultyOK = false
   faculty(s: string) {
-    this.facultyElem.text(s)
+    this.facultyOK = !!s
+    this.facultyElem.text(s || "no faculty")
+    this.updateButtonsMaybe()
   }
+  private hoursOK = false
   hours(s: string) {
-    this.hoursElem.text(s)
+    this.hoursOK = !!s
+    this.hoursElem.text(s || "0")
+    this.updateButtonsMaybe()
+  }
+  updateButtonsMaybe() {
+    if (this.subjectOK && this.facultyOK && this.hoursOK) this.confirmButton.enable()
+    else this.confirmButton.disable()
   }
   async hightlightConfirmButton() {
-    // this.confirmButton.css()
+    await this.confirmButton.anim({background: "rgba(0,0,0,0.15)"}, 300)
+    await this.confirmButton.anim({background: "rgba(0,0,0,0)"}, 300)
   }
 
   stl() {

@@ -25,6 +25,11 @@ text-content {
 
 .hightlight {
   font-weight: bold;
+  display: inline-block;
+  min-width: 42px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
 }
 
 c-block-button {
