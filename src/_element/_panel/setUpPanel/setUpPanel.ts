@@ -3,6 +3,7 @@ import SetUpInput from "../../setUpInput/setUpInput"
 import Easing from "waapi-easing";
 import delay from "delay";
 import { ElementList } from "extended-dom";
+import PanelManager from "../../panelManager/panelManager";
 
 
 
@@ -14,7 +15,7 @@ export default class SetUpPanel extends Panel {
   private headingElem = this.q("text-heading")
   private backElem = this.q("#back")
   
-  constructor(addresser: string) {
+  constructor(manager: PanelManager, addresser: string) {
     super()
 
     this.headingElem.text("Hello " + addresser)

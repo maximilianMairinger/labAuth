@@ -1,4 +1,5 @@
 import Panel from "../panel"
+import PanelManager from "../../panelManager/panelManager"
 
 
 
@@ -8,7 +9,7 @@ export default class InformPanel extends Panel {
   
   private headingElem = this.q("text-heading")
   private contentElem = this.q("text-paragraph")
-  constructor(heading: string, content: string) {
+  constructor(manager: PanelManager, heading: string, content: string) {
     super()
 
     this.heading(heading)

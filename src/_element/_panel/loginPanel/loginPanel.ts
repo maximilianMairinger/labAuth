@@ -1,12 +1,13 @@
 import Panel from "../panel"
 import "./../../input/input"
+import PanelManager from "../../panelManager/panelManager"
 
 
 
 export default class LoginPanel extends Panel {
   public preferedWidth: "small" = "small"
 
-  constructor() {
+  constructor(manager: PanelManager) {
     super()
     
   }
@@ -20,4 +21,5 @@ export default class LoginPanel extends Panel {
   }
 }
 
+//@ts-ignore
 window.customElements.define('c-login-panel', LoginPanel);

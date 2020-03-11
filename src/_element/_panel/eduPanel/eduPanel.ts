@@ -6,6 +6,7 @@ import Easing from "waapi-easing"
 import { Data, DataArray } from "front-db";
 import Button from "./../../_button/_rippleButton/blockButton/blockButton"
 import animatedScrollTo from "animated-scroll-to"
+import PanelManager from "../../panelManager/panelManager";
 
 
 type Percent = number
@@ -34,7 +35,7 @@ export default class EduPanel extends Panel {
   private cancButton: Button
   private confButton: Button
 
-  constructor(list: DataArray<Entry>) {
+  constructor(manager: PanelManager, list: DataArray<Entry>) {
     super()
 
     this.arrow.on("mousedown", async (e) => {

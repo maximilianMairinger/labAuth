@@ -1,11 +1,9 @@
 :host {
-  transition: background-color .6s;
   border-radius: 2px;
   height: 30px;
+  transition: border .4s, color .4s;
 }
-:host(:focus) {
-  transition: border .4s;
-}
+
 button-container {
   display: flex;
   height: 100%
@@ -18,8 +16,12 @@ button-text {
 }
 
 :host {
+  border: 1px solid rgba(0,0,0,.24);
+}
+
+:host(:not(.enabled)) {
   border: 1px solid rgba(0,0,0,.14);
-  background: rgba(255, 255, 255, 0.377);
+  color: rgb(191, 191, 191)
 }
 
 :host(:focus) {

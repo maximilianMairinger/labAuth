@@ -37,13 +37,13 @@ export default class PanelManager extends Element {
   private right: Panel
 
   public panelIndex: PanelIndex = {
-    edu: new EduPanel(entries),
-    info: new InformPanel("Inform", "Content"),
-    login: new LoginPanel(),
-    setUpConfirmationPanel: new SetUpConfirmationPanel(() => {
+    edu: new EduPanel(this, entries),
+    info: new InformPanel(this, "Inform", "Content"),
+    login: new LoginPanel(this),
+    setUpConfirmationPanel: new SetUpConfirmationPanel(this, () => {
       console.log("confirm")
     }),
-    setUpPanel: new SetUpPanel("Dole")
+    setUpPanel: new SetUpPanel(this, "Dole")
   }
 
   constructor() {

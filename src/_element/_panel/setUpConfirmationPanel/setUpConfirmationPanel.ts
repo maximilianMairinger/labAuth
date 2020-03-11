@@ -1,5 +1,6 @@
 import Panel from "../panel"
 import Button from "./../../_button/_rippleButton/blockButton/blockButton"
+import PanelManager from "../../panelManager/panelManager"
 
 
 
@@ -10,18 +11,23 @@ export default class SetUpConfirmationPanel extends Panel {
   private subjectElem = this.q("subject-text")
   private facultyElem = this.q("faculty-text")
   private hoursElem = this.q("hours-text")
-  constructor(public confirmCallback?: (confirmation: boolean) => void) {
+
+  private confirmButton: Button
+  constructor(manager: PanelManager, public confirmCallback?: (confirmation: boolean) => void) {
     super()
 
 
     let cb = (e) => {
-      if (this.confirmCallback) this.confirmCallback(e.target === confirmButton)
+      if (this.confirmCallback) this.confirmCallback(e.target === this.confirmButton)
     }
 
     let abortButton = new Button("Abort", cb).addClass("abort")
-    let confirmButton = new Button("Sure", cb).addClass("confirm")
+    this.confirmButton = new Button("Sure", cb).addClass("confirm")
 
-    this.apd(abortButton, confirmButton)
+    this.apd(abortButton, this.confirmButton)
+
+
+    this.hightlightConfirmButton()
 
   }
   subject(s: string) {
@@ -32,6 +38,9 @@ export default class SetUpConfirmationPanel extends Panel {
   }
   hours(s: string) {
     this.hoursElem.text(s)
+  }
+  async hightlightConfirmButton() {
+    // this.confirmButton.css()
   }
 
   stl() {
