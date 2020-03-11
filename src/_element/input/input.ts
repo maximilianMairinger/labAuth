@@ -15,7 +15,7 @@ export default class Input extends Element {
   private enterAlreadyPressed = false;
 
   private _type: "password" | "text" | "number" | "email";
-  constructor(placeholder: string = "", type: "password" | "text" | "number" | "email" = "text", public submitCallback?: (value: string, e: KeyboardEvent) => void, value?: any, public customVerification?: (value?: string | number) => boolean) {
+  constructor(placeholder: string = "", type: "password" | "text" | "number" | "email" = "text", public submitCallback?: (value: string, e: KeyboardEvent) => void, value?: any, public customVerification?: (value?: string | number) => boolean, public intrusiveValidation?: boolean) {
     super(false);
     
     this.type = type;
@@ -28,7 +28,13 @@ export default class Input extends Element {
     
 
     // ----- Validation start
+
+    // unintrusive
     let listener = this.input.ls("input", () => {
+      if (this.intrusiveValidation) {
+        listener.disable()
+        return
+      }
       let valid = this.validate()
 
       if (valid) {
@@ -38,6 +44,7 @@ export default class Input extends Element {
     }, false)
 
     this.input.on("blur", (e) => {
+      if (this.intrusiveValidation) return
       let valid = this.validate()
       
       if (!valid) {
@@ -45,6 +52,14 @@ export default class Input extends Element {
         listener.enable()
       }
     });
+
+    // intrusive
+    this.input.on("input", () => {
+      if (!this.intrusiveValidation) return
+      let valid = this.validate()
+
+      this.showInvalidation(!valid)
+    })
 
 
     // ----- Validation end
@@ -146,6 +161,7 @@ export default class Input extends Element {
     return this.placeholderElem.html();
   }
   public set type(to: "password" | "text" | "number" | "email") {
+    this.intrusiveValidation = to === "password" || to === "number"
     if (to === "password") {
       this.input.type = to;
     }
