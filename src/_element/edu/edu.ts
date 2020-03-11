@@ -31,8 +31,8 @@ export default class Edu extends Element {
     super(false);
     
 
-    if (expectedUser === "teacher") this.setTeacher()
-    else if (expectedUser === "student") this.setStudent()
+    if (expectedUser === "teacher") this.expectTeacher()
+    else if (expectedUser === "student") this.expectStudent()
   }
 
   username(to: string) {
@@ -97,13 +97,13 @@ export default class Edu extends Element {
     this.removeClass("big")
   }
 
-  setStudent() {
+  expectStudent() {
     this.eduTeacher.anim({opacity: 0})
     let c = this.fullNameOverlay.childs()
     c.first.css("background", "linear-gradient(90deg, rgba(83, 80, 74, 0), rgba(236, 168, 56, 1))")
     c[1].css("background", "rgb(236, 168, 56)")
   }
-  setTeacher() {
+  expectTeacher() {
     this.eduTeacher.anim({opacity: 1})
     let c = this.fullNameOverlay.childs()
     c.first.css("background", "linear-gradient(90deg, rgba(77, 191, 238, 0), rgba(77, 191, 238, 1))")

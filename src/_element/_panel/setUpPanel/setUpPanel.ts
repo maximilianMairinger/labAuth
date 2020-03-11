@@ -65,6 +65,7 @@ export default class SetUpPanel extends Panel {
         }
         else {
           manager.panelIndex.setUpConfirmationPanel.hightlightConfirmButton()
+          
         }
       }
     }

@@ -35,3 +35,7 @@ bottom-stripe {
   width: 40px;
   background: #3B3B3B;
 }
+
+text-hightlight {
+  font-weight: bold;
+}

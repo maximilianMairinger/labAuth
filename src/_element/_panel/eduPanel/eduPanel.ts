@@ -147,6 +147,13 @@ export default class EduPanel extends Panel {
     
   }
 
+  public expectedStudent() {
+    this.mainCard.expectStudent()
+  }
+  public expectedTeacher() {
+    this.mainCard.expectTeacher()
+  }
+
   private currButtonCb: Function;
   private currentlyShowingConfirmOptions: boolean = false
   async displayConfimOptions(cb: (confirm: boolean) => void) {

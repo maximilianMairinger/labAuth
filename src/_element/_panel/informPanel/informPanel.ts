@@ -23,7 +23,7 @@ export default class InformPanel extends Panel {
     this.headingElem.text(to)
   }
   content(to: string) {
-    this.contentElem.text(to)
+    this.contentElem.html(to)
   }
 
   stl() {

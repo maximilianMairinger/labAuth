@@ -16,22 +16,33 @@ export default class SetUpConfirmationPanel extends Panel {
 
   private confirmButton: Button
   private abortButton: Button
-  constructor(manager: PanelManager, public confirmCallback?: (confirmation: boolean) => void) {
+  constructor(manager: PanelManager) {
     super()
 
 
-    let cb = (e) => {
-      if (this.confirmCallback) this.confirmCallback(e.target === this.confirmButton)
-    }
+    this.abortButton = new Button("Abort").addClass("abort")
+    this.confirmButton = new Button("Sure").addClass("confirm")
 
-    this.abortButton = new Button("Abort", cb).addClass("abort")
-    this.confirmButton = new Button("Sure", cb).addClass("confirm")
+    this.abortButton.addActivationCallback(() => {
+      manager.panelIndex.info.heading("LabAuth")
+      manager.panelIndex.info.content("A teacher may log in with his edu.card to start the session.")
+      manager.panelIndex.edu.expectedTeacher()
+      manager.setPanel("info", "left")
+      manager.setPanel("edu", "right")
+    })
 
+    this.confirmButton.addActivationCallback(() => {
+      manager.panelIndex.info.heading("LabAuth")
+      manager.panelIndex.info.content("You may sigh into <text-hightlight>Medt</text-hightlight> here. To sign out register your card again.")
+      manager.panelIndex.edu.expectedStudent()
+      manager.setPanel("info", "left")
+      manager.setPanel("edu", "right")
+    })
 
     this.apd(this.abortButton, this.confirmButton)
 
 
-
+    this.updateButtonsMaybe()
   }
   private subjectOK = false
   subject(s: string) {
@@ -51,11 +62,12 @@ export default class SetUpConfirmationPanel extends Panel {
     this.hoursElem.text(s || "0")
     this.updateButtonsMaybe()
   }
-  updateButtonsMaybe() {
+  private updateButtonsMaybe() {
     if (this.subjectOK && this.facultyOK && this.hoursOK) this.confirmButton.enable()
     else this.confirmButton.disable()
   }
   async hightlightConfirmButton() {
+    this.confirmButton.focus()
     await this.confirmButton.anim({background: "rgba(0,0,0,0.15)"}, 300)
     await this.confirmButton.anim({background: "rgba(0,0,0,0)"}, 300)
   }
