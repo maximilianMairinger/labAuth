@@ -54,7 +54,7 @@ export default class SetUpConfirmationPanel extends Panel {
   private facultyOK = false
   faculty(s: string) {
     this.facultyOK = !!s
-    this.facultyElem.text(s || "no faculty")
+    this.facultyElem.text(s || "no classroom")
     this.updateButtonsMaybe()
   }
   private hoursOK = false
