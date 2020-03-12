@@ -99,7 +99,7 @@
 #FullnameOverlay {
   position: absolute;
   display: inline-block;
-  left: 90px;
+  left: 100px;
   top: 0;
   height: 20px;
   opacity: 0;
