@@ -14,6 +14,7 @@ export default class SetUpPanel extends Panel {
   private questionContainer = this.q("question-container")
   private headingElem = this.q("text-heading")
   private backElem = this.q("#back")
+  private inputs: ElementList<SetUpInput>
   
   constructor(manager: PanelManager, addresser: string) {
     super()
@@ -24,7 +25,6 @@ export default class SetUpPanel extends Panel {
     let currentAnimation: Symbol
     let submitCb = async (back = false, submit = false) => {
       let sib = back ? activeElement.previousSibling as HTMLElement : activeElement.nextSibling as HTMLElement
-      console.log(sib)
       
       
       
@@ -35,7 +35,7 @@ export default class SetUpPanel extends Panel {
         let currentlyActive = activeElement
 
 
-        if (sib === inputs.first) this.hideBackButton()
+        if (sib === this.inputs.first) this.hideBackButton()
         else this.showBackButton()
 
 
@@ -101,7 +101,7 @@ export default class SetUpPanel extends Panel {
       submitCb(true)
     })
 
-    let inputs: ElementList<SetUpInput> = new ElementList(
+    this.inputs = new ElementList(
       new SetUpInput("Please tell us what <highlight-text>subject</highlight-text> you are currently teaching.", "uppercase", (s) => {
         manager.panelIndex.setUpConfirmationPanel.subject(s)
       }),
@@ -113,14 +113,14 @@ export default class SetUpPanel extends Panel {
       }, undefined, i => i !== 0 && i <= 24)
     )
 
-    inputs.ea((el) => {
+    this.inputs.ea((el) => {
       el.submitCallback = () => {
         submitCb(false, true)
       }
     })
 
 
-    inputs.on("keydown", (e) => {
+    this.inputs.on("keydown", (e) => {
       if (e.key === "Tab") {
         e.preventDefault()
         submitCb(e.shiftKey)
@@ -128,12 +128,12 @@ export default class SetUpPanel extends Panel {
     })
 
 
-    let activeElement = inputs.first
-    inputs.first.show()
-    inputs.first.focus()
+    let activeElement = this.inputs.first
+    this.inputs.first.show()
+    this.inputs.first.focus()
 
 
-    this.questionContainer.apd(...inputs)
+    this.questionContainer.apd(...this.inputs)
 
   }
   private currentBackButtonAniamtion: Symbol
@@ -163,6 +163,10 @@ export default class SetUpPanel extends Panel {
       this.backElem.anim({translateX: -10}, {duration: 500}),
       this.headingElem.anim({translateX: -32}, {duration: 700})
     ])
+  }
+  activationCallback(active: boolean) {
+    super.activationCallback(active)
+    this.inputs.first.focus()
   }
 
   stl() {
