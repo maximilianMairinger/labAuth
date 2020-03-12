@@ -24,6 +24,11 @@ app.post("/LDAPAuth", (req, res) => {
   }, 2000)
 })
 
+app.post("/cardAuth", (req, res) => {
+  res.send({entry: true, emplyeetype: "student"})
+})
+
+
 
 app.listen(port);
 console.log("Listening on Port: " + port);
