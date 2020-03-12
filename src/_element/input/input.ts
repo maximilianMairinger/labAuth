@@ -91,7 +91,7 @@ export default class Input extends Element {
     });
     
     this.input.on("keydown", (e) => {
-      if (e.key === "Enter" && this.submitCallback !== undefined) if (!this.enterAlreadyPressed) {
+      if (e.key === "Enter" && this.submitCallback !== undefined && !this.enterAlreadyPressed && !this.currentlyInvalid) {
         this.enterAlreadyPressed = true;
         this.submitCallback(this.value, e);
       }
@@ -145,7 +145,8 @@ export default class Input extends Element {
   private listeners: Map<(value: string, e: InputEvent) => void, (e: InputEvent) => void> = new Map()
   public onChange(f: (value: string, e: InputEvent) => void) {
     let inner = (e: InputEvent) => {
-      f(this.value, e)
+      if (!this.currentlyInvalid) f(this.value, e)
+      else f("", e)
     }
     this.listeners.set(f, inner)
     this.input.on("input", inner)
@@ -231,6 +232,7 @@ export default class Input extends Element {
       this.placeholderElem.css("cursor", "text");
     }
   }
+  public readonly currentlyInvalid = false
   public showInvalidation(valid: boolean = true) {
     if (valid) {
       this.title = "Invalid input";
@@ -240,6 +242,8 @@ export default class Input extends Element {
       this.title = "";
       this.allElems.removeClass("invalid");
     }
+    //@ts-ignore
+    this.currentlyInvalid = valid
   }
   static get observedAttributes() {
     return ["placeholder", "type", "value"];
