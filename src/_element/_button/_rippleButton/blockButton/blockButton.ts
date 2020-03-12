@@ -30,9 +30,9 @@ export default class BlockButton extends RippleButton {
         this.doneLoading()
         await delay(250)
         this.enable()
-        animationDoneCb()
+        if (animationDoneCb) animationDoneCb()
       }
-      else animationDoneCb()
+      else if (animationDoneCb) animationDoneCb()
     }
     
 
