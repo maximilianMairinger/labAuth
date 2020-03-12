@@ -55,8 +55,17 @@ export function disable() {
   input.tabIndex = -1
 }
 
+disable()
+
 export function enable() {
   blurListener.enable()
   input.focus()
   input.tabIndex = 0
+}
+
+//@ts-ignore
+global.cardRead = () => {
+  subscription.forEach((f) => {
+    f("testid")
+  });
 }

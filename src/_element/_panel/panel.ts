@@ -8,13 +8,17 @@ import * as cardReader from "./../../lib/card-reader"
 export default abstract class Panel extends Element {
   public abstract preferedWidth: "big" | "small" | Percent
   protected active: boolean
+
+  public wantsCardReader: boolean
   constructor() {
     super()
 
     
     if (this.cardReadCallback !== defaultCardReadCallback) {
       cardReader.addListener(this.cardReadCallback)
+      this.wantsCardReader = true
     }
+    else this.wantsCardReader = false
   }
 
   public activate(): void {
@@ -28,21 +32,11 @@ export default abstract class Panel extends Element {
     this.activationCallback(activate);
   }
   protected activationCallback(active: boolean) {
-    if (active) {
-      if (this.cardReadCallback !== defaultCardReadCallback) {
-        cardReader.enable()
-      }
-      else {
-        cardReader.disable()
-      }
-    }
-    else {
 
-    }
   }
 
   protected cardReadCallback(cardId: string) {
-
+    
   }
 
   stl() {

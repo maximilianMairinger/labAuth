@@ -7,6 +7,7 @@ import { Data, DataBase } from "front-db"
 import SetUpConfirmationPanel from "../_panel/setUpConfirmationPanel/setUpConfirmationPanel";
 import SetUpPanel from "../_panel/setUpPanel/setUpPanel";
 import delay from "delay";
+import * as cardReader from "./../../lib/card-reader"
 
 
 type Percent = number
@@ -92,6 +93,9 @@ export default class PanelManager extends Element {
       this.right.activate()
       if (lastRight) lastRight.deactivate()
     }
+
+    if (this.right.wantsCardReader || this.left.wantsCardReader) cardReader.enable()
+    else cardReader.disable()
 
     
 

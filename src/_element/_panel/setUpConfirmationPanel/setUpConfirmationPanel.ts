@@ -2,7 +2,6 @@ import Panel from "../panel"
 import Button from "./../../_button/_rippleButton/blockButton/blockButton"
 import PanelManager from "../../panelManager/panelManager"
 import delay from "delay"
-import { ElementList } from "extended-dom"
 
 
 

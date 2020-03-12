@@ -276,6 +276,10 @@ export default class EduPanel extends Panel {
     this.alreadyCanc = false
   }
 
+  cardReadCallback(cardId: string) {
+    console.log(cardId + " cardReq")
+  }
+
   stl() {
     return super.stl() + require("./eduPanel.css").toString()
   }
