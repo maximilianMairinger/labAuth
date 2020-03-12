@@ -7,17 +7,18 @@ function prittyDate(date: Date = randomDate.getRandomDate() as Date, year = fals
   var set = date
   var getDate = set.getDate().toString();
   if (getDate.length == 1){ //example if 1 change to 01
-   getDate = "0"+getDate;
+   getDate = "0" + getDate;
   }
   var getMonth = (set.getMonth()+1).toString();
   if (getMonth.length == 1){
-   getMonth = "0"+getMonth;
+   getMonth = "0" + getMonth;
   }
   var dateNow = getDate + "." + getMonth + (year ? "." + set.getFullYear() : "");
   return dateNow as string;
 }
 
 export default class Edu extends Element {
+  private mainEduContainer = this.q("#edu")
   private eduTeacher = this.q("#edu-teacher")
   private usernameElement = this.q("#Username__mmairinger span")
   private passcodeElem = this.q("#ID2424_Wien span")
@@ -61,6 +62,7 @@ export default class Edu extends Element {
   authentication() {
     this.fullNameElem.text("Authenticating...")
     this.fullNameOverlay.css("opacity", 1)
+    this.mainEduContainer.addClass("big")
 
     this.fullNameOverlay.anim([
       {translateX: 0, offset: 0},
@@ -86,15 +88,14 @@ export default class Edu extends Element {
       {translateX: 15}
     ], 1000)
 
-    this.addClass("big")
   }
 
   doneAuthentication() {
+    this.mainEduContainer.removeClass("big")
     this.fullNameOverlay.css("opacity", 0)
     this.fullNameOverlay.anim({translateX: 0})
     this.moveFullName.anim({translateX: 0}, 300)
     this.spinner.anim({opacity: 0}).then(() => this.spinner.anim({rotateZ: 0}))
-    this.removeClass("big")
   }
 
   expectStudent() {

@@ -55,6 +55,8 @@ export default class PanelManager extends Element {
   public async setPanel(panel: keyof PanelIndex, side: "left" | "right") {
     let newPanel = this.panelIndex[panel]
 
+    log("setpanel")
+
     if (side === "left") {
       if (newPanel.preferedWidth === "big") {
         this.leftContainer.anim({width: "58.75%"}, 700)

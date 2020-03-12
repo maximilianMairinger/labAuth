@@ -36,7 +36,7 @@ export default class EduPanel extends Panel {
   private cancButton: Button
   private confButton: Button
 
-  constructor(manager: PanelManager, list: DataArray<Entry>) {
+  constructor(private manager: PanelManager, list: DataArray<Entry>) {
     super()
 
     this.arrow.on("mousedown", async (e) => {
@@ -278,7 +278,6 @@ export default class EduPanel extends Panel {
   }
 
   async cardReadCallback(cardId: string) {
-    console.log("auth")
     this.mainCard.authentication()
 
 
@@ -286,8 +285,8 @@ export default class EduPanel extends Panel {
     let req = ajax.post("cardAuth", {
       cardId
     })
-
-    await Promise.all([req, delay(1500)])
+    
+    await Promise.all([req, delay(1000 + (Math.random() * 1000))])
 
     let res = await req
 
@@ -297,14 +296,15 @@ export default class EduPanel extends Panel {
       if (res.employeetype === "lehrer") {
         localStorage.sessKey = res.sessKey
         this.expectTeacher()
-
+        
       }
       else {
         this.expectStudent()
       }
     }
     else {
-
+      this.manager.setPanel("login", "left")
+      
     }
 
     // if (this.expectedCard === "student") {

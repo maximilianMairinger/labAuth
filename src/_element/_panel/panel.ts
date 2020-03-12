@@ -30,7 +30,6 @@ export default abstract class Panel extends Element {
   public vate(activate: boolean) {
     this.active = activate;
     setTimeout(() => {
-      log("now")
       this.activationCallback(activate);
     }, 100)
   }

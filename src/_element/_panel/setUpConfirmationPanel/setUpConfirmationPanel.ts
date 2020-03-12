@@ -48,7 +48,7 @@ export default class SetUpConfirmationPanel extends Panel {
   private subjectOK = false
   subject(s: string) {
     this.subjectOK = !!s
-    this.subjectElem.text(s || "no Subject")
+    this.subjectElem.text(s || "no subject")
     this.updateButtonsMaybe()
   }
   private facultyOK = false

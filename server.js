@@ -25,7 +25,7 @@ app.post("/LDAPAuth", (req, res) => {
 })
 
 app.post("/cardAuth", (req, res) => {
-  res.send({entry: true, emplyeetype: "student"})
+  res.send({entry: false, emplyeetype: "student"})
 })
 
 
