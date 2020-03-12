@@ -19,14 +19,19 @@ export default class SetUpPanel extends Panel {
     super()
 
     this.headingElem.text("Hello " + addresser)
-
     
-
+    
+    let currentAnimation: Symbol
     let submitCb = async (back = false, submit = false) => {
       let sib = back ? activeElement.previousSibling as HTMLElement : activeElement.nextSibling as HTMLElement
+      console.log(sib)
+      
       
       
       if (sib) {
+        currentAnimation = Symbol("anim")
+        let localAniamtion = currentAnimation
+        
         let currentlyActive = activeElement
 
 
@@ -39,19 +44,35 @@ export default class SetUpPanel extends Panel {
           sib.css({translateX: 10, opacity: 0})
           sib.show()
           sib.focus()
+
           sib.anim({translateX: .1}, 700)
+          
           delay(200).then(() => {
-            sib.anim({opacity: 1}, 500)
+            if (currentAnimation === localAniamtion) {
+              sib.show()
+              sib.focus()
+              sib.anim({opacity: 1}, 500)
+            }
+              
           })
         }
         else {
+          
           currentlyActive.anim({translateX: 10, opacity: 0}, 500).then(() => currentlyActive.hide())
           sib.css({translateX: -10, opacity: 0})
+          
           sib.show()
           sib.focus()
           sib.anim({translateX: .1}, 700)
+
+          
           delay(200).then(() => {
-            sib.anim({opacity: 1}, 500)
+            if (currentAnimation === localAniamtion) {
+              sib.show()
+              sib.focus()
+              sib.anim({opacity: 1}, 500)
+            }
+              
           })
         }
         
@@ -115,20 +136,27 @@ export default class SetUpPanel extends Panel {
     this.questionContainer.apd(...inputs)
 
   }
+  private currentBackButtonAniamtion: Symbol
 
   private backButtonIsShown = false
   private async showBackButton() {
     if (this.backButtonIsShown) return
+    let localAnimation = Symbol("anim")
+    this.currentBackButtonAniamtion = localAnimation
     this.backButtonIsShown = true
     await Promise.all([
       this.backElem.anim({translateX: 1}, {duration: 700}),
-      delay(250).then(() => this.backElem.anim({opacity: 1}, {duration: 500})),
+      delay(250).then(() => {
+        if (this.currentBackButtonAniamtion === localAnimation) return this.backElem.anim({opacity: 1}, {duration: 500})
+      }),
       this.headingElem.anim({translateX: 1}, {duration: 700})
     ])
     
   }
   private async hideBackButton() {
     if (!this.backButtonIsShown) return
+    let localAnimation = Symbol("anim")
+    this.currentBackButtonAniamtion = localAnimation
     this.backButtonIsShown = false
     await Promise.all([
       this.backElem.anim({opacity: 0}, {duration: 300}),
