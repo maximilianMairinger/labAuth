@@ -277,7 +277,7 @@ export default class EduPanel extends Panel {
   }
 
   stl() {
-    return require("./eduPanel.css").toString()
+    return super.stl() + require("./eduPanel.css").toString()
   }
   pug() {
     return require("./eduPanel.pug").default

@@ -27,7 +27,7 @@ export default class InformPanel extends Panel {
   }
 
   stl() {
-    return require("./informPanel.css").toString()
+    return super.stl() + require("./informPanel.css").toString()
   }
   pug() {
     return require("./informPanel.pug").default

@@ -13,8 +13,18 @@ left-container {
   width: 41.25%;
 }
 
+left-container > * {
+  opacity: 0;
+  transform: translateX(5px);
+}
+
 right-container {
   flex-grow: 1;
   width: auto;
   background: rgba(0, 0, 0, 3%);
+}
+
+right-container > * {
+  opacity: 0;
+  transform: translateX(5px);
 }

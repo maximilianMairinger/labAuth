@@ -78,7 +78,7 @@ export default class SetUpConfirmationPanel extends Panel {
   }
 
   stl() {
-    return require("./setUpConfirmationPanel.css").toString()
+    return super.stl() + require("./setUpConfirmationPanel.css").toString()
   }
   pug() {
     return require("./setUpConfirmationPanel.pug").default

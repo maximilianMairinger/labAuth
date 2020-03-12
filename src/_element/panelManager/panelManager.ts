@@ -6,6 +6,7 @@ import LoginPanel from "../_panel/loginPanel/loginPanel";
 import { Data, DataBase } from "front-db"
 import SetUpConfirmationPanel from "../_panel/setUpConfirmationPanel/setUpConfirmationPanel";
 import SetUpPanel from "../_panel/setUpPanel/setUpPanel";
+import delay from "delay";
 
 
 type Percent = number
@@ -50,33 +51,49 @@ export default class PanelManager extends Element {
     
   }
 
-  public setPanel(panel: keyof PanelIndex, side: "left" | "right") {
+  public async setPanel(panel: keyof PanelIndex, side: "left" | "right") {
+    let newPanel = this.panelIndex[panel]
+
+    if (side === "left") {
+      if (newPanel.preferedWidth === "big") {
+        this.leftContainer.anim({width: "58.75%"}, 700)
+      }
+      else if (newPanel.preferedWidth === "small") {
+        this.leftContainer.anim({width: "41.25%"}, 700)
+      }
+      else if (typeof newPanel.preferedWidth === "number") {
+        this.leftContainer.anim({width: newPanel.preferedWidth + "%"}, 700)
+      }
+    }
+    
+
+
     if (side === "left") {
       let lastLeft = this.left
       this.left = this.panelIndex[panel]
-      this.leftContainer.html("")
+      if (lastLeft) {
+        lastLeft.anim({opacity: 0, translateX: 5}, 300).then(() => lastLeft.remove())
+        await delay(150)
+      }
       this.leftContainer.apd(this.left);
+      this.left.anim({opacity: 1, translateX: .1})
       this.left.activate()
       if (lastLeft) lastLeft.deactivate()
     }
     if (side === "right") {
       let lastRight = this.right
       this.right = this.panelIndex[panel]
-      this.rightContainer.html("")
+      if (lastRight) {
+        lastRight.anim({opacity: 0, translateX: 5}, 300).then(() => lastRight.remove())
+        await delay(150)
+      }
       this.rightContainer.apd(this.right)
+      this.right.anim({opacity: 1, translateX: .1})
       this.right.activate()
       if (lastRight) lastRight.deactivate()
     }
 
-    if (this.left.preferedWidth === "big") {
-      this.leftContainer.anim({width: "58.75%"}, 600)
-    }
-    else if (this.left.preferedWidth === "small") {
-      this.leftContainer.anim({width: "41.25%"}, 600)
-    }
-    else if (typeof this.left.preferedWidth === "number") {
-      this.leftContainer.anim({width: this.left.preferedWidth + "%"}, 1000)
-    }
+    
 
   }
 

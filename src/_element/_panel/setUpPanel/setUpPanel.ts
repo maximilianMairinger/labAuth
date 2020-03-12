@@ -138,7 +138,7 @@ export default class SetUpPanel extends Panel {
   }
 
   stl() {
-    return require("./setUpPanel.css").toString()
+    return super.stl() + require("./setUpPanel.css").toString()
   }
   pug() {
     return require("./setUpPanel.pug").default

@@ -13,7 +13,7 @@ export default class LoginPanel extends Panel {
   }
 
   stl() {
-    return require("./loginPanel.css").toString()
+    return super.stl() + require("./loginPanel.css").toString()
   }
   pug() {
     return require("./loginPanel.pug").default
