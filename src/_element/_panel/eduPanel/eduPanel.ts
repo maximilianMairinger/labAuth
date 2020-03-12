@@ -161,7 +161,8 @@ export default class EduPanel extends Panel {
     if (this.active) {
       await animatedScrollTo(0, {
         elementToScroll: this.cardsContainer,
-        speed: 1000
+        speed: 2000,
+        cancelOnUserAction: false
       })
       await delay(100)
     }
@@ -201,7 +202,8 @@ export default class EduPanel extends Panel {
 
     await animatedScrollTo(0, {
       elementToScroll: this.cardsContainer,
-      speed: 1000
+      speed: 2000,
+      cancelOnUserAction: false
     })
 
     this.buttons.show().anim({opacity: 1})
@@ -221,7 +223,7 @@ export default class EduPanel extends Panel {
       await animatedScrollTo(0, {
         elementToScroll: this.cardsContainer,
         speed: 2000,
-        cancelOnUserAction: false,
+        cancelOnUserAction: false
       })
       await delay(100)
     }

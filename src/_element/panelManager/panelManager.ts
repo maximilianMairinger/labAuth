@@ -69,10 +69,10 @@ export default class PanelManager extends Element {
     }
 
     if (this.left.preferedWidth === "big") {
-      this.leftContainer.anim({width: "58.75%"}, 1000)
+      this.leftContainer.anim({width: "58.75%"}, 600)
     }
     else if (this.left.preferedWidth === "small") {
-      this.leftContainer.anim({width: "41.25%"}, 1000)
+      this.leftContainer.anim({width: "41.25%"}, 600)
     }
     else if (typeof this.left.preferedWidth === "number") {
       this.leftContainer.anim({width: this.left.preferedWidth + "%"}, 1000)
