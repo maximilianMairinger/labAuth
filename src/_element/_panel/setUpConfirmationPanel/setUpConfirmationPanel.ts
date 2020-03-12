@@ -10,7 +10,7 @@ export default class SetUpConfirmationPanel extends Panel {
 
   
   private subjectElem = this.q("subject-text")
-  private facultyElem = this.q("faculty-text")
+  private facultyElem = this.q("classroom-text")
   private hoursElem = this.q("hours-text")
 
   private confirmButton: Button

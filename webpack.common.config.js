@@ -24,8 +24,9 @@ module.exports = () => {
                     use: ['to-string-loader', 'css-loader'],
                 },
                 {
-                    test: /\.(png|jpg|svg|jpeg|gif)$/,
-                    loader: 'url-loader'
+                    
+                    test: /\.(png|jpg|gif|jpeg|woff|woff2|eot|ttf|svg)$/,
+                    loader: 'url-loader?limit=100000'
                 },
                 {
                     test: /\.pug$/,
