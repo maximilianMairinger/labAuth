@@ -2,7 +2,7 @@ import Element from "../element"
 
 
 type Percent = number
-import * as cardReader from "./../../lib/card-reader"
+import * as cardReader from "../../lib/cardReader"
 
 
 export default abstract class Panel extends Element {
@@ -15,7 +15,7 @@ export default abstract class Panel extends Element {
 
     
     if (this.cardReadCallback !== defaultCardReadCallback) {
-      cardReader.addListener(this.cardReadCallback)
+      cardReader.addListener(this.cardReadCallback.bind(this))
       this.wantsCardReader = true
     }
     else this.wantsCardReader = false

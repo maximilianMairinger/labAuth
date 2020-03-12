@@ -7,6 +7,7 @@ import { Data, DataArray } from "front-db";
 import Button from "./../../_button/_rippleButton/blockButton/blockButton"
 import animatedScrollTo from "animated-scroll-to"
 import PanelManager from "../../panelManager/panelManager";
+import ajax from "../../../lib/ajax";
 
 
 type Percent = number
@@ -276,8 +277,44 @@ export default class EduPanel extends Panel {
     this.alreadyCanc = false
   }
 
-  cardReadCallback(cardId: string) {
-    console.log(cardId + " cardReq")
+  async cardReadCallback(cardId: string) {
+    console.log("auth")
+    this.mainCard.authentication()
+
+
+
+    let req = ajax.post("cardAuth", {
+      cardId
+    })
+
+    await Promise.all([req, delay(1500)])
+
+    let res = await req
+
+    this.mainCard.doneAuthentication()
+
+    if (res.entry) {
+      if (res.employeetype === "lehrer") {
+        localStorage.sessKey = res.sessKey
+        this.expectTeacher()
+
+      }
+      else {
+        this.expectStudent()
+      }
+    }
+    else {
+
+    }
+
+    // if (this.expectedCard === "student") {
+    //   ajax.post("cardAuth", {
+    //     cardId
+    //   })
+    // }
+    // else if (this.expectedCard === "teacher") {
+
+    // }
   }
 
   stl() {
