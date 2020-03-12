@@ -22,7 +22,7 @@ export default class SetUpPanel extends Panel {
 
     
 
-    let submitCb = async (back = false) => {
+    let submitCb = async (back = false, submit = false) => {
       let sib = back ? activeElement.previousSibling as HTMLElement : activeElement.nextSibling as HTMLElement
       
       
@@ -64,8 +64,12 @@ export default class SetUpPanel extends Panel {
           await activeElement.anim({translateX: .1})
         }
         else {
-          manager.panelIndex.setUpConfirmationPanel.hightlightConfirmButton()
-          
+          if (submit) {
+            manager.panelIndex.setUpConfirmationPanel.confirm()
+          }
+          else {
+            manager.panelIndex.setUpConfirmationPanel.hightlightConfirmButton()
+          }
         }
       }
     }
@@ -90,7 +94,7 @@ export default class SetUpPanel extends Panel {
 
     inputs.ea((el) => {
       el.submitCallback = () => {
-        submitCb()
+        submitCb(false, true)
       }
     })
 
