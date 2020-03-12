@@ -72,11 +72,12 @@ export default class PanelManager extends Element {
     if (side === "left") {
       let lastLeft = this.left
       this.left = this.panelIndex[panel]
+      this.leftContainer.apd(this.left);
       if (lastLeft) {
         lastLeft.anim({opacity: 0, translateX: 5}, 300).then(() => lastLeft.remove())
         await delay(150)
       }
-      this.leftContainer.apd(this.left);
+      
       this.left.anim({opacity: 1, translateX: .1})
       this.left.activate()
       if (lastLeft) lastLeft.deactivate()
@@ -84,11 +85,12 @@ export default class PanelManager extends Element {
     if (side === "right") {
       let lastRight = this.right
       this.right = this.panelIndex[panel]
+      this.rightContainer.apd(this.right)
       if (lastRight) {
         lastRight.anim({opacity: 0, translateX: 5}, 300).then(() => lastRight.remove())
         await delay(150)
       }
-      this.rightContainer.apd(this.right)
+      
       this.right.anim({opacity: 1, translateX: .1})
       this.right.activate()
       if (lastRight) lastRight.deactivate()

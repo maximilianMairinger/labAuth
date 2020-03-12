@@ -81,13 +81,13 @@ export default class SetUpPanel extends Panel {
     })
 
     let inputs: ElementList<SetUpInput> = new ElementList(
-      new SetUpInput("Please tell us what <highlight-text>subject</highlight-text> you are currently teaching", "uppercase", (s) => {
+      new SetUpInput("Please tell us what <highlight-text>subject</highlight-text> you are currently teaching.", "uppercase", (s) => {
         manager.panelIndex.setUpConfirmationPanel.subject(s)
       }),
-      new SetUpInput("Please tell us which <highlight-text>classroom</highlight-text> you are teaching in", "uppercase", (s) => {
+      new SetUpInput("Please tell us which <highlight-text>classroom</highlight-text> you are teaching in.", "uppercase", (s) => {
         manager.panelIndex.setUpConfirmationPanel.faculty(s)
       }),
-      new SetUpInput("Please tell us how many <highlight-text>hours</highlight-text> you are teaching", "number", (s) => {
+      new SetUpInput("Please tell us how many <highlight-text>hours</highlight-text> you are teaching for.", "number", (s) => {
         manager.panelIndex.setUpConfirmationPanel.hours(s)
       }, undefined, i => i !== 0 && i <= 24)
     )
