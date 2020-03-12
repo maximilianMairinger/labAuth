@@ -65,6 +65,7 @@ export function enable() {
 
 //@ts-ignore
 global.cardRead = () => {
+  if (input.tabIndex === 0)
   subscription.forEach((f) => {
     f("testid")
   });

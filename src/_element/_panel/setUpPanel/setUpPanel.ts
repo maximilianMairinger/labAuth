@@ -84,7 +84,7 @@ export default class SetUpPanel extends Panel {
       new SetUpInput("Please tell us what <highlight-text>subject</highlight-text> you are currently teaching", "uppercase", (s) => {
         manager.panelIndex.setUpConfirmationPanel.subject(s)
       }),
-      new SetUpInput("Please tell us in which <highlight-text>faculty</highlight-text> you are teaching", "uppercase", (s) => {
+      new SetUpInput("Please tell us which <highlight-text>classroom</highlight-text> you are teaching in", "uppercase", (s) => {
         manager.panelIndex.setUpConfirmationPanel.faculty(s)
       }),
       new SetUpInput("Please tell us how many <highlight-text>hours</highlight-text> you are teaching", "number", (s) => {

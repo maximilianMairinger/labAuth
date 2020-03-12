@@ -95,7 +95,6 @@ export default class PanelManager extends Element {
     }
 
     if (this.right && this.left) {
-      debugger
       if (this.right.wantsCardReader || this.left.wantsCardReader) cardReader.enable()
       else cardReader.disable()
     }
