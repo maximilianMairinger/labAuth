@@ -35,7 +35,7 @@ export default class SetUpConfirmationPanel extends Panel {
       await delay(3000);
     }, () => {
       manager.panelIndex.info.heading("LabAuth")
-      manager.panelIndex.info.content("You may sigh into <text-hightlight>Medt</text-hightlight> here. To sign out register your card again.")
+      manager.panelIndex.info.content("You may sigh into <text-hightlight>" + this.subjectElem.text() + "</text-hightlight> here. To sign out register your card again.")
       manager.panelIndex.edu.expectStudent()
       manager.setPanel("info", "left")
       manager.setPanel("edu", "right")
