@@ -14,11 +14,13 @@ export default class Input extends Element {
 
   private enterAlreadyPressed = false;
 
-  private _type: "password" | "text" | "number" | "email";
-  constructor(placeholder: string = "", type: "password" | "text" | "number" | "email" = "text", public submitCallback?: (value: string, e: KeyboardEvent) => void, value?: any, public customVerification?: (value?: string | number) => boolean, public intrusiveValidation?: boolean) {
+  private _type: "password" | "text" | "number" | "email" | "uppercase";
+  constructor(placeholder: string = "", type: "password" | "text" | "number" | "email" | "uppercase" = "text", public submitCallback?: (value: string, e: KeyboardEvent) => void, value?: any, public customVerification?: (value?: string | number) => boolean, public intrusiveValidation?: boolean) {
     super(false);
     
     this.type = type;
+
+    this.input.spellcheck = false
 
     this.placeholderElem = ce("input-placeholder");
     this.placeholder = placeholder;
@@ -155,22 +157,31 @@ export default class Input extends Element {
 
 
   public set placeholder(to: string) {
-    this.placeholderElem.html(to);
+    this.placeholderElem.text(to);
   }
   public get placeholder(): string {
-    return this.placeholderElem.html();
+    return this.placeholderElem.text();
   }
-  public set type(to: "password" | "text" | "number" | "email") {
+  private upperCaseParseListener = this.input.ls("input", () => {
+    this.input.value = this.input.value.toUpperCase()
+  })
+  public set type(to: "password" | "text" | "number" | "email" | "uppercase") {
     this.intrusiveValidation = to === "password" || to === "number"
     if (to === "password") {
       this.input.type = to;
+      this.upperCaseParseListener.disable()
+    }
+    else if (to === "uppercase") {
+      this.upperCaseParseListener.enable()
+      this.input.type = "text";
     }
     else {
       this.input.type = "text";
+      this.upperCaseParseListener.disable()
     }
     this._type = to;
   }
-  public get type(): "password" | "text" | "number" | "email" {
+  public get type(): "password" | "text" | "number" | "email" | "uppercase" {
     return this._type;
   }
   public isValid(emptyAllowed: boolean = true) {
@@ -194,6 +205,7 @@ export default class Input extends Element {
     if (this.type === "number") valid = !isNaN(this.value);
     else if (this.type === "email") valid = emailValidationRegex.test(this.value.toLowerCase());
     if (this.customVerification !== undefined) if (!this.customVerification(this.value)) valid = false;
+    if (this.input.value === "") valid = true
     return valid;
   }
   private alignPlaceHolder() {

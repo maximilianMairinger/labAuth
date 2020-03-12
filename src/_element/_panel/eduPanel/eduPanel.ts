@@ -189,7 +189,7 @@ export default class EduPanel extends Panel {
     this.elementBody.css("overflowX", "hidden")
   }
 
-  private currButtonCb: Function;
+  private currButtonCb: (e: Event) => void;
   private currentlyShowingConfirmOptions: boolean = false
   async displayConfimOptions(cb: (confirm: boolean) => void) {
     this.currentlyShowingConfirmOptions = true

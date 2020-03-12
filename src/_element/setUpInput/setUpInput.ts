@@ -8,7 +8,7 @@ export default class SetUpInput extends Element {
   private inputElem = this.q("c-input").first as Input
   private questionElem = this.q("text-paragraph")
   
-  constructor(question: string, public changeCallback?: (content: string, e: InputEvent) => void, public submitCallback?: (content: string, e: KeyboardEvent) => void, type: "number" | "password" | "text" | "email" = "text") {
+  constructor(question: string, type: "number" | "password" | "text" | "email" | "uppercase" = "text", public changeCallback?: (content: string, e: InputEvent) => void, public submitCallback?: (content: string, e: KeyboardEvent) => void, cunstomverifaction?: (value?: string | number) => boolean) {
     super(false)
 
     this.inputElem.type = type
@@ -21,7 +21,8 @@ export default class SetUpInput extends Element {
     this.inputElem.submitCallback = (s, e) => {
       if (this.submitCallback) this.submitCallback(s, e)
     }
-    
+
+    this.inputElem.customVerification = cunstomverifaction
   }
 
   public focus() {
