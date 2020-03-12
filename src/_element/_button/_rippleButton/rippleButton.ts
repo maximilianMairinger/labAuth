@@ -12,7 +12,7 @@ export default abstract class RippleButton extends Button {
       this.wave = ce("button-wave");
 
       this.ripples = ce("button-waves");
-      this.sra(this.ripples);
+      this.apd(this.ripples);
     }
     public initRipple(e: MouseEvent | KeyboardEvent | "center") {
       

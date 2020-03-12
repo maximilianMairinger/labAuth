@@ -1,12 +1,40 @@
 import RippleButton from "./../rippleButton";
+import delay from "delay"
 
 export default class BlockButton extends RippleButton {
-  private textElem: HTMLElement;
+  private textElem = ce("button-text")
+  private spinner = ce("loading-spinner")
+  private textContainer = ce("button-container")
   constructor(content: string = "", activationCallback?: Function) {
     super(activationCallback);
-    this.textElem = ce("button-text");
     this.content(content);
-    this.sra(ce("button-container").apd(this.textElem));
+    this.apd(
+      this.spinner
+    ).apd(
+      this.textContainer.apd(
+        this.textElem
+      )
+    );
+  }
+  private loading() {
+    this.textContainer.anim({translateX: 10}, 1000)
+
+    delay(100).then(() => {
+      this.spinner.anim([
+        {opacity: 0, offset: 0},
+        {opacity: 1}
+      ], 400)
+      this.spinner.anim([
+        {rotateZ: 0, offset: 0},
+        {rotateZ: 360}
+      ], {duration: 1000, iterations: Infinity, easing: "linear"})
+    })
+
+    this.textContainer.anim({translateX: 6}, 400)
+  }
+  private doneLoading() {
+    this.spinner.anim({opacity: 0}).then(() => this.spinner.anim({rotateZ: 0}))
+    this.textContainer.anim({translateX: .1}, 400)
   }
   content(to: string) {
     this.textElem.text(to)

@@ -12,7 +12,7 @@ export default class Button extends Element {
 
   private preferedTabIndex: number
   constructor(activationCallback?: Function, protected readonly enabled: boolean = true, focusOnHover: boolean = false, public tabIndex: number = 0, public obtainDefault: boolean = false, public preventFocus = false, blurOnMouseOut: boolean = false) {
-    super();
+    super(false);
 
     if (enabled) this.enableForce(true)
     else this.enableForce(true)
