@@ -26,7 +26,7 @@ text-content {
 .hightlight {
   font-weight: bold;
   display: inline-block;
-  min-width: 46px;
+  min-width: 47px;
   overflow: hidden;
   text-overflow: ellipsis;
   vertical-align: top;
