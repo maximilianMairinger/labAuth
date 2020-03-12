@@ -8,10 +8,10 @@ export default class Button extends Element {
   private doesFocusOnHover: boolean;
   private mouseOverListener: Tel;
   private mouseOutListener: Tel;
-  private callbacks: Function[] = [];
+  private callbacks: ((e: MouseEvent | KeyboardEvent) => void)[] = [];
 
   private preferedTabIndex: number
-  constructor(activationCallback?: Function, protected readonly enabled: boolean = true, focusOnHover: boolean = false, public tabIndex: number = 0, public obtainDefault: boolean = false, public preventFocus = false, blurOnMouseOut: boolean = false) {
+  constructor(protected readonly enabled: boolean = true, focusOnHover: boolean = false, public tabIndex: number = 0, public obtainDefault: boolean = false, public preventFocus = false, blurOnMouseOut: boolean = false) {
     super(false);
 
     if (enabled) this.enableForce(true)
@@ -53,7 +53,6 @@ export default class Button extends Element {
       this.blur();
     }, false)
 
-    this.addActivationCallback(activationCallback);
     this.focusOnHover = focusOnHover;
     this.blurOnMouseOut = blurOnMouseOut;
   }
@@ -83,10 +82,10 @@ export default class Button extends Element {
     if (to) this.mouseOutListener.enable();
     else this.mouseOutListener.disable();
   }
-  public addActivationCallback(cb?: Function) {
+  public addActivationCallback(cb?: (e: MouseEvent | KeyboardEvent) => void) {
     if (cb !== undefined) this.callbacks.add(cb);
   }
-  public removeActivationCallback(cb?: Function) {
+  public removeActivationCallback(cb?: (e: MouseEvent | KeyboardEvent) => void) {
     if (cb !== undefined) this.callbacks.removeV(cb);
   }
   public set focusOnHover(to: boolean) {
@@ -103,7 +102,7 @@ export default class Button extends Element {
   public get focusOnHover(): boolean {
     return this.doesFocusOnHover;
   }
-  public click(e?: Event) {
+  public click(e?: MouseEvent | KeyboardEvent) {
     if (e !== undefined && !this.obtainDefault) e.preventDefault();
     if (this.enabled) {
       if (!this.preventFocus) this.focus();

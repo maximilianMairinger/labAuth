@@ -3,11 +3,12 @@ import Button from "./../button";
 export default abstract class RippleButton extends Button {
   private ripples: HTMLElement;
   private wave: HTMLElement;
-    constructor(activationCallback?: Function, enabled?: boolean, focusOnHover?: boolean, tabIndex?: number) {
-      super((e) => {
+    constructor(activationCallback?: (e?: MouseEvent | KeyboardEvent) => void, enabled?: boolean, focusOnHover?: boolean, tabIndex?: number) {
+      super(enabled, focusOnHover, tabIndex);
+      super.addActivationCallback((e) => {
         this.initRipple(e);
-      }, enabled, focusOnHover, tabIndex);
-      this.addActivationCallback(activationCallback);
+      })
+      super.addActivationCallback(activationCallback);
 
       this.wave = ce("button-wave");
 
@@ -23,7 +24,7 @@ export default abstract class RippleButton extends Button {
         try {
           await r.anim({opacity: 0}, {duration: 400});  
         } catch (error) {
-          // should not be too bad
+          
         }
         
         r.remove();

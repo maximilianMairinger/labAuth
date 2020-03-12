@@ -5,8 +5,10 @@ export default class BlockButton extends RippleButton {
   private textElem = ce("button-text")
   private spinner = ce("loading-spinner")
   private textContainer = ce("button-container")
-  constructor(content: string = "", activationCallback?: Function) {
-    super(activationCallback);
+  constructor(content: string = "", activationCallback?: ((e?: MouseEvent | KeyboardEvent) => void | Promise<void>)) {
+    super();
+
+    if (activationCallback) this.addActivationCallback(activationCallback)
     this.content(content);
     this.apd(
       this.spinner
@@ -16,25 +18,55 @@ export default class BlockButton extends RippleButton {
       )
     );
   }
-  private loading() {
-    this.textContainer.anim({translateX: 10}, 1000)
+  private activationCallbackIndex = new Map<Function, Function>()
+  public addActivationCallback(activationCallback: ((e?: MouseEvent | KeyboardEvent) => void | Promise<void>), animationDoneCb?: Function) {
+    
+    let inner = async (e) => {
+      let res = activationCallback(e)
+      if (res instanceof Promise) {
+        this.loading()
+        this.disable()
+        await res
+        this.doneLoading()
+        await delay(250)
+        this.enable()
+        animationDoneCb()
+      }
+      else animationDoneCb()
+    }
+    
 
+    super.addActivationCallback(inner)
+
+    this.activationCallbackIndex.set(activationCallback, inner)
+  }
+  public removeActivationCallback(activationCallback: ((e?: MouseEvent | KeyboardEvent) => void | Promise<void>)) {
+    let inner = this.activationCallbackIndex.get(activationCallback)
+    if (inner !== undefined) {
+      super.removeActivationCallback(inner as (e?: MouseEvent | KeyboardEvent) => void)
+    }
+  }
+  private async loading() {
+    let proms = []
     delay(100).then(() => {
-      this.spinner.anim([
+      proms.add(this.spinner.anim([
         {opacity: 0, offset: 0},
         {opacity: 1}
-      ], 400)
+      ], 400))
       this.spinner.anim([
         {rotateZ: 0, offset: 0},
         {rotateZ: 360}
       ], {duration: 1000, iterations: Infinity, easing: "linear"})
-    })
+    }),
+    proms.add(this.textContainer.anim({translateX: 6}, 400))
 
-    this.textContainer.anim({translateX: 6}, 400)
+    await Promise.all(proms)
   }
-  private doneLoading() {
-    this.spinner.anim({opacity: 0}).then(() => this.spinner.anim({rotateZ: 0}))
-    this.textContainer.anim({translateX: .1}, 400)
+  private async doneLoading() {
+    await Promise.all([
+      this.spinner.anim({opacity: 0}).then(() => this.spinner.anim({rotateZ: 0})),
+      this.textContainer.anim({translateX: .1}, 400)
+    ])
   }
   content(to: string) {
     this.textElem.text(to)

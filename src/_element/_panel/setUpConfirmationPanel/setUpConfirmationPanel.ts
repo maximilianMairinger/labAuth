@@ -31,7 +31,9 @@ export default class SetUpConfirmationPanel extends Panel {
       manager.setPanel("edu", "right")
     })
 
-    this.confirmButton.addActivationCallback(() => {
+    this.confirmButton.addActivationCallback(async () => {
+      await delay(3000);
+    }, () => {
       manager.panelIndex.info.heading("LabAuth")
       manager.panelIndex.info.content("You may sigh into <text-hightlight>Medt</text-hightlight> here. To sign out register your card again.")
       manager.panelIndex.edu.expectStudent()
@@ -68,8 +70,11 @@ export default class SetUpConfirmationPanel extends Panel {
   }
   async hightlightConfirmButton() {
     this.confirmButton.focus()
-    await this.confirmButton.anim({background: "rgba(0,0,0,0.15)"}, 300)
+    await this.confirmButton.anim({background: "rgba(0,0,0,0.05)"}, 300)
     await this.confirmButton.anim({background: "rgba(0,0,0,0)"}, 300)
+  }
+  confirm() {
+    this.confirmButton.click()
   }
 
   stl() {
