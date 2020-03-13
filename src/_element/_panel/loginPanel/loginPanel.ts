@@ -17,9 +17,9 @@ export default class LoginPanel extends Panel {
     
   }
 
-  activationCallback(active: boolean) {
-    super.activationCallback(active)
-
+  activationCallback() {
+    super.activationCallback()
+    
     this.usr.focus()
   }
 

@@ -22,18 +22,24 @@ export default abstract class Panel extends Element {
   }
 
   public activate(): void {
-    this.vate(true)
+    setTimeout(() => {
+      this.activationCallback()
+    }, 200)
+    
   }
   public deactivate(): void {
-    this.vate(false)
+    setTimeout(() => {
+      this.deactivationCallback()
+    }, 200)
   }
   public vate(activate: boolean) {
-    this.active = activate;
-    setTimeout(() => {
-      this.activationCallback(activate);
-    }, 100)
+    if (activate) this.activate()
+    else this.deactivate()
   }
-  protected activationCallback(active: boolean) {
+  protected activationCallback() {
+
+  }
+  protected deactivationCallback() {
 
   }
 

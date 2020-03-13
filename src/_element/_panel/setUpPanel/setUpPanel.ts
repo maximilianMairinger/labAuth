@@ -164,8 +164,9 @@ export default class SetUpPanel extends Panel {
       this.headingElem.anim({translateX: -32}, {duration: 700})
     ])
   }
-  activationCallback(active: boolean) {
-    super.activationCallback(active)
+  activationCallback() {
+    super.activationCallback()
+    
     this.inputs.first.focus()
   }
 
