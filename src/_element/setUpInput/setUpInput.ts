@@ -15,7 +15,7 @@ export default class SetUpInput extends Element {
     
     this.questionElem.html(question)
 
-    this.inputElem.onChange((s, e) => {
+    this.inputElem.onInput((s, e) => {
       if (this.changeCallback) this.changeCallback(s, e)
     })
     this.inputElem.submitCallback = (s, e) => {

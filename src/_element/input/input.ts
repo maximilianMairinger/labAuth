@@ -143,7 +143,7 @@ export default class Input extends Element {
   }
 
   private listeners: Map<(value: string, e: InputEvent) => void, (e: InputEvent) => void> = new Map()
-  public onChange(f: (value: string, e: InputEvent) => void) {
+  public onInput(f: (value: string, e: InputEvent) => void) {
     let inner = (e: InputEvent) => {
       if (!this.currentlyInvalid) f(this.value, e)
       else f("", e)
@@ -151,7 +151,7 @@ export default class Input extends Element {
     this.listeners.set(f, inner)
     this.input.on("input", inner)
   }
-  public offChange(f: (value: string, e: InputEvent) => void) {
+  public offInput(f: (value: string, e: InputEvent) => void) {
     this.input.off("input", this.listeners.get(f))
     this.listeners.delete(f)
   }
