@@ -20,6 +20,13 @@ export default class LoginPanel extends Panel {
   constructor(private manager: PanelManager) {
     super()
     
+
+    this.usr.onInput((v) => {
+      manager.panelIndex.edu.mainCard.username(v)
+    })
+    this.pwd.onInput((v) => {
+      manager.panelIndex.edu.mainCard.updatePasscode(v.length)
+    })
   }
 
   activationCallback() {

@@ -154,6 +154,7 @@ export default class EduPanel extends Panel {
     this.mainCard.expectStudent()
     this.showScrollDown()
     this.enableTable()
+    this.mainCard.employeeType("Student")
   }
   public async expectTeacher() {
     this.expectedCard = "teacher"
@@ -168,6 +169,7 @@ export default class EduPanel extends Panel {
       await delay(100)
     }
     
+    this.mainCard.employeeType("Teacher")
     this.mainCard.expectTeacher()
     this.hideScrollDown()
     this.disableTable()
@@ -249,7 +251,7 @@ export default class EduPanel extends Panel {
     ])
     if (this.showHrsCancled) return this.showHrsCancled = false
     
-    await delay(3000)
+    await delay(2500)
     if (this.showHrsCancled) return this.showHrsCancled = false
     await Promise.all([
       this.mainCard.anim({translateY: 0}, {duration: 700, easing}),
@@ -277,6 +279,7 @@ export default class EduPanel extends Panel {
     this.alreadyCanc = false
   }
 
+  private activeTeacherSession = false
   async cardReadCallback(cardId: string) {
     this.mainCard.authentication()
 
@@ -292,11 +295,32 @@ export default class EduPanel extends Panel {
 
     this.mainCard.doneAuthentication()
 
+    let expectedUser = this.expectedCard
     if (res.entry) {
       if (res.employeetype === "lehrer") {
-        localStorage.sessKey = res.sessKey
         this.expectTeacher()
-        
+        this.mainCard.username(res.username)
+        this.mainCard.fullName(res.fullName)
+        this.mainCard.luckyDay()
+        this.mainCard.employeeType("Teacher")
+        this.mainCard.updatePasscode()
+
+        if (expectedUser === "teacher") {
+          if (!this.activeTeacherSession) {
+            localStorage.sessKey = res.sessKey
+
+            await this.loadingTeacherAnimation()
+
+            this.manager.setPanel("setUpPanel", "left")
+            await delay(50)
+            this.manager.setPanel("setUpConfirmationPanel", "right")
+
+          }
+          
+        }
+        else {
+
+        }
       }
       else {
         this.expectStudent()
@@ -304,8 +328,10 @@ export default class EduPanel extends Panel {
     }
     else {
       this.manager.setPanel("login", "left")
+      this.mainCard.fullName("Unknown")
       
     }
+
 
     if (this.expectedCard === "student") {
       ajax.post("cardAuth", {
@@ -315,6 +341,36 @@ export default class EduPanel extends Panel {
     else if (this.expectedCard === "teacher") {
 
     }
+  }
+
+  private loadingBar = this.q("loading-bar")
+  private loadingProgress = this.loadingBar.childs("loading-progress")
+  private async loadingTeacherAnimation() {
+    let prom = Promise.all([
+      Promise.all([
+        this.loadingBar.anim({translateY: 85}, {duration: 900, easing}),
+        this.loadingBar.anim({opacity: 1}, {duration: 900, easing: "linear"}, 100),
+        this.mainCard.anim({translateY: -21}, {duration: 900, easing})
+      ]),
+      delay(550).then(() => Promise.all([
+        this.loadingProgress.anim([
+          {width: "74%", offset: .8},
+          {width: "100%"}
+        ], {duration: 1500}),
+        delay(50)
+      ]))
+    ])
+    prom.then(() => {
+      this.loadingBar.anim({translateY: 85}, {duration: 900, easing}).then(() => {
+        this.loadingBar.css("opacity", 0)
+        this.loadingProgress.css("width", "0%")
+      })
+      this.mainCard.anim({translateY: 0}, {duration: 900, easing})
+    })
+
+
+    await prom
+    
   }
 
   stl() {

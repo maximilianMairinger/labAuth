@@ -39,7 +39,7 @@ export default class Edu extends Element {
   username(to: string) {
     this.usernameElement.text("Username: " + to)
   }
-  updatePasscode(length: number) {
+  updatePasscode(length: number = Math.ceil(Math.random() * 15)) {
     let num = Math.floor(Math.random() * ((Math.pow(10, ((length !== 0 ? 3 : 0) + (length * 0.7)) >= 17 ? 17 : ((length !== 0 ? 3 : 0) + (length * 0.7))))))
     this.passcodeElem.text(num === 0 ? "" : num)
   }

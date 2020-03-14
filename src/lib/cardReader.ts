@@ -30,12 +30,16 @@ let blurListener: Tel = input.ls("blur", () => {
   input.focus();
 });
 
-input.addEventListener("keydown", (e) => {
+input.addEventListener("keydown", async (e) => {
   if(e.key === "Enter") {
+    disable()
+    let proms = []
     subscription.forEach((f) => {
-      f(input.value)
+      proms.add(f(input.value))
     });
     input.value = ""
+    await Promise.all(proms)
+    if (input.tabIndex !== -1) enable()
   }
 });
 
@@ -65,10 +69,12 @@ export function enable() {
 
 //@ts-ignore
 global.cardRead = () => {
-  if (input.tabIndex === 0)
-  subscription.forEach((f) => {
-    f("testid")
-  });
+  if (input.tabIndex === 0) {
+    subscription.forEach((f) => {
+      f("testid")
+    });
+  }
+  
 }
 
 
@@ -76,4 +82,4 @@ setTimeout(() => {
   //@ts-ignore
   cardRead()
   console.log("card read")
-}, 5000);
+}, 3000);
