@@ -170,7 +170,6 @@ export default class SetUpPanel extends Panel {
   activationCallback() {
     super.activationCallback()
     
-    log("foc")
     this.inputs.first.focus()
   }
 
