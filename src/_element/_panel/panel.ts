@@ -24,16 +24,10 @@ export default abstract class Panel extends Element {
   }
 
   public activate(): void {
-    log("accc")
-    setTimeout(() => {
-      this.activationCallback()
-    }, 500)
-    
+    this.activationCallback()
   }
   public deactivate(): void {
-    setTimeout(() => {
-      this.deactivationCallback()
-    }, 200)
+    this.deactivationCallback()
   }
   public vate(activate: boolean) {
     if (activate) this.activate()

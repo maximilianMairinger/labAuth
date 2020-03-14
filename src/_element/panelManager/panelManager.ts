@@ -82,8 +82,7 @@ export default class PanelManager extends Element {
       }
       
       setTimeout(() => {
-        this.left.anim({opacity: 1, translateX: .1}).then(() => {   
-          log("foc left")  
+        this.left.anim({opacity: 1, translateX: .1}).then(() => {
           this.left.activate()
         })
       }, 0)
@@ -94,13 +93,18 @@ export default class PanelManager extends Element {
       this.right = this.panelIndex[panel]
       this.rightContainer.apd(this.right)
       if (lastRight) {
-        lastRight.anim({opacity: 0, translateX: 5}, 300).then(() => lastRight.remove())
+        lastRight.anim({opacity: 0, translateX: 5}, 300).then(() => {
+          if (lastRight) lastRight.deactivate()
+          lastRight.remove()
+        })
         await delay(150)
       }
       
-      this.right.anim({opacity: 1, translateX: .1})
-      this.right.activate()
-      if (lastRight) lastRight.deactivate()
+      setTimeout(() => {
+        this.right.anim({opacity: 1, translateX: .1}).then(() => {
+          this.right.activate()
+        })
+      }, 0)
     }
 
     if (this.right && this.left) {
