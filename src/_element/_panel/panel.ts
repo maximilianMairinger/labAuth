@@ -9,6 +9,8 @@ export default abstract class Panel extends Element {
   public abstract preferedWidth: "big" | "small" | Percent
   protected active: boolean
 
+  public preventFocusInterference = false
+
   public wantsCardReader: boolean
   constructor() {
     super()
@@ -22,9 +24,10 @@ export default abstract class Panel extends Element {
   }
 
   public activate(): void {
+    log("accc")
     setTimeout(() => {
       this.activationCallback()
-    }, 200)
+    }, 500)
     
   }
   public deactivate(): void {

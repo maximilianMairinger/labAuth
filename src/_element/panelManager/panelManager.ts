@@ -55,8 +55,6 @@ export default class PanelManager extends Element {
   public async setPanel(panel: keyof PanelIndex, side: "left" | "right") {
     let newPanel = this.panelIndex[panel]
 
-    log("setpanel")
-
     if (side === "left") {
       if (newPanel.preferedWidth === "big") {
         this.leftContainer.anim({width: "58.75%"}, 700)
@@ -76,13 +74,20 @@ export default class PanelManager extends Element {
       this.left = this.panelIndex[panel]
       this.leftContainer.apd(this.left);
       if (lastLeft) {
-        lastLeft.anim({opacity: 0, translateX: 5}, 300).then(() => lastLeft.remove())
+        lastLeft.anim({opacity: 0, translateX: 5}, 300).then(() => {
+          if (lastLeft) lastLeft.deactivate()
+          lastLeft.remove()
+        })
         await delay(150)
       }
       
-      this.left.anim({opacity: 1, translateX: .1})
-      this.left.activate()
-      if (lastLeft) lastLeft.deactivate()
+      setTimeout(() => {
+        this.left.anim({opacity: 1, translateX: .1}).then(() => {   
+          log("foc left")  
+          this.left.activate()
+        })
+      }, 0)
+      
     }
     if (side === "right") {
       let lastRight = this.right
@@ -99,7 +104,7 @@ export default class PanelManager extends Element {
     }
 
     if (this.right && this.left) {
-      if (this.right.wantsCardReader || this.left.wantsCardReader) cardReader.enable()
+      if ((this.right.wantsCardReader || this.left.wantsCardReader) && !this.right.preventFocusInterference && !this.left.preventFocusInterference) cardReader.enable()
       else cardReader.disable()
     }
     

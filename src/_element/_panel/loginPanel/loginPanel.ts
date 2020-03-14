@@ -8,9 +8,14 @@ import Input from "./../../input/input"
 
 export default class LoginPanel extends Panel {
   public preferedWidth: "small" = "small"
+  public preventFocusInterference = true
+
+
   private inputs = this.q("c-input") as ElementList<Input>
   private usr = this.inputs.first
   private pwd = this.inputs[1]
+
+  
 
   constructor(private manager: PanelManager) {
     super()
@@ -19,7 +24,7 @@ export default class LoginPanel extends Panel {
 
   activationCallback() {
     super.activationCallback()
-    
+
     this.usr.focus()
   }
 

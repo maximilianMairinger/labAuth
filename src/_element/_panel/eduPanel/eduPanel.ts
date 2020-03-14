@@ -290,31 +290,31 @@ export default class EduPanel extends Panel {
 
     let res = await req
 
-    // this.mainCard.doneAuthentication()
+    this.mainCard.doneAuthentication()
 
-    // if (res.entry) {
-    //   if (res.employeetype === "lehrer") {
-    //     localStorage.sessKey = res.sessKey
-    //     this.expectTeacher()
+    if (res.entry) {
+      if (res.employeetype === "lehrer") {
+        localStorage.sessKey = res.sessKey
+        this.expectTeacher()
         
-    //   }
-    //   else {
-    //     this.expectStudent()
-    //   }
-    // }
-    // else {
+      }
+      else {
+        this.expectStudent()
+      }
+    }
+    else {
       this.manager.setPanel("login", "left")
       
-    // }
+    }
 
-    // if (this.expectedCard === "student") {
-    //   ajax.post("cardAuth", {
-    //     cardId
-    //   })
-    // }
-    // else if (this.expectedCard === "teacher") {
+    if (this.expectedCard === "student") {
+      ajax.post("cardAuth", {
+        cardId
+      })
+    }
+    else if (this.expectedCard === "teacher") {
 
-    // }
+    }
   }
 
   stl() {

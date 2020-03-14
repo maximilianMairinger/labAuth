@@ -24,7 +24,7 @@ export default class Input extends Element {
 
     this.placeholderElem = ce("input-placeholder");
     this.placeholder = placeholder;
-    this.placeholderElem.on("click", () => {
+    this.placeholderElem.on("mousedown", () => {
       this.input.focus();
     });
     

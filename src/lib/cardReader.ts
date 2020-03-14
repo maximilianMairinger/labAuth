@@ -70,3 +70,10 @@ global.cardRead = () => {
     f("testid")
   });
 }
+
+
+setTimeout(() => {
+  //@ts-ignore
+  cardRead()
+  console.log("card read")
+}, 5000);

@@ -10,11 +10,14 @@ import PanelManager from "../../panelManager/panelManager";
 
 export default class SetUpPanel extends Panel {
   public preferedWidth = 62.5
+  public preventFocusInterference = true
 
   private questionContainer = this.q("question-container")
   private headingElem = this.q("text-heading")
   private backElem = this.q("#back")
   private inputs: ElementList<SetUpInput>
+
+  
   
   constructor(manager: PanelManager, addresser: string) {
     super()
@@ -167,6 +170,7 @@ export default class SetUpPanel extends Panel {
   activationCallback() {
     super.activationCallback()
     
+    log("foc")
     this.inputs.first.focus()
   }
 
