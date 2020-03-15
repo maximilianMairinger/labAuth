@@ -148,12 +148,17 @@ export default class EduPanel extends Panel {
   }
 
   private expectedCard: "student" | "teacher"
-  public expectStudent() {
-    this.expectedCard = "student"
-    this.mainCard.expectStudent()
-    this.showScrollDown()
-    this.enableTable()
+  public async expectStudent(temporary: boolean = false) {
+    
+    if (!temporary) {
+      this.showScrollDown()
+      this.enableTable()
+    }
+    
+
     this.mainCard.employeeType("Student")
+    this.expectedCard = "student"
+    await this.mainCard.expectStudent()
   }
   public async expectTeacher() {
     this.expectedCard = "teacher"
@@ -167,10 +172,10 @@ export default class EduPanel extends Panel {
       await delay(100)
     }
     
-    this.mainCard.employeeType("Teacher")
-    this.mainCard.expectTeacher()
     this.hideScrollDown()
     this.disableTable()
+    this.mainCard.employeeType("Teacher")
+    await this.mainCard.expectTeacher()
   }
 
   private async showScrollDown() {
@@ -317,12 +322,13 @@ export default class EduPanel extends Panel {
     let expectedUser = this.expectedCard
     if (res.entry) {
       if (res.data.employeetype === "lehrer") {
-        this.expectTeacher()
+        // got user teacher
+        
         this.mainCard.username(res.data.username)
         this.mainCard.fullName(res.data.fullName)
         this.mainCard.luckyDay()
-        this.mainCard.employeeType("Teacher")
         this.mainCard.updatePasscode()
+        await this.expectTeacher()
 
         if (expectedUser === "teacher") {
           // expected and got teacher
@@ -336,47 +342,59 @@ export default class EduPanel extends Panel {
             this.manager.setPanel("setUpPanel", "left")
             this.manager.setPanel("setUpConfirmationPanel", "right")
 
-            this.clearMainCard()
+            delay(250).then(() => {
+              this.clearMainCard()
+            })
 
           }
           else {
-            this.manager.panelIndex.info.updateContents("Logout", "You are about to log out of, hence terminate this session. Are you sure?")
-            let confirm = await this.showConfimOptions()
-            if (confirm) {
-              ajax.post("destroySession")
-              delete localStorage.sessKey
-              this.activeTeacherSession = false
-              this.clearMainCard()
-              this.manager.panelIndex.info.updateContents("LabAuth", "A teacher may log in with his edu.card to start the session.")
-            }
+            // double login teacher
+            await this.logoutAction()
           }
-        }
-        else {
-          // expect teacher but got student
-        }
-      }
-      else {
-        this.expectStudent()
-        if (expectedUser === "student") {
-            // got and expected student
         }
         else {
           // expected student but got teacher
-          this.expectTeacher()
-          this.mainCard.username(res.data.username)
-          this.mainCard.fullName(res.data.fullName)
-          this.mainCard.luckyDay()
-          this.mainCard.employeeType("Teacher")
-          this.mainCard.updatePasscode()
+          await this.logoutAction()
+        }
+      }
+      else {
+        this.mainCard.username(res.data.username)
+        this.mainCard.fullName(res.data.fullName)
+        this.mainCard.luckyDay()
+        this.mainCard.updatePasscode()
+        await this.expectStudent(true)
+        
+
+        if (expectedUser === "student") {
+            // got and expected student 
+
+
+            // TODO
+        }
+        else {
+          // expected teacher but got student
+          
+          
+
 
           if (!this.activeTeacherSession) {
-            // Teacher start session ( this should never happen )
+            // Teacher start session ( this should never happen since the must be a active Teacher session for expectedCard to be student )
             console.warn("Unexpected flow")
           }
           else {
-            // log out teacher
-
-
+            // expected teacher but got student
+            
+            
+            await this.mainCard.anim({
+              translateX: [6, -6, 5, -5, 4, -4, 3, -3, 2, -2, 1, -1, 0]
+            }, {duration: 1400, easing})
+  
+            this.mainCard.username("")
+            this.mainCard.fullName("Unknown")
+            this.mainCard.clearLuckyDay()
+            this.mainCard.updatePasscode(0)
+            await this.expectTeacher()
+            
           }
         }
       }
@@ -385,6 +403,18 @@ export default class EduPanel extends Panel {
       this.manager.setPanel("login", "left")
       this.mainCard.fullName("Unknown")
       
+    }
+  }
+
+  private async logoutAction() {
+    this.manager.panelIndex.info.updateContents("Logout", "You are about to log out of, hence terminate this session. Are you sure?")
+    let confirm = await this.showConfimOptions()
+    if (confirm) {
+      ajax.post("destroySession")
+      delete localStorage.sessKey
+      this.activeTeacherSession = false
+      this.clearMainCard()
+      this.manager.panelIndex.info.updateContents("LabAuth", "A teacher may log in with his edu.card to start the session.")
     }
   }
 
@@ -412,10 +442,11 @@ export default class EduPanel extends Panel {
       ]),
       delay(550).then(() => Promise.all([
         this.loadingProgress.anim([
-          {width: "30%", offset: .5},
+          {width: "30%", offset: .3},
+          {width: "40%", offset: .555},
           {width: "74%", offset: .8},
           {width: "100%"}
-        ], {duration: 1500}),
+        ], {duration: 1700}),
         delay(50)
       ]))
     ])

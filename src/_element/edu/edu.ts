@@ -101,17 +101,18 @@ export default class Edu extends Element {
     this.spinner.anim({opacity: 0}).then(() => this.spinner.anim({rotateZ: 0}))
   }
 
-  expectStudent() {
-    this.eduTeacher.anim({opacity: 0})
+  async expectStudent() {
     let c = this.fullNameOverlay.childs()
     c.first.css("background", "linear-gradient(90deg, rgba(83, 80, 74, 0), rgba(236, 168, 56, 1))")
     c[1].css("background", "rgb(236, 168, 56)")
+    await this.eduTeacher.anim({opacity: 0})
   }
-  expectTeacher() {
-    this.eduTeacher.anim({opacity: 1})
+  async expectTeacher() {
     let c = this.fullNameOverlay.childs()
     c.first.css("background", "linear-gradient(90deg, rgba(77, 191, 238, 0), rgba(77, 191, 238, 1))")
     c[1].css("background", "rgb(77, 191, 238)")
+    await this.eduTeacher.anim({opacity: 1})
+    
   }
 
   stl() {

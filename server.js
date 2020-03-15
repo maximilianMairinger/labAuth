@@ -25,7 +25,7 @@ app.post("/LDAPAuth", (req, res) => {
 })
 
 app.post("/cardAuth", (req, res) => {
-  res.send({entry: true, data: {employeetype: "lehrer", username: "ddolezal", fullName: "Domenik Dolezal", registered: [true, false, true, true], sessKey: "sessKeyDummy"}})
+  res.send({entry: true, data: {employeetype: "student", username: "ddolezal", fullName: "Domenik Dolezal", registered: [true, false, true, true], sessKey: "sessKeyDummy"}})
 })
 
 app.post("/destroySession", (req, res) => {
