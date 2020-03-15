@@ -96,6 +96,7 @@ loading-bar {
 
 loading-progress {
   position: absolute;
+  border-radius: 3px;
   left: 0;
   top: 0;
   bottom: 0;

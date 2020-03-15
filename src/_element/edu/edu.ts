@@ -55,6 +55,9 @@ export default class Edu extends Element {
   luckyDay() {
     this.luckyDayElem.text("Lucky day: " + prittyDate())
   }
+  clearLuckyDay() {
+    this.luckyDayElem.text("Lucky day:")
+  }
   employeeType(to: string) {
     this.validUntilElem.text("Employee: " + to)
   }

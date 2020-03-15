@@ -69,7 +69,9 @@ export function enable() {
 
 //@ts-ignore
 global.cardRead = () => {
+  console.log("card read")
   if (input.tabIndex === 0) {
+    
     subscription.forEach((f) => {
       f("testid")
     });
@@ -81,5 +83,10 @@ global.cardRead = () => {
 setTimeout(() => {
   //@ts-ignore
   cardRead()
-  console.log("card read")
+  
 }, 3000);
+
+setTimeout(() => {
+  //@ts-ignore
+  cardRead()
+}, 10000);

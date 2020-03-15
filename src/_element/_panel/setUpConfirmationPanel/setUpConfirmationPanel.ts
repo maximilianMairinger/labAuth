@@ -23,19 +23,18 @@ export default class SetUpConfirmationPanel extends Panel {
     this.confirmButton = new Button("Sure").addClass("confirm")
 
     this.abortButton.addActivationCallback(() => {
-      manager.panelIndex.info.heading("LabAuth")
-      manager.panelIndex.info.content("A teacher may log in with his edu.card to start the session.")
+      manager.panelIndex.info.updateContents("LabAuth", "A teacher may log in with his edu.card to start the session.")
       manager.panelIndex.edu.expectTeacher()
       manager.setPanel("info", "left")
       manager.setPanel("edu", "right")
     })
 
     this.confirmButton.addActivationCallback(async () => {
-      await delay(3000);
+      await delay(600);
     }, () => {
-      manager.panelIndex.info.heading("LabAuth")
-      manager.panelIndex.info.content("You may sigh into <text-hightlight>" + this.subjectElem.text() + "</text-hightlight> here. To sign out register your card again.")
+      manager.panelIndex.info.updateContents("LabAuth", "You may sigh into <text-hightlight>" + this.subjectElem.text() + "</text-hightlight> here. To sign out register your card again.")
       manager.panelIndex.edu.expectStudent()
+      manager.panelIndex.edu.maxHoursCount(+this.hoursElem.text())
       manager.setPanel("info", "left")
       manager.setPanel("edu", "right")
     })

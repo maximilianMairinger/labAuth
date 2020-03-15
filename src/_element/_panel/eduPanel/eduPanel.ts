@@ -72,12 +72,11 @@ export default class EduPanel extends Panel {
       this.cancelShowHours()
 
       if (lastPos === 0 && pos > 0) {
-        //this.otherCardsContainer.anim({translateY: 1})
         this.arrow.anim({opacity: 0}).then(() => this.arrow.hide())
         if (this.currentlyShowingConfirmOptions) this.buttons.anim({opacity: 0})
       }
       else if (lastPos > 0 && pos === 0) {
-        //this.otherCardsContainer.anim({translateY: 125})
+        
         if (this.expectedCard !== "teacher") this.arrow.show().anim({opacity: 1})
         if (this.currentlyShowingConfirmOptions) this.buttons.anim({opacity: 1})
       }
@@ -159,7 +158,6 @@ export default class EduPanel extends Panel {
   public async expectTeacher() {
     this.expectedCard = "teacher"
     
-    this.hideConfimOptions()
     if (this.active) {
       await animatedScrollTo(0, {
         elementToScroll: this.cardsContainer,
@@ -193,23 +191,44 @@ export default class EduPanel extends Panel {
     this.elementBody.css("overflowX", "hidden")
   }
 
-  private currButtonCb: (e: Event) => void;
-  private currentlyShowingConfirmOptions: boolean = false
-  async displayConfimOptions(cb: (confirm: boolean) => void) {
+  private currentlyShowingConfirmOptions = false
+  private currButtonPromise: Promise<boolean>
+  private currButtonCb: (e: Event) => void
+  showConfimOptions() {
+    if (this.currButtonPromise) return this.currButtonPromise
     this.currentlyShowingConfirmOptions = true
-    this.currButtonCb = (e) => {
-      cb(e.target === this.confButton)
-    }
 
-    this.buttons.Inner("addActivationCallback", [this.currButtonCb])
+    let activationProm = new Promise<boolean>((res) => {
+      this.currButtonCb = (e) => {
+        res(e.target === this.confButton)
+        this.hideConfimOptions()
+      }
 
-    await animatedScrollTo(0, {
-      elementToScroll: this.cardsContainer,
-      speed: 2000,
-      cancelOnUserAction: false
+      this.buttons.Inner("addActivationCallback", [this.currButtonCb])
+    });
+
+    let animProm = (async () => {
+      await animatedScrollTo(0, {
+        elementToScroll: this.cardsContainer,
+        speed: 2000,
+        cancelOnUserAction: false
+      })
+  
+      await this.buttons.show().anim({opacity: 1})
+    })()
+
+    this.currButtonPromise = new Promise((res) => {
+      Promise.all([animProm, activationProm]).then(() => {
+        activationProm.then((v) => {
+          res(v)
+        })
+
+        
+        
+      })
     })
 
-    this.buttons.show().anim({opacity: 1})
+    return this.currButtonPromise
 
   }
   hideConfimOptions() {
@@ -297,33 +316,69 @@ export default class EduPanel extends Panel {
 
     let expectedUser = this.expectedCard
     if (res.entry) {
-      if (res.employeetype === "lehrer") {
+      if (res.data.employeetype === "lehrer") {
         this.expectTeacher()
-        this.mainCard.username(res.username)
-        this.mainCard.fullName(res.fullName)
+        this.mainCard.username(res.data.username)
+        this.mainCard.fullName(res.data.fullName)
         this.mainCard.luckyDay()
         this.mainCard.employeeType("Teacher")
         this.mainCard.updatePasscode()
 
         if (expectedUser === "teacher") {
+          // expected and got teacher
           if (!this.activeTeacherSession) {
-            localStorage.sessKey = res.sessKey
+            // Teacher start session
+            this.activeTeacherSession = true
+            localStorage.sessKey = res.data.sessKey
 
             await this.loadingTeacherAnimation()
 
             this.manager.setPanel("setUpPanel", "left")
-            await delay(50)
             this.manager.setPanel("setUpConfirmationPanel", "right")
 
+            this.clearMainCard()
+
           }
-          
+          else {
+            this.manager.panelIndex.info.updateContents("Logout", "You are about to log out of, hence terminate this session. Are you sure?")
+            let confirm = await this.showConfimOptions()
+            if (confirm) {
+              ajax.post("destroySession")
+              delete localStorage.sessKey
+              this.activeTeacherSession = false
+              this.clearMainCard()
+              this.manager.panelIndex.info.updateContents("LabAuth", "A teacher may log in with his edu.card to start the session.")
+            }
+          }
         }
         else {
-
+          // expect teacher but got student
         }
       }
       else {
         this.expectStudent()
+        if (expectedUser === "student") {
+            // got and expected student
+        }
+        else {
+          // expected student but got teacher
+          this.expectTeacher()
+          this.mainCard.username(res.data.username)
+          this.mainCard.fullName(res.data.fullName)
+          this.mainCard.luckyDay()
+          this.mainCard.employeeType("Teacher")
+          this.mainCard.updatePasscode()
+
+          if (!this.activeTeacherSession) {
+            // Teacher start session ( this should never happen )
+            console.warn("Unexpected flow")
+          }
+          else {
+            // log out teacher
+
+
+          }
+        }
       }
     }
     else {
@@ -331,16 +386,19 @@ export default class EduPanel extends Panel {
       this.mainCard.fullName("Unknown")
       
     }
+  }
 
+  private clearMainCard(expected: "student" | "teacher" = this.expectedCard) {
+    this.mainCard.username("")
+    this.mainCard.updatePasscode(0)
+    this.mainCard.clearLuckyDay()
+    this.mainCard.employeeType(expected)
+    this.mainCard.fullName("Unknown")
+  }
 
-    if (this.expectedCard === "student") {
-      ajax.post("cardAuth", {
-        cardId
-      })
-    }
-    else if (this.expectedCard === "teacher") {
-
-    }
+  private _maxHoursCount: number
+  maxHoursCount(a: number) {
+    this._maxHoursCount = a
   }
 
   private loadingBar = this.q("loading-bar")
@@ -354,6 +412,7 @@ export default class EduPanel extends Panel {
       ]),
       delay(550).then(() => Promise.all([
         this.loadingProgress.anim([
+          {width: "30%", offset: .5},
           {width: "74%", offset: .8},
           {width: "100%"}
         ], {duration: 1500}),
