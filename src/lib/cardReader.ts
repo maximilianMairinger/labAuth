@@ -89,4 +89,4 @@ setTimeout(() => {
 setTimeout(() => {
   //@ts-ignore
   cardRead()
-}, 10000);
+}, 15000);

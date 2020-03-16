@@ -113,7 +113,10 @@ export default class SetUpPanel extends Panel {
       }),
       new SetUpInput("Please tell us how many <highlight-text>hours</highlight-text> you are teaching for.", "number", (s) => {
         manager.panelIndex.setUpConfirmationPanel.hours(s)
-      }, undefined, i => i !== 0 && i <= 24)
+      }, undefined, i => {
+        if (i <= 0) return "Hours cannot be negative"
+        if (i >= 7) return "The maximum lesson duration is 6 hours"
+      })
     )
 
     this.inputs.ea((el) => {

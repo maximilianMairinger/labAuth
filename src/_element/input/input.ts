@@ -15,7 +15,7 @@ export default class Input extends Element {
   private enterAlreadyPressed = false;
 
   private _type: "password" | "text" | "number" | "email" | "uppercase";
-  constructor(placeholder: string = "", type: "password" | "text" | "number" | "email" | "uppercase" = "text", public submitCallback?: (value: string, e: KeyboardEvent) => void, value?: any, public customVerification?: (value?: string | number) => boolean, public intrusiveValidation?: boolean) {
+  constructor(placeholder: string = "", type: "password" | "text" | "number" | "email" | "uppercase" = "text", public submitCallback?: (value: string, e: KeyboardEvent) => void, value?: any, public customVerification?: (value?: string | number) => (boolean | string | void), public intrusiveValidation?: boolean) {
     super(false);
     
     this.type = type;
@@ -37,9 +37,10 @@ export default class Input extends Element {
         listener.disable()
         return
       }
-      let valid = this.validate()
+      let invalid = this.validate()
 
-      if (valid) {
+
+      if (!invalid) {
         this.showInvalidation(false)
         listener.disable()
       }
@@ -47,20 +48,21 @@ export default class Input extends Element {
 
     this.input.on("blur", (e) => {
       if (this.intrusiveValidation) return
-      let valid = this.validate()
-      
-      if (!valid) {
-        this.showInvalidation(true)
+      let invalid = this.validate()
+      if (invalid) {
+        this.showInvalidation(invalid)
         listener.enable()
       }
     });
 
     // intrusive
     this.input.on("input", () => {
-      if (!this.intrusiveValidation) return
-      let valid = this.validate()
 
-      this.showInvalidation(!valid)
+
+      if (!this.intrusiveValidation) return
+      let invalid = this.validate()
+
+      this.showInvalidation(invalid)
     })
 
 
@@ -186,7 +188,7 @@ export default class Input extends Element {
     return this._type;
   }
   public isValid(emptyAllowed: boolean = true) {
-    let valid = this.validate();
+    let valid = !this.validate();
     if (emptyAllowed) return valid;
     return this.value !== "" && valid;
   }
@@ -201,13 +203,21 @@ export default class Input extends Element {
     this.input.value = to;
     this.alignPlaceHolder();
   }
-  private validate() {
-    let valid = true;
-    if (this.type === "number") valid = !isNaN(this.value);
-    else if (this.type === "email") valid = emailValidationRegex.test(this.value.toLowerCase());
-    if (this.customVerification !== undefined) if (!this.customVerification(this.value)) valid = false;
-    if (this.input.value === "") valid = true
-    return valid;
+  private validate(): string | boolean | void {
+    let invalid: string | boolean | void = false
+    if (this.type === "number") invalid = isNaN(this.value) ? "Expected a number" : false;
+    else if (this.type === "email") invalid = emailValidationRegex.test(this.value.toLowerCase()) ? "This is not a valid email address" : false;
+    if (this.customVerification !== undefined) {
+      let returnInvalid = this.customVerification(this.value)
+      if (typeof returnInvalid === "boolean") {
+        if (!returnInvalid) invalid = false
+      }
+      else if (typeof returnInvalid === "string") {
+        if (returnInvalid) invalid = returnInvalid
+      }
+    }
+    if (this.input.value === "") invalid = false
+    return invalid;
   }
   private alignPlaceHolder() {
     if (this.value === "" && !this.isFocused) this.placeHolderDown("css");
@@ -215,7 +225,7 @@ export default class Input extends Element {
   }
   private async placeHolderUp(func: "anim" | "css" = "anim") {
     if (!this.isUp) {
-      // This seems to be too complex for typescript. Maybe in thefuture the ts-ignore can be removed. Proof that it should work.
+      // This seems to be too complex for typescript. Maybe in the future the ts-ignore can be removed. Proof that it should work.
       // this.placeholder.css({marginLeft: "13px", marginTop: "10px", fontSize: "1em"})
       // this.placeholder.anim({marginLeft: "13px", marginTop: "10px", fontSize: "1em"})
       //@ts-ignore
@@ -233,20 +243,26 @@ export default class Input extends Element {
     }
   }
   public readonly currentlyInvalid = false
-  public showInvalidation(valid: boolean = true) {
+  public showInvalidation(valid: boolean | string | void = true) {
     if (valid) {
-      this.title = "Invalid input";
       this.allElems.addClass("invalid");
+      if (valid === true) {
+        this.title = "Invalid input";
+      }
+      else if (typeof valid === "string") {
+        this.title = valid
+      }
     }
     else {
       this.title = "";
       this.allElems.removeClass("invalid");
     }
+
     //@ts-ignore
-    this.currentlyInvalid = valid
+    this.currentlyInvalid = !!valid
   }
   static get observedAttributes() {
-    return ["placeholder", "type", "value"];
+    return ["placeholder", "type", "value", "intrusiveValidation"];
   }
   stl() {
     return require('./input.css').toString();

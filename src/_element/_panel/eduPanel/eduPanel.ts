@@ -244,7 +244,7 @@ export default class EduPanel extends Panel {
 
   private showHrsCancled = false
   private showingHours = false
-  async showHours(max: number, toBeGone: number = 0) {
+  async showHours(max: number = this._maxHoursCount, toBeGone: number = 0) {
     
     if (this.cardsContainer.scrollTop !== 0) {
       await animatedScrollTo(0, {
@@ -278,8 +278,10 @@ export default class EduPanel extends Panel {
     await delay(2500)
     if (this.showHrsCancled) return this.showHrsCancled = false
     await Promise.all([
-      this.mainCard.anim({translateY: 0}, {duration: 700, easing}),
-      elements.anim({translateY: 0}, {duration: 700, easing}).then(() => elements.remove())
+      this.mainCard.anim({translateY: .1}, {duration: 700, easing}),
+      elements.anim({translateY: 0}, {duration: 700, easing}).then(() => {
+        elements.remove()
+      })
     ])
     this.showingHours = false
     this.showHrsCancled = false
@@ -362,14 +364,16 @@ export default class EduPanel extends Panel {
         this.mainCard.fullName(res.data.fullName)
         this.mainCard.luckyDay()
         this.mainCard.updatePasscode()
-        await this.expectStudent(true)
+        
         
 
         if (expectedUser === "student") {
             // got and expected student 
+          
+            await this.expectStudent()
+            await this.showHours()
 
-
-            // TODO
+            
         }
         else {
           // expected teacher but got student
@@ -383,6 +387,7 @@ export default class EduPanel extends Panel {
           }
           else {
             // expected teacher but got student
+            await this.expectStudent(true)
             
             
             await this.mainCard.anim({
@@ -434,6 +439,7 @@ export default class EduPanel extends Panel {
   private loadingBar = this.q("loading-bar")
   private loadingProgress = this.loadingBar.childs("loading-progress")
   private async loadingTeacherAnimation() {
+    this.loadingBar.css("opacity", 1)
     let prom = Promise.all([
       Promise.all([
         this.loadingBar.anim({translateY: 85}, {duration: 900, easing}),

@@ -92,6 +92,7 @@ loading-bar {
 
   width: 125px;
   height: 6px;
+  opacity: 0;
 }
 
 loading-progress {
