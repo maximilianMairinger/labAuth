@@ -17,7 +17,8 @@ let easing = new Easing(0.485, 0.010, 0.155, 1);
 
 export type Entry = {
   fullName: string,
-  username: string
+  username: string,
+  registered: boolean[]
 }
 
 
@@ -36,7 +37,7 @@ export default class EduPanel extends Panel {
   private cancButton: Button
   private confButton: Button
 
-  constructor(private manager: PanelManager, list: DataArray<Entry>) {
+  constructor(private manager: PanelManager, private list: DataArray<Entry>) {
     super()
 
     this.arrow.on("mousedown", async (e) => {
@@ -328,8 +329,13 @@ export default class EduPanel extends Panel {
 
     let elements = this.hoursContainer.childs()
 
+    this.mainCard.username("")
+    this.mainCard.fullName("Unknown")
+    this.mainCard.clearLuckyDay()
+    this.mainCard.updatePasscode(0)
+
     await Promise.all([
-      this.mainCard.anim({translateY: 0}, {duration: 2000, easing}),
+      this.mainCard.anim({translateY: .1}, {duration: 2000, easing}),
       elements.anim({opacity: 0}, {duration: 100, easing}).then(() => elements.hide())
     ])
 
@@ -407,15 +413,15 @@ export default class EduPanel extends Panel {
         
 
         if (expectedUser === "student") {
-            // got and expected student 
-            
-        
-            delay(400).then(() => {
-              this.expectStudent()
-            })
-            await this.showHours()
-
-            log("done")
+          // got and expected student 
+          
+      
+          // TODO: Show hours needs to take entries as second param. 
+          this.list.add({username: res.data.username, fullName: res.data.fullName, registered: res.data.registered})
+          delay(600).then(() => {
+            this.expectStudent()
+          })
+          await this.showHours()
             
         }
         else {
