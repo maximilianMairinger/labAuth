@@ -154,8 +154,12 @@ export default class EduPanel extends Panel {
       this.showScrollDown()
       this.enableTable()
     }
+    else {
+      this.hideScrollDown()
+      this.disableTable()
+    }
     
-
+    if (this.expectedCard === "student") return
     this.mainCard.employeeType("Student")
     this.expectedCard = "student"
     await this.mainCard.expectStudent()
@@ -181,11 +185,11 @@ export default class EduPanel extends Panel {
   private async showScrollDown() {
     this.arrow.show()
     this.cardsContainer.css("overflowY", "auto")
-    await this.arrow.anim({opacity: 1})
+    await this.arrow.anim({opacity: 1}, 500)
   }
   private async hideScrollDown() {
     this.cardsContainer.css("overflowY", "hidden")
-    await this.arrow.anim({opacity: 0})
+    await this.arrow.anim({opacity: 0}, 500)
     this.arrow.hide()
   }
 
@@ -277,12 +281,40 @@ export default class EduPanel extends Panel {
     
     await delay(2500)
     if (this.showHrsCancled) return this.showHrsCancled = false
-    await Promise.all([
-      this.mainCard.anim({translateY: .1}, {duration: 700, easing}),
-      elements.anim({translateY: 0}, {duration: 700, easing}).then(() => {
-        elements.remove()
+
+    let currMain = this.mainCard
+
+    let proms = []
+
+    proms.add(elements.anim({translateY: .1}, {duration: 500, easing}).then(() => {
+      elements.hide()
+      elements.remove()
+    }))
+    proms.add(this.mainCard.anim([
+      {translateY: 12, opacity: 1, offset: .8},
+      {translateY: 21, opacity: 0}
+    ], {duration: 1100, easing: new Easing(0.34, 0.01, 0.03, 0.97)}))
+
+    this.mainCard = new Edu(this.expectedCard)
+    this.mainCard.css({opacity: 0, translateY: 158, position: "absolute"})
+    
+    this.cardsContainer.prepend(this.mainCard)
+
+    proms.add(delay(850).then(() => {
+      return this.mainCard.anim({opacity: 1, translateY: 168}, {easing, duration: 1000}).then(() => {
+        this.mainCard.css({
+          translateY: .1,
+          position: "relative"
+        })
+        this.mainCard.id = "mainCard"
+        currMain.remove()
       })
-    ])
+    }
+      
+    ))
+
+    await Promise.all(proms)
+
     this.showingHours = false
     this.showHrsCancled = false
   }
@@ -298,7 +330,7 @@ export default class EduPanel extends Panel {
 
     await Promise.all([
       this.mainCard.anim({translateY: 0}, {duration: 2000, easing}),
-      elements.anim({opacity: 0}, {duration: 150, easing}).then(() => elements.hide())
+      elements.anim({opacity: 0}, {duration: 100, easing}).then(() => elements.hide())
     ])
 
     this.showingHours = false
@@ -307,7 +339,14 @@ export default class EduPanel extends Panel {
 
   private activeTeacherSession = false
   async cardReadCallback(cardId: string) {
+    await animatedScrollTo(0, {
+      elementToScroll: this.cardsContainer,
+      speed: 2000,
+      cancelOnUserAction: false
+    })
+    this.hideScrollDown()
     this.mainCard.authentication()
+    
 
 
 
@@ -369,10 +408,14 @@ export default class EduPanel extends Panel {
 
         if (expectedUser === "student") {
             // got and expected student 
-          
-            await this.expectStudent()
+            
+        
+            delay(400).then(() => {
+              this.expectStudent()
+            })
             await this.showHours()
 
+            log("done")
             
         }
         else {
@@ -409,6 +452,8 @@ export default class EduPanel extends Panel {
       this.mainCard.fullName("Unknown")
       
     }
+
+    if (this.expectedCard === "student") this.showScrollDown()
   }
 
   private async logoutAction() {
