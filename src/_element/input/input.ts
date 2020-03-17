@@ -206,6 +206,8 @@ export default class Input extends Element {
     this.input.value = to.toString();
     this.alignPlaceHolder();
 
+    if (this.isDisabled) return
+
     // unintrusice validation
     (() => {
       if (this.intrusiveValidation) {
