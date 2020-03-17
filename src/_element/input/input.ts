@@ -1,6 +1,7 @@
 import Element from "./../element";
 import { ElementList, Tel } from "extended-dom"
 
+
 var emailValidationRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export type Value = string | number
@@ -41,6 +42,8 @@ export default class Input extends Element {
     this.placeholderElem.on("click", () => {
       this.input.focus();
     });
+
+    this.placeholderElem.tabIndex = -1
     
 
     // ----- Validation start
@@ -85,11 +88,11 @@ export default class Input extends Element {
       this.enterAlreadyPressed = false
     })
 
-    this.on("focus", () => {
-      this.input.focus()
+    this.input.on("focus", () => {
+      if (!this.isDisabled) this.input.focus()
       this.placeHolderUp();
     });
-    this.on("blur", () => {
+    this.input.on("blur", () => {
       if (this.value === "") this.placeHolderDown();
     });
     
@@ -127,14 +130,13 @@ export default class Input extends Element {
     if (this.isDisabled) return
     this.isDisabled = true
     this.allElems.addClass("disabled")
-    let foc = this.isFocused
-    this.input.disabled = true
-    if (foc) this.focus()
+    if (this.isFocused) this.placeholderElem.focus()
     this.enterAlreadyPressed = false
   }
 
   public focus() {
-    this.input.focus()
+    if (this.isDisabled) super.focus()
+    else this.input.focus()
   }
 
   public enable() {
