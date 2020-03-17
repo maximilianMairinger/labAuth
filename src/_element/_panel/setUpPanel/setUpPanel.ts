@@ -16,6 +16,7 @@ export default class SetUpPanel extends Panel {
   private headingElem = this.q("text-heading")
   private backElem = this.q("#back").first
   private inputs: ElementList<SetUpInput>
+  private activeElement: SetUpInput
 
   
   
@@ -27,7 +28,7 @@ export default class SetUpPanel extends Panel {
     
     let currentAnimation: Symbol
     let submitCb = async (back = false, submit = false) => {
-      let sib = back ? activeElement.previousSibling as HTMLElement : activeElement.nextSibling as HTMLElement
+      let sib = back ? this.activeElement.previousSibling as HTMLElement : this.activeElement.nextSibling as HTMLElement
       
       
       
@@ -35,7 +36,7 @@ export default class SetUpPanel extends Panel {
         currentAnimation = Symbol("anim")
         let localAniamtion = currentAnimation
         
-        let currentlyActive = activeElement
+        let currentlyActive = this.activeElement
 
 
         if (sib === this.inputs.first) this.hideBackButton()
@@ -79,13 +80,13 @@ export default class SetUpPanel extends Panel {
           })
         }
         
-        activeElement = sib as SetUpInput
+        this.activeElement = sib as SetUpInput
         
       }
       else {
         if (back) {
-          await activeElement.anim({translateX: -2})
-          await activeElement.anim({translateX: .1})
+          await this.activeElement.anim({translateX: -2})
+          await this.activeElement.anim({translateX: .1})
         }
         else {
           if (submit) {
@@ -135,7 +136,7 @@ export default class SetUpPanel extends Panel {
     })
 
 
-    let activeElement = this.inputs.first
+    this.activeElement = this.inputs.first
     this.inputs.first.show()
     this.inputs.first.focus()
 
@@ -177,13 +178,16 @@ export default class SetUpPanel extends Panel {
     })
 
     this.inputs.first.show()
-    this.inputs.first.css({opacity: 1, translateY: .1})
+    this.inputs.first.css({opacity: 1, translateX: .1})
+    
 
     for (let i = 1; i < this.inputs.length; i++) {
       const elem = this.inputs[i];
       elem.hide()
       elem.css("opacity", 0)
     }
+
+    this.activeElement = this.inputs.first
 
     this.hideBackButton()
   }

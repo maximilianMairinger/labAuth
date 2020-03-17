@@ -59,7 +59,7 @@ export default class EduPanel extends Panel {
       this.cancButton.disable()
       this.confButton.disable()
       await delay(600)
-    }, async function (e) {
+    }, async function () {
       if (t.currButtonCb) t.currButtonCb(this === t.confButton)
       delete t.currButtonCb
       await t.hideConfimOptions()
@@ -88,18 +88,18 @@ export default class EduPanel extends Panel {
       this.cancelShowHours()
 
       if (lastPos === 0 && pos > 0) {
-        this.arrow.anim({opacity: 0}).then(() => this.arrow.hide())
+        if (list.length() !== 0) this.arrow.anim({opacity: 0}).then(() => this.arrow.hide())
         if (this.currentlyShowingConfirmOptions) this.hideConfimOptions()
       }
       else if (lastPos > 0 && pos === 0) {
         
-        if (this.expectedCard !== "teacher") this.arrow.show().anim({opacity: 1})
+        if (list.length() !== 0) if (this.expectedCard !== "teacher") this.arrow.show().anim({opacity: 1})
       }
 
       lastPos = pos
     })
     
-    this.otherCardsContainer.anim([{translateY: 125, offset: 0}, {translateY: 0}], {start: 0, end: 300}, guide)
+    this.otherCardsContainer.anim([{translateY: 125, offset: 0}, {translateY: .1}], {start: 0, end: 300}, guide)
 
 
 
@@ -198,14 +198,19 @@ export default class EduPanel extends Panel {
   }
 
   private async showScrollDown() {
-    this.arrow.show()
-    this.cardsContainer.css("overflowY", "auto")
-    await this.arrow.anim({opacity: 1}, 500)
+    if (this.list.length() !== 0) {
+      this.arrow.show()
+      this.cardsContainer.css("overflowY", "auto")
+      await this.arrow.anim({opacity: 1}, 500)
+    }
+    
   }
   private async hideScrollDown() {
-    this.cardsContainer.css("overflowY", "hidden")
-    await this.arrow.anim({opacity: 0}, 500)
-    this.arrow.hide()
+    if (this.list.length() !== 0) {
+      this.cardsContainer.css("overflowY", "hidden")
+      await this.arrow.anim({opacity: 0}, 500)
+      this.arrow.hide()
+    }
   }
 
   private async enableTable() {
@@ -325,7 +330,7 @@ export default class EduPanel extends Panel {
     this.alreadyCanc = false
   }
 
-  private activeTeacherSession = false
+  public activeTeacherSession = false
   async cardReadCallback(cardId: string) {
     await this.cancelShowHours()
     await animatedScrollTo(0, {
@@ -431,6 +436,7 @@ export default class EduPanel extends Panel {
     else {
       this.manager.setPanel("login", "left")
       this.mainCard.fullName("Unknown")
+      log("unkn")
       
     }
 
@@ -490,7 +496,7 @@ export default class EduPanel extends Panel {
         this.loadingBar.css("opacity", 0)
         this.loadingProgress.css("width", "0%")
       })
-      this.mainCard.anim({translateY: 0}, {duration: 900, easing})
+      this.mainCard.anim({translateY: .1}, {duration: 900, easing})
     })
 
 

@@ -2,6 +2,7 @@ import Panel from "../panel"
 import Button from "./../../_button/_rippleButton/blockButton/blockButton"
 import PanelManager from "../../panelManager/panelManager"
 import delay from "delay"
+import ajax from "../../../lib/ajax"
 
 
 
@@ -25,7 +26,9 @@ export default class SetUpConfirmationPanel extends Panel {
 
     this.abortButton.addActivationCallback(async () => {
       this.confirmButton.disable()
-      await delay(600);
+      await Promise.all([delay(600), ajax.post("destroySession")])
+      delete localStorage.sessKey
+      manager.panelIndex.edu.activeTeacherSession = false
     },
     () => {
       manager.panelIndex.info.updateContents("LabAuth", "A teacher may log in with his edu.card to start the session.")

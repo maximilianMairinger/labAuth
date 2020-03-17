@@ -20,10 +20,6 @@ let entries: DataArray<Entry> = new DataBase(new Data([])).asArray
 
 // ("gone" | "toBeGone" | "active")
 
-entries.add({username: "mmairinger", fullName: "Maximilian Mairinger", registered: ["gone", "active", "active", "active"]})
-entries.add({username: "rschlager", fullName: "Raphael Schlager", registered: ["gone", "active", "active", "active"]})
-entries.add({username: "dzimmermann", fullName: "Daniel Zimmermann", registered: ["gone", "active", "active", "active"]})
-
 type PanelIndex = {
   edu: EduPanel,
   info: InformPanel,

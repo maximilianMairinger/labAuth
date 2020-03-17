@@ -131,6 +131,8 @@ hour-box.toBeGone {
 #arrow {
   position: absolute;
   bottom: 20px;
+  display: none;
+  opacity: 0;
 }
 
 other-cards-container {
