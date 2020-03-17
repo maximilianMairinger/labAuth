@@ -31,7 +31,7 @@ export default class EduPanel extends Panel {
   private cardsContainer = this.q("scroll-conatiner.cards").first
   private tableContainer = this.q("scroll-conatiner.table").first
   private tableRoot = this.q("table-root").first
-  private arrow = this.q("#arrow")
+  private arrow = this.q("#arrow").first
 
   private buttons: ElementList<Button>
   private cancButton: Button
@@ -450,9 +450,15 @@ export default class EduPanel extends Panel {
     this.manager.panelIndex.info.updateContents("Logout", "You are about to log out of, hence terminate this session. Are you sure?")
     let confirm = await this.showConfimOptions()
     if (confirm) {
-      await ajax.post("destroySession")
+      let req = ajax.post("destroySession")
+      while(this.list.length()) {
+        this.list.removeI(0)
+      }
+
+      await req
       delete localStorage.sessKey
       this.activeTeacherSession = false
+      
       this.clearMainCard()
       this.manager.panelIndex.info.updateContents("LabAuth", "A teacher may log in with his edu.card to start the session.")
     }
