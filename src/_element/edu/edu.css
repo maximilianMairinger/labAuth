@@ -99,7 +99,7 @@
 #FullnameOverlay {
   position: absolute;
   display: inline-block;
-  left: 100px;
+  left: 101px;
   top: 0;
   height: 20px;
   opacity: 0;
@@ -250,12 +250,12 @@ img-austria {
   height: 40px;
   width: 40px;
   font-size: 10px;
-  transform: rotate(90deg);
+  transform: rotate(90deg) translateY(-1px);
   transform-origin: 12.5px 0;
 }
 
 .edu-card-side.b {
-  transform: rotate(270deg) translateX(-25px);
+  transform: rotate(270deg) translateX(-27px) translateY(-1px);
   transform-origin: 2.5px 0;
 }
 
