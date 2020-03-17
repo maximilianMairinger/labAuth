@@ -3,7 +3,7 @@ import { ElementList, Tel } from "extended-dom"
 
 var emailValidationRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-
+export type Value = string | number
 
 export default class Input extends Element {
   private placeholderElem: HTMLElement;
@@ -145,8 +145,8 @@ export default class Input extends Element {
     if (this.isFocused) this.input.focus()
   }
 
-  private inputlisteners: Map<(value: string | number, e?: InputEvent) => void, (e: InputEvent) => void> = new Map()
-  public onInput(f: (value: string | number, e?: InputEvent) => void) {
+  private inputlisteners: Map<(value: Value, e?: InputEvent) => void, (e: InputEvent) => void> = new Map()
+  public onInput(f: (value: Value, e?: InputEvent) => void) {
     let inner = (e: InputEvent) => {
       if (!this.currentlyInvalid) f(this.value, e)
       else f("", e)
@@ -154,7 +154,7 @@ export default class Input extends Element {
     this.inputlisteners.set(f, inner)
     this.input.on("input", inner)
   }
-  public offInput(f: (value: string, e?: InputEvent) => void) {
+  public offInput(f: (value: Value, e?: InputEvent) => void) {
     this.input.off("input", this.inputlisteners.get(f))
     this.inputlisteners.delete(f)
   }
@@ -193,14 +193,14 @@ export default class Input extends Element {
     if (emptyAllowed) return valid;
     return this.value !== "" && valid;
   }
-  public get value(): string | number {
+  public get value(): Value {
     let v = this.input.value;
     if (this.type === "number") {
       return +v;
     }
     return v;
   }
-  public set value(to: string | number) {
+  public set value(to: Value) {
     this.input.value = to.toString();
     this.alignPlaceHolder();
 

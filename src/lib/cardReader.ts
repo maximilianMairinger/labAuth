@@ -91,15 +91,3 @@ global.cardRead = async () => {
 
   
 }
-
-
-setTimeout(() => {
-  //@ts-ignore
-  cardRead()
-  
-}, 3000);
-
-setTimeout(() => {
-  //@ts-ignore
-  cardRead()
-}, 10000);

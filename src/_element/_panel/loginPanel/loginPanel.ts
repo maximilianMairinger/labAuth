@@ -22,10 +22,10 @@ export default class LoginPanel extends Panel {
     
 
     this.usr.onInput((v) => {
-      manager.panelIndex.edu.mainCard.username(v)
+      manager.panelIndex.edu.mainCard.username(v as string)
     })
     this.pwd.onInput((v) => {
-      manager.panelIndex.edu.mainCard.updatePasscode(v.length)
+      manager.panelIndex.edu.mainCard.updatePasscode((v as string).length)
     })
   }
 

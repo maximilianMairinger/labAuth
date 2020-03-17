@@ -1,5 +1,5 @@
 import Element from "../element"
-import Input from "./../input/input"
+import Input, { Value } from "./../input/input"
 import "./../input/input"
 
 
@@ -8,7 +8,7 @@ export default class SetUpInput extends Element {
   private inputElem = this.q("c-input").first as Input
   private questionElem = this.q("text-paragraph")
   
-  constructor(question: string, type: "number" | "password" | "text" | "email" | "uppercase" = "text", public changeCallback?: (content: string, e: InputEvent) => void, public submitCallback?: (content: string, e: KeyboardEvent) => void, cunstomverifaction?: (value?: string | number) => (boolean | string | void)) {
+  constructor(question: string, type: "number" | "password" | "text" | "email" | "uppercase" = "text", public changeCallback?: (content: Value, e: InputEvent) => void, public submitCallback?: (content: Value, e: KeyboardEvent) => void, cunstomverifaction?: (value?: string | number) => (boolean | string | void)) {
     super(false)
 
     this.inputElem.type = type

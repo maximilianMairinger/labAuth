@@ -107,13 +107,13 @@ export default class SetUpPanel extends Panel {
 
     this.inputs = new ElementList(
       new SetUpInput("Please tell us what <highlight-text>subject</highlight-text> you are currently teaching.", "uppercase", (s) => {
-        manager.panelIndex.setUpConfirmationPanel.subject(s)
+        manager.panelIndex.setUpConfirmationPanel.subject(s as string)
       }),
       new SetUpInput("Please tell us which <highlight-text>classroom</highlight-text> you are teaching in.", "uppercase", (s) => {
-        manager.panelIndex.setUpConfirmationPanel.faculty(s)
+        manager.panelIndex.setUpConfirmationPanel.faculty(s as string)
       }),
       new SetUpInput("Please tell us how many <highlight-text>hours</highlight-text> you are teaching for.", "number", (s) => {
-        manager.panelIndex.setUpConfirmationPanel.hours(s)
+        manager.panelIndex.setUpConfirmationPanel.hours(s as string)
       }, undefined, i => {
         if (i <= 0) return "Hours cannot be negative"
         if (i >= 7) return "The maximum lesson duration is 6 hours"
