@@ -16,6 +16,7 @@ text-heading {
   margin-bottom: 2px;
   font-size: 45px;
   font-weight: bold;
+  min-height: 57.5px;
 }
 
 text-paragraph {
@@ -25,6 +26,7 @@ text-paragraph {
   margin-bottom: 10px;
   line-height: 23px;
   min-width: 170px;
+  min-height: 69px;
 }
 
 bottom-stripe {
