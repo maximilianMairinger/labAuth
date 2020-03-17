@@ -5,6 +5,7 @@ import { ElementList } from "extended-dom"
 import Input from "./../../input/input"
 import ajax from "../../../lib/ajax"
 import delay from "delay"
+import { disable, enable } from "../../../lib/cardReader"
 
 
 
@@ -34,10 +35,16 @@ export default class LoginPanel extends Panel {
 
       let res = await req
       if (res.valid) {
-        manager.panelIndex.edu
+        disable()
+        manager.panelIndex.edu.registerRequest(res.data).then(() => {
+          enable()
+        })
+
+        await manager.setPanel("info", "left", true)
         this.inputs.ea((input) => {
           input.value = ""
         })
+        this.inputs.Inner("enable", [])
       }
       else {
         this.inputs.Inner("showInvalidation", ["Username or password is incorrect."])
@@ -52,6 +59,7 @@ export default class LoginPanel extends Panel {
       if (invalid) {
         this.inputs.Inner("showInvalidation", [false])
         invalid = false
+        manager.panelIndex.edu.mainCard.fullName("Unknown")
       }
     }])
     

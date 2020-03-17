@@ -330,6 +330,84 @@ export default class EduPanel extends Panel {
     this.alreadyCanc = false
   }
 
+  public async registerRequest(data: any) {
+    let expectedUser = this.expectedCard
+    if (data.employeetype === "teacher") {
+      // got user teacher
+      
+      this.mainCard.username(data.username)
+      this.mainCard.fullName(data.fullName)
+      this.mainCard.luckyDay()
+      this.mainCard.updatePasscode()
+      await this.expectTeacher()
+
+      if (expectedUser === "teacher") {
+        // expected and got teacher
+        if (!this.activeTeacherSession) {
+          // Teacher start session
+          this.activeTeacherSession = true
+          localStorage.sessKey = data.sessKey
+
+          await this.loadingTeacherAnimation()
+
+          this.manager.setPanel("setUpPanel", "left")
+          this.manager.setPanel("setUpConfirmationPanel", "right")
+
+          delay(250).then(() => {
+            this.clearMainCard()
+          })
+
+        }
+        else {
+          // double login teacher
+          await this.logoutAction()
+        }
+      }
+      else {
+        // expected student but got teacher
+        await this.logoutAction()
+      }
+    }
+    else {
+      this.mainCard.username(data.username)
+      this.mainCard.fullName(data.fullName)
+      this.mainCard.luckyDay()
+      this.mainCard.updatePasscode()
+      
+      
+
+      if (expectedUser === "student") {
+        // got and expected student 
+        
+        this.list.add({username: data.username, fullName: data.fullName, registered: data.registered})
+        delay(600).then(() => {
+          this.expectStudent()
+        })
+        this.showHours(data.registered)
+          
+      }
+      else {
+        // expected teacher but got student
+        
+        
+
+        await this.expectStudent(true)
+          
+          
+        await this.mainCard.anim({
+          translateX: [6, -6, 5, -5, 4, -4, 3, -3, 2, -2, 1, -1, 0]
+        }, {duration: 1400, easing})
+
+        this.mainCard.username("")
+        this.mainCard.fullName("Unknown")
+        this.mainCard.clearLuckyDay()
+        this.mainCard.updatePasscode(0)
+        await this.expectTeacher()
+          
+      }
+    }
+  }
+
   public activeTeacherSession = false
   async cardReadCallback(cardId: string) {
     await this.cancelShowHours()
@@ -354,90 +432,12 @@ export default class EduPanel extends Panel {
 
     this.mainCard.doneAuthentication()
 
-    let expectedUser = this.expectedCard
     if (res.entry) {
-      if (res.data.employeetype === "teacher") {
-        // got user teacher
-        
-        this.mainCard.username(res.data.username)
-        this.mainCard.fullName(res.data.fullName)
-        this.mainCard.luckyDay()
-        this.mainCard.updatePasscode()
-        await this.expectTeacher()
-
-        if (expectedUser === "teacher") {
-          // expected and got teacher
-          if (!this.activeTeacherSession) {
-            // Teacher start session
-            this.activeTeacherSession = true
-            localStorage.sessKey = res.data.sessKey
-
-            await this.loadingTeacherAnimation()
-
-            this.manager.setPanel("setUpPanel", "left")
-            this.manager.setPanel("setUpConfirmationPanel", "right")
-
-            delay(250).then(() => {
-              this.clearMainCard()
-            })
-
-          }
-          else {
-            // double login teacher
-            await this.logoutAction()
-          }
-        }
-        else {
-          // expected student but got teacher
-          await this.logoutAction()
-        }
-      }
-      else {
-        this.mainCard.username(res.data.username)
-        this.mainCard.fullName(res.data.fullName)
-        this.mainCard.luckyDay()
-        this.mainCard.updatePasscode()
-        
-        
-
-        if (expectedUser === "student") {
-          // got and expected student 
-          
-      
-          // TODO: Show hours needs to take entries as second param. 
-          this.list.add({username: res.data.username, fullName: res.data.fullName, registered: res.data.registered})
-          delay(600).then(() => {
-            this.expectStudent()
-          })
-          this.showHours(res.data.registered)
-            
-        }
-        else {
-          // expected teacher but got student
-          
-          
-
-          await this.expectStudent(true)
-            
-            
-          await this.mainCard.anim({
-            translateX: [6, -6, 5, -5, 4, -4, 3, -3, 2, -2, 1, -1, 0]
-          }, {duration: 1400, easing})
-
-          this.mainCard.username("")
-          this.mainCard.fullName("Unknown")
-          this.mainCard.clearLuckyDay()
-          this.mainCard.updatePasscode(0)
-          await this.expectTeacher()
-            
-        }
-      }
+      await this.registerRequest(res.data)
     }
     else {
       this.manager.setPanel("login", "left")
       this.mainCard.fullName("Unknown")
-      log("unkn")
-      
     }
 
     if (this.expectedCard === "student") this.showScrollDown()
