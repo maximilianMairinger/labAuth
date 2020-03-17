@@ -83,10 +83,10 @@ export default class PanelManager extends Element {
 
         setTimeout(() => {
           log(this.left.css("display"))
-          this.left.anim([{opacity: 0, translateX: -5, offset: 0}, {opacity: 1, translateX: .1}], 300).then(() => {
+          this.left.anim([{opacity: 0, translateX: -5, offset: 0}, {opacity: 1, translateX: .1}], 400).then(() => {
             this.left.activate()
           })
-        }, 10)
+        }, 0)
         
       }
       if (side === "right") {
@@ -102,10 +102,10 @@ export default class PanelManager extends Element {
         }
         
         setTimeout(() => {
-          this.right.anim([{opacity: 0, translateX: -5, offset: 0}, {opacity: 1, translateX: .1}], 300).then(() => {
+          this.right.anim([{opacity: 0, translateX: -5, offset: 0}, {opacity: 1, translateX: .1}], 400).then(() => {
             this.right.activate()
           })
-        }, 10)
+        }, 0)
       }
 
       if (!prevCardReaderEnable && this.right && this.left) {
