@@ -82,7 +82,6 @@ export default class PanelManager extends Element {
         
 
         setTimeout(() => {
-          log(this.left.css("display"))
           this.left.anim([{opacity: 0, translateX: -5, offset: 0}, {opacity: 1, translateX: .1}], 400).then(() => {
             this.left.activate()
           })
