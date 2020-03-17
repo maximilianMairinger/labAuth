@@ -20,13 +20,21 @@ export default class SetUpConfirmationPanel extends Panel {
 
 
     this.abortButton = new Button("Abort").addClass("abort")
+    this.abortButton.hotkey = "Escape"
     this.confirmButton = new Button("Sure").addClass("confirm")
 
-    this.abortButton.addActivationCallback(() => {
+    this.abortButton.addActivationCallback(async () => {
+      this.confirmButton.disable()
+      await delay(600);
+    },
+    () => {
       manager.panelIndex.info.updateContents("LabAuth", "A teacher may log in with his edu.card to start the session.")
       manager.panelIndex.edu.expectTeacher()
       manager.setPanel("info", "left")
-      manager.setPanel("edu", "right")
+      manager.setPanel("edu", "right").then(() => {
+        this.confirmButton.enable()
+        manager.panelIndex.setUpPanel.resetInputs()
+      })
     })
 
     this.confirmButton.addActivationCallback(async () => {
@@ -34,11 +42,12 @@ export default class SetUpConfirmationPanel extends Panel {
       await delay(600);
     }, () => {
       manager.panelIndex.info.updateContents("LabAuth", "You may sigh into <text-hightlight>" + this.subjectElem.text() + "</text-hightlight> here. To sign out register your card again.")
+      manager.panelIndex.edu.subject = this.subjectElem.text()
       manager.panelIndex.edu.expectStudent()
-      manager.panelIndex.edu.maxHoursCount(+this.hoursElem.text())
       manager.setPanel("info", "left")
       manager.setPanel("edu", "right").then(() => {
-        
+        this.abortButton.enable()
+        manager.panelIndex.setUpPanel.resetInputs()
       })
     })
 

@@ -20,12 +20,12 @@ app.get('*', (req, res) => {
 
 app.post("/LDAPAuth", (req, res) => {
   setTimeout(() => {
-    res.send({valid: true, data: {fullName: "Maximilian Mairinger", class: "student", registered: [true, false, true, true]}})
+    res.send({valid: true, data: {fullName: "Maximilian Mairinger", employeetype: "student", registered: ["gone", "active", "active", "active"], sessKey: "sessKeyDummy"}})
   }, 2000)
 })
 
 app.post("/cardAuth", (req, res) => {
-  res.send({entry: true, data: {employeetype: "student", username: "ddolezal", fullName: "Domenik Dolezal", registered: [true, false, true, true], sessKey: "sessKeyDummy"}})
+  res.send({entry: true, data: {employeetype: "teacher", username: "ddolezal", fullName: "Domenik Dolezal", registered: ["gone", "active", "active", "toBeGone"], sessKey: "sessKeyDummy"}})
 })
 
 app.post("/destroySession", (req, res) => {

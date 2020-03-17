@@ -1,5 +1,5 @@
 import Element from "./../element";
-import { ElementList } from "extended-dom"
+import { ElementList, Tel } from "extended-dom"
 
 var emailValidationRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -15,6 +15,20 @@ export default class Input extends Element {
   private enterAlreadyPressed = false;
 
   private _type: "password" | "text" | "number" | "email" | "uppercase";
+
+  private unintrusiveListener: Tel = this.input.ls("input", () => {
+    if (this.intrusiveValidation) {
+      this.unintrusiveListener.disable()
+      return
+    }
+    let invalid = this.validate()
+
+
+    if (!invalid) {
+      this.showInvalidation(false)
+      this.unintrusiveListener.disable()
+    }
+  }, false)
   constructor(placeholder: string = "", type: "password" | "text" | "number" | "email" | "uppercase" = "text", public submitCallback?: (value: string | number, e: KeyboardEvent) => void, value?: any, public customVerification?: (value?: string | number) => (boolean | string | void), public intrusiveValidation?: boolean) {
     super(false);
     
@@ -32,26 +46,13 @@ export default class Input extends Element {
     // ----- Validation start
 
     // unintrusive
-    let listener = this.input.ls("input", () => {
-      if (this.intrusiveValidation) {
-        listener.disable()
-        return
-      }
-      let invalid = this.validate()
-
-
-      if (!invalid) {
-        this.showInvalidation(false)
-        listener.disable()
-      }
-    }, false)
 
     this.input.on("blur", (e) => {
       if (this.intrusiveValidation) return
       let invalid = this.validate()
       if (invalid) {
         this.showInvalidation(invalid)
-        listener.enable()
+        this.unintrusiveListener.enable()
       }
     });
 
@@ -144,18 +145,18 @@ export default class Input extends Element {
     if (this.isFocused) this.input.focus()
   }
 
-  private listeners: Map<(value: string | number, e: InputEvent) => void, (e: InputEvent) => void> = new Map()
-  public onInput(f: (value: string | number, e: InputEvent) => void) {
+  private inputlisteners: Map<(value: string | number, e?: InputEvent) => void, (e: InputEvent) => void> = new Map()
+  public onInput(f: (value: string | number, e?: InputEvent) => void) {
     let inner = (e: InputEvent) => {
       if (!this.currentlyInvalid) f(this.value, e)
       else f("", e)
     }
-    this.listeners.set(f, inner)
+    this.inputlisteners.set(f, inner)
     this.input.on("input", inner)
   }
-  public offInput(f: (value: string, e: InputEvent) => void) {
-    this.input.off("input", this.listeners.get(f))
-    this.listeners.delete(f)
+  public offInput(f: (value: string, e?: InputEvent) => void) {
+    this.input.off("input", this.inputlisteners.get(f))
+    this.inputlisteners.delete(f)
   }
 
 
@@ -202,6 +203,39 @@ export default class Input extends Element {
   public set value(to: string | number) {
     this.input.value = to.toString();
     this.alignPlaceHolder();
+
+    // unintrusice validation
+    (() => {
+      if (this.intrusiveValidation) {
+        this.unintrusiveListener.disable()
+        return
+      }
+      let invalid = this.validate()
+  
+  
+      if (!invalid) {
+        this.showInvalidation(false)
+        this.unintrusiveListener.disable()
+      }
+    })();
+
+    // intrusive validation if (!this.intrusiveValidation) return
+    (() => {
+      if (!this.intrusiveValidation) return
+      let invalid = this.validate()
+
+      this.showInvalidation(invalid)
+    })()
+
+
+    // onInput
+    this.inputlisteners.forEach((inner, f) => {
+      if (!this.currentlyInvalid) f(this.value)
+      else f("")
+    })
+    
+
+    
   }
   private validate(): string | boolean | void {
     let invalid: string | boolean | void = false

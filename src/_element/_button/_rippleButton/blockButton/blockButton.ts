@@ -22,17 +22,17 @@ export default class BlockButton extends RippleButton {
   public addActivationCallback(activationCallback: ((e?: MouseEvent | KeyboardEvent) => void | Promise<void>), animationDoneCb?: Function) {
     
     let inner = async (e) => {
-      let res = activationCallback(e)
+      let res = activationCallback.call(this, e)
       if (res instanceof Promise) {
-        this.loading()
+        this.loading() 
         this.disable()
         await res
         this.doneLoading()
-        await delay(250)
-        this.enable()
-        if (animationDoneCb) animationDoneCb()
+        if (animationDoneCb) await animationDoneCb.call(this, e)
       }
-      else if (animationDoneCb) animationDoneCb()
+      else if (animationDoneCb) await animationDoneCb.call(this, e)
+
+      this.enable()
     }
     
 

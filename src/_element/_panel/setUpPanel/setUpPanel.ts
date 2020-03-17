@@ -14,7 +14,7 @@ export default class SetUpPanel extends Panel {
 
   private questionContainer = this.q("question-container")
   private headingElem = this.q("text-heading")
-  private backElem = this.q("#back")
+  private backElem = this.q("#back").first
   private inputs: ElementList<SetUpInput>
 
   
@@ -101,6 +101,7 @@ export default class SetUpPanel extends Panel {
     this.backElem.on("mousedown", (e) => {
       // Prevent blur of SetUpInput
       e.preventDefault()
+      if (this.backElem.css("opacity") === 0) return
       submitCb(true)
     })
 
@@ -169,6 +170,22 @@ export default class SetUpPanel extends Panel {
       this.backElem.anim({translateX: -10}, {duration: 500}),
       this.headingElem.anim({translateX: -32}, {duration: 700})
     ])
+  }
+  resetInputs() {
+    this.inputs.ea((input) => {
+      input.value = ""
+    })
+
+    this.inputs.first.show()
+    this.inputs.first.css({opacity: 1, translateY: .1})
+
+    for (let i = 1; i < this.inputs.length; i++) {
+      const elem = this.inputs[i];
+      elem.hide()
+      elem.css("opacity", 0)
+    }
+
+    this.hideBackButton()
   }
   activationCallback() {
     super.activationCallback()

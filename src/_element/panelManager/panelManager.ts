@@ -18,9 +18,11 @@ type PanelCombo = {left: Panel, right: Panel} | {left: Panel} | {right: Panel}
 //@ts-ignore
 let entries: DataArray<Entry> = new DataBase(new Data([])).asArray
 
-entries.add({username: "mmairinger", fullName: "Maximilian Mairinger", registered: [true, true, true, true]})
-entries.add({username: "rschlager", fullName: "Raphael Schlager", registered: [true, true, true, true]})
-entries.add({username: "dzimmermann", fullName: "Daniel Zimmermann", registered: [true, true, true, true]})
+// ("gone" | "toBeGone" | "active")
+
+entries.add({username: "mmairinger", fullName: "Maximilian Mairinger", registered: ["gone", "active", "active", "active"]})
+entries.add({username: "rschlager", fullName: "Raphael Schlager", registered: ["gone", "active", "active", "active"]})
+entries.add({username: "dzimmermann", fullName: "Daniel Zimmermann", registered: ["gone", "active", "active", "active"]})
 
 type PanelIndex = {
   edu: EduPanel,
@@ -52,69 +54,71 @@ export default class PanelManager extends Element {
     
   }
 
-  public async setPanel(panel: keyof PanelIndex, side: "left" | "right") {
-    let newPanel = this.panelIndex[panel]
+  public setPanel(panel: keyof PanelIndex, side: "left" | "right") {
+    (async () => {
+      let newPanel = this.panelIndex[panel]
 
-    if (side === "left") {
-      if (newPanel.preferedWidth === "big") {
-        this.leftContainer.anim({width: "58.75%"}, 700)
-      }
-      else if (newPanel.preferedWidth === "small") {
-        this.leftContainer.anim({width: "41.25%"}, 700)
-      }
-      else if (typeof newPanel.preferedWidth === "number") {
-        this.leftContainer.anim({width: newPanel.preferedWidth + "%"}, 700)
-      }
-    }
-    
-
-
-    if (side === "left") {
-      let lastLeft = this.left
-      this.left = this.panelIndex[panel]
-      this.leftContainer.apd(this.left);
-      if (lastLeft) {
-        lastLeft.anim({opacity: 0, translateX: 5}, 300).then(() => {
-          if (lastLeft) lastLeft.deactivate()
-          lastLeft.remove()
-        })
-        await delay(150)
+      if (side === "left") {
+        if (newPanel.preferedWidth === "big") {
+          this.leftContainer.anim({width: "58.75%"}, 700)
+        }
+        else if (newPanel.preferedWidth === "small") {
+          this.leftContainer.anim({width: "41.25%"}, 700)
+        }
+        else if (typeof newPanel.preferedWidth === "number") {
+          this.leftContainer.anim({width: newPanel.preferedWidth + "%"}, 700)
+        }
       }
       
-      setTimeout(() => {
-        this.left.anim({opacity: 1, translateX: .1}).then(() => {
-          this.left.activate()
-        })
-      }, 0)
-      
-    }
-    if (side === "right") {
-      let lastRight = this.right
-      this.right = this.panelIndex[panel]
-      this.rightContainer.apd(this.right)
-      if (lastRight) {
-        lastRight.anim({opacity: 0, translateX: 5}, 300).then(() => {
-          if (lastRight) lastRight.deactivate()
-          lastRight.remove()
-        })
-        await delay(150)
+
+
+      if (side === "left") {
+        let lastLeft = this.left
+        this.left = this.panelIndex[panel]
+        this.leftContainer.apd(this.left);
+        if (lastLeft) {
+          lastLeft.anim({opacity: 0, translateX: 5}, 300).then(() => {
+            if (lastLeft) lastLeft.deactivate()
+            lastLeft.remove()
+          })
+          await delay(150)
+        }
+        
+        setTimeout(() => {
+          this.left.anim({opacity: 1, translateX: .1}).then(() => {
+            this.left.activate()
+          })
+        }, 0)
+        
       }
-      
-      setTimeout(() => {
-        this.right.anim({opacity: 1, translateX: .1}).then(() => {
-          this.right.activate()
-        })
-      }, 0)
-    }
+      if (side === "right") {
+        let lastRight = this.right
+        this.right = this.panelIndex[panel]
+        this.rightContainer.apd(this.right)
+        if (lastRight) {
+          lastRight.anim({opacity: 0, translateX: 5}, 300).then(() => {
+            if (lastRight) lastRight.deactivate()
+            lastRight.remove()
+          })
+          await delay(150)
+        }
+        
+        setTimeout(() => {
+          this.right.anim({opacity: 1, translateX: .1}).then(() => {
+            this.right.activate()
+          })
+        }, 0)
+      }
 
-    if (this.right && this.left) {
-      if ((this.right.wantsCardReader || this.left.wantsCardReader) && !this.right.preventFocusInterference && !this.left.preventFocusInterference) cardReader.enable()
-      else cardReader.disable()
-    }
+      if (this.right && this.left) {
+        if ((this.right.wantsCardReader || this.left.wantsCardReader) && !this.right.preventFocusInterference && !this.left.preventFocusInterference) cardReader.enable()
+        else cardReader.disable()
+      }
+    })();
     
 
     
-
+    return delay(700)
   }
 
   stl() {

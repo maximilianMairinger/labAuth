@@ -39,7 +39,7 @@ input.addEventListener("keydown", async (e) => {
     });
     input.value = ""
     await Promise.all(proms)
-    if (input.tabIndex !== -1) enable()
+    enable()
   }
 });
 
@@ -68,14 +68,27 @@ export function enable() {
 }
 
 //@ts-ignore
-global.cardRead = () => {
-  console.log("card read")
+global.cardRead = async () => {
+  
+  
   if (input.tabIndex === 0) {
+    disable()
+    let proms = []
+    console.log("card read")
     
     subscription.forEach((f) => {
-      f("testid")
+      proms.add(f("testid"))
     });
+
+
+    await Promise.all(proms)    
+    
+    enable()
   }
+  else {
+    console.log("card read (req)")
+  }
+
   
 }
 
@@ -84,9 +97,9 @@ setTimeout(() => {
   //@ts-ignore
   cardRead()
   
-}, 5000);
+}, 3000);
 
 setTimeout(() => {
   //@ts-ignore
   cardRead()
-}, 15000);
+}, 10000);

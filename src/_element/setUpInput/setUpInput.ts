@@ -32,6 +32,9 @@ export default class SetUpInput extends Element {
   get value() {
     return this.inputElem.value
   }
+  set value(val: string | number) {
+    this.inputElem.value = val
+  }
 
   stl() {
     return require("./setUpInput.css").toString()

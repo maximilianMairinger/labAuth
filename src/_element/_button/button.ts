@@ -11,7 +11,8 @@ export default class Button extends Element {
   private callbacks: ((e: MouseEvent | KeyboardEvent) => void)[] = [];
 
   private preferedTabIndex: number
-  constructor(protected readonly enabled: boolean = true, focusOnHover: boolean = false, public tabIndex: number = 0, public obtainDefault: boolean = false, public preventFocus = false, blurOnMouseOut: boolean = false) {
+  private _hotKey: string
+  constructor(protected readonly enabled: boolean = true, focusOnHover: boolean = false, public tabIndex: number = 0, public obtainDefault: boolean = false, public preventFocus = false, blurOnMouseOut: boolean = false, hotkey?: string) {
     super(false);
 
     if (enabled) this.enableForce(true)
@@ -55,6 +56,7 @@ export default class Button extends Element {
 
     this.focusOnHover = focusOnHover;
     this.blurOnMouseOut = blurOnMouseOut;
+    this.hotkey = hotkey
   }
   private enableForce(prevFocus: boolean) {
     //@ts-ignore
@@ -107,8 +109,27 @@ export default class Button extends Element {
     if (this.enabled) {
       if (!this.preventFocus) this.focus();
       this.addClass(pressedClass);
-      this.callbacks.forEach(f => {f(e);});
+      this.callbacks.forEach(f => {f.call(this, e);});
     }
+  }
+  private hotKeyListener: (e: KeyboardEvent) => void
+  public set hotkey(to: string) {
+    if (to === undefined) {
+      if (this._hotKey !== undefined) {
+        document.off("keydown", this.hotKeyListener)
+        delete this.hotKeyListener
+      }
+    }
+    else if (this._hotKey === undefined) {
+      this.hotKeyListener = (e) => {
+        if (this.offsetParent !== null) if (e.key === this._hotKey) this.click()
+      }
+      document.on("keydown", this.hotKeyListener)
+    }
+    this._hotKey = to
+  }
+  public get hotkey() {
+    return this._hotKey
   }
   stl() {
     return require('./button.css').toString();
@@ -118,4 +139,5 @@ export default class Button extends Element {
   }
 }
 
+//@ts-ignore
 window.customElements.define('c-button', Button);
