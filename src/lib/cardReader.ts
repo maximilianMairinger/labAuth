@@ -32,14 +32,18 @@ let blurListener: Tel = input.ls("blur", () => {
 
 input.addEventListener("keydown", async (e) => {
   if(e.key === "Enter") {
-    disable()
-    let proms = []
-    subscription.forEach((f) => {
-      proms.add(f(input.value))
-    });
+    let val = input.value
     input.value = ""
-    await Promise.all(proms)
-    enable()
+    if (input.tabIndex !== -1) {
+      disable()
+      let proms = []
+      subscription.forEach((f) => {
+        proms.add(f(val))
+      });
+      
+      await Promise.all(proms)
+      enable()
+    }
   }
 });
 
@@ -65,29 +69,4 @@ export function enable() {
   blurListener.enable()
   input.focus()
   input.tabIndex = 0
-}
-
-//@ts-ignore
-global.cardRead = async () => {
-  
-  
-  if (input.tabIndex === 0) {
-    disable()
-    let proms = []
-    console.log("card read")
-    
-    subscription.forEach((f) => {
-      proms.add(f("testid"))
-    });
-
-
-    await Promise.all(proms)    
-    
-    enable()
-  }
-  else {
-    console.log("card read (req)")
-  }
-
-  
 }
