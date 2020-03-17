@@ -20,8 +20,14 @@ app.get('*', (req, res) => {
 
 app.post("/LDAPAuth", (req, res) => {
   setTimeout(() => {
-    res.send({valid: true, data: {fullName: "Maximilian Mairinger", employeetype: "student", registered: ["gone", "active", "active", "active"], sessKey: "sessKeyDummy"}})
-  }, 2000)
+    if (req.body.username === "s") {
+      res.send({valid: true, data: {fullName: "Maximilian Mairinger", username: "mmairinger", employeetype: "student", registered: ["gone", "active", "active", "active"]}})
+    }
+    else if (req.body.username === "t") {
+      res.send({valid: true, data: {fullName: "Domenik Dolezal", username: "ddolezal", employeetype: "teacher", sessKey: "sessKeyDummy"}})
+    }
+    else res.send({valid: false})
+  }, 300)
 })
 
 app.post("/cardAuth", (req, res) => {

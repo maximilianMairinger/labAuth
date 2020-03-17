@@ -3,6 +3,8 @@ import "./../../input/input"
 import PanelManager from "../../panelManager/panelManager"
 import { ElementList } from "extended-dom"
 import Input from "./../../input/input"
+import ajax from "../../../lib/ajax"
+import delay from "delay"
 
 
 
@@ -19,8 +21,43 @@ export default class LoginPanel extends Panel {
 
   constructor(private manager: PanelManager) {
     super()
-    
 
+    let invalid = false
+    let submitCb = async () => {
+      this.inputs.Inner("disable", [])
+      manager.panelIndex.edu.mainCard.authentication()
+      let req = ajax.post("LDAPAuth", {username: this.usr.value, password: this.pwd.value})
+
+      await Promise.all([req, delay(1000 + (Math.random() * 1000))])
+
+      manager.panelIndex.edu.mainCard.doneAuthentication()
+
+      let res = await req
+      if (res.valid) {
+        manager.panelIndex.edu
+        this.inputs.ea((input) => {
+          input.value = ""
+        })
+      }
+      else {
+        this.inputs.Inner("showInvalidation", ["Username or password is incorrect."])
+        this.inputs.Inner("enable", [])
+        invalid = true
+        manager.panelIndex.edu.mainCard.fullName("Authentication failed")
+      }
+
+    }
+
+    this.inputs.Inner("onInput", [() => {
+      if (invalid) {
+        this.inputs.Inner("showInvalidation", [false])
+        invalid = false
+      }
+    }])
+    
+    this.inputs.ea((input) => {
+      input.submitCallback = submitCb
+    })
     this.usr.onInput((v) => {
       manager.panelIndex.edu.mainCard.username(v as string)
     })
