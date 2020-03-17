@@ -15,7 +15,7 @@ left-container {
 
 left-container > * {
   opacity: 0;
-  transform: translateX(5px);
+  transform: translateX(-5px);
 }
 
 right-container {
@@ -26,5 +26,5 @@ right-container {
 
 right-container > * {
   opacity: 0;
-  transform: translateX(5px);
+  transform: translateX(-5px);
 }

@@ -50,7 +50,7 @@ export default class PanelManager extends Element {
     
   }
 
-  public setPanel(panel: keyof PanelIndex, side: "left" | "right") {
+  public setPanel(panel: keyof PanelIndex, side: "left" | "right", prevCardReaderEnable: boolean = false) {
     (async () => {
       let newPanel = this.panelIndex[panel]
 
@@ -80,11 +80,13 @@ export default class PanelManager extends Element {
           await delay(150)
         }
         
+
         setTimeout(() => {
-          this.left.anim({opacity: 1, translateX: .1}).then(() => {
+          log(this.left.css("display"))
+          this.left.anim([{opacity: 0, translateX: -5, offset: 0}, {opacity: 1, translateX: .1}], 300).then(() => {
             this.left.activate()
           })
-        }, 0)
+        }, 10)
         
       }
       if (side === "right") {
@@ -100,13 +102,13 @@ export default class PanelManager extends Element {
         }
         
         setTimeout(() => {
-          this.right.anim({opacity: 1, translateX: .1}).then(() => {
+          this.right.anim([{opacity: 0, translateX: -5, offset: 0}, {opacity: 1, translateX: .1}], 300).then(() => {
             this.right.activate()
           })
-        }, 0)
+        }, 10)
       }
 
-      if (this.right && this.left) {
+      if (!prevCardReaderEnable && this.right && this.left) {
         if ((this.right.wantsCardReader || this.left.wantsCardReader) && !this.right.preventFocusInterference && !this.left.preventFocusInterference) cardReader.enable()
         else cardReader.disable()
       }
