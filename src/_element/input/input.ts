@@ -15,7 +15,7 @@ export default class Input extends Element {
   private enterAlreadyPressed = false;
 
   private _type: "password" | "text" | "number" | "email" | "uppercase";
-  constructor(placeholder: string = "", type: "password" | "text" | "number" | "email" | "uppercase" = "text", public submitCallback?: (value: string, e: KeyboardEvent) => void, value?: any, public customVerification?: (value?: string | number) => (boolean | string | void), public intrusiveValidation?: boolean) {
+  constructor(placeholder: string = "", type: "password" | "text" | "number" | "email" | "uppercase" = "text", public submitCallback?: (value: string | number, e: KeyboardEvent) => void, value?: any, public customVerification?: (value?: string | number) => (boolean | string | void), public intrusiveValidation?: boolean) {
     super(false);
     
     this.type = type;
@@ -144,8 +144,8 @@ export default class Input extends Element {
     if (this.isFocused) this.input.focus()
   }
 
-  private listeners: Map<(value: string, e: InputEvent) => void, (e: InputEvent) => void> = new Map()
-  public onInput(f: (value: string, e: InputEvent) => void) {
+  private listeners: Map<(value: string | number, e: InputEvent) => void, (e: InputEvent) => void> = new Map()
+  public onInput(f: (value: string | number, e: InputEvent) => void) {
     let inner = (e: InputEvent) => {
       if (!this.currentlyInvalid) f(this.value, e)
       else f("", e)
@@ -192,21 +192,21 @@ export default class Input extends Element {
     if (emptyAllowed) return valid;
     return this.value !== "" && valid;
   }
-  public get value(): any {
+  public get value(): string | number {
     let v = this.input.value;
     if (this.type === "number") {
       return +v;
     }
     return v;
   }
-  public set value(to: any) {
-    this.input.value = to;
+  public set value(to: string | number) {
+    this.input.value = to.toString();
     this.alignPlaceHolder();
   }
   private validate(): string | boolean | void {
     let invalid: string | boolean | void = false
-    if (this.type === "number") invalid = isNaN(this.value) ? "Expected a number" : false;
-    else if (this.type === "email") invalid = emailValidationRegex.test(this.value.toLowerCase()) ? "This is not a valid email address" : false;
+    if (this.type === "number") invalid = isNaN(this.value as number) ? "Expected a number" : false;
+    else if (this.type === "email") invalid = emailValidationRegex.test((this.value as string).toLowerCase()) ? "This is not a valid email address" : false;
     if (this.customVerification !== undefined) {
       let returnInvalid = this.customVerification(this.value)
       if (typeof returnInvalid === "boolean") {
