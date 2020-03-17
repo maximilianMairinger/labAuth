@@ -25,7 +25,16 @@ app.post("/LDAPAuth", (req, res) => {
 })
 
 app.post("/cardAuth", (req, res) => {
-  res.send({entry: true, data: {employeetype: "teacher", username: "ddolezal", fullName: "Domenik Dolezal", registered: ["gone", "active", "active", "toBeGone"], sessKey: "sessKeyDummy"}})
+  if (req.body.cardId === "t") {
+    res.send({entry: true, data: {employeetype: "teacher", username: "ddolezal", fullName: "Domenik Dolezal", sessKey: "sessKeyDummy"}})
+  }
+  else if (req.body.cardId === "s") {
+    res.send({entry: true, data: {employeetype: "student", username: "mmairinger", fullName: "Maximilian Mairinger", registered: ["active", "active", "active", "active"]}})
+  }
+  else {
+    res.send({entry: false})
+  }
+  
 })
 
 app.post("/destroySession", (req, res) => {
