@@ -19,8 +19,9 @@ export default class Site extends Element {
     
 
     //this.manager.setPanel({left: new InformPanel("LabAuth", "A teacher may log in with his edu.card to start the session."), right: new EduPanel("teacher")})
-    this.manager.setPanel("setUpPanel", "left")
-    this.manager.setPanel("setUpConfirmationPanel", "right")
+    this.manager.setPanel("info", "left")
+    this.manager.setPanel("edu", "right")
+    this.manager.panelIndex.edu.expectTeacher()
     
 
     this.elementBody.apd(this.manager)
