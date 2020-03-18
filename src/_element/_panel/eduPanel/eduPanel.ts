@@ -37,7 +37,7 @@ export default class EduPanel extends Panel {
   private cancButton: Button
   private confButton: Button
 
-  constructor(private manager: PanelManager, private list: DataArray<Entry>) {
+  constructor(private manager: PanelManager, private list: DataArray<Entry>, public eduExpectedChangeCb?: (edu: "student" | "teacher") => void) {
     super()
 
     this.arrow.on("mousedown", async (e) => {
@@ -164,6 +164,8 @@ export default class EduPanel extends Panel {
 
   private expectedCard: "student" | "teacher"
   public async expectStudent(temporary: boolean = false) {
+
+    if (this.eduExpectedChangeCb) this.eduExpectedChangeCb("student")
     
     if (!temporary) {
       this.showScrollDown()
@@ -181,6 +183,8 @@ export default class EduPanel extends Panel {
   }
   public async expectTeacher() {
     this.expectedCard = "teacher"
+
+    if (this.eduExpectedChangeCb) this.eduExpectedChangeCb("teacher")
     
     if (this.active) {
       await animatedScrollTo(0, {

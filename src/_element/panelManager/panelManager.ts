@@ -1,24 +1,14 @@
 import Element from "../element"
 import Panel from "../_panel/panel";
-import EduPanel from "../_panel/eduPanel/eduPanel";
+import EduPanel, { Entry } from "../_panel/eduPanel/eduPanel";
 import InformPanel from "../_panel/informPanel/informPanel";
 import LoginPanel from "../_panel/loginPanel/loginPanel";
-import { Data, DataBase } from "front-db"
+import { Data, DataBase, DataArray } from "front-db"
 import SetUpConfirmationPanel from "../_panel/setUpConfirmationPanel/setUpConfirmationPanel";
 import SetUpPanel from "../_panel/setUpPanel/setUpPanel";
 import delay from "delay";
 import * as cardReader from "../../lib/cardReader"
 
-
-type Percent = number
-
-type PanelCombo = {left: Panel, right: Panel} | {left: Panel} | {right: Panel}
-
-
-//@ts-ignore
-let entries: DataArray<Entry> = new DataBase(new Data([])).asArray
-
-// ("gone" | "toBeGone" | "active")
 
 type PanelIndex = {
   edu: EduPanel,
@@ -36,18 +26,18 @@ export default class PanelManager extends Element {
   private left: Panel
   private right: Panel
 
-  public panelIndex: PanelIndex = {
-    edu: new EduPanel(this, entries),
-    info: new InformPanel(this, "LabAuth", "A teacher may log in with his edu.card to start the session."),
-    login: new LoginPanel(this),
-    setUpConfirmationPanel: new SetUpConfirmationPanel(this),
-    setUpPanel: new SetUpPanel(this, "there")
-  }
+  public panelIndex: PanelIndex;
 
-  constructor() {
+  constructor(entries: DataArray<Entry>, eduExpectedChangeCb?: (edu: "student" | "teacher") => void) {
     super()
 
-    
+    this.panelIndex = {
+      edu: new EduPanel(this, entries, eduExpectedChangeCb),
+      info: new InformPanel(this, "LabAuth", "A teacher may log in with his edu.card to start the session."),
+      login: new LoginPanel(this),
+      setUpConfirmationPanel: new SetUpConfirmationPanel(this),
+      setUpPanel: new SetUpPanel(this, "there")
+    }
   }
 
   public setPanel(panel: keyof PanelIndex, side: "left" | "right", prevCardReaderEnable: boolean = false) {
@@ -126,4 +116,5 @@ export default class PanelManager extends Element {
   }
 }
 
+//@ts-ignore
 window.customElements.define('c-panel-manager', PanelManager);
