@@ -46,7 +46,7 @@ app.post("/startUnit", ({ body: param }, res) => {
 app.post("/LDAPAuth", (req, res) => {
   setTimeout(() => {
     if (req.body.username === "s") {
-      res.send({valid: true, data: {fullName: "Maximilian Mairinger", username: "mmairinger", employeetype: "student", registered: ["gone", "active", "toBeGone", "toBeGone"]}})
+      res.send({valid: true, data: {fullName: "Maximilian Mairinger", username: "mmairinger", employeetype: "student", registered: ["active", "active", "active", "active"], sign: "out"}})
     }
     else if (req.body.username === "t") {
       res.send({valid: true, data: {fullName: "Domenik Dolezal", username: "ddolezal", employeetype: "teacher", sessKey: "sessKeyDummy"}})
@@ -60,7 +60,7 @@ app.post("/cardAuth", (req, res) => {
     res.send({entry: true, data: {employeetype: "teacher", username: "ddolezal", fullName: "Domenik Dolezal", sessKey: "sessKeyDummy"}})
   }
   else if (req.body.cardId === "s") {
-    res.send({entry: true, data: {employeetype: "student", username: "mmairinger", fullName: "Maximilian Mairinger", registered: ["active", "active", "active", "active"]}})
+    res.send({entry: true, data: {employeetype: "student", username: "mmairinger", fullName: "Maximilian Mairinger", registered: ["active", "active", "active", "active"], sign: "in"}})
   }
   else {
     res.send({entry: false})

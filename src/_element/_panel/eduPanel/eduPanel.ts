@@ -305,21 +305,17 @@ export default class EduPanel extends Panel {
 
     let elements: ElementList = new ElementList()
 
-    let logoutProcess = false
 
     for (let i = 0; i < data.registered.length; i++) {
       let hour = ce("hour-box")
       if (data.registered[i] === "active") hour.addClass("active")
       else if (data.registered[i] === "gone") {}
-      else if (data.registered[i] === "toBeGone") {
-        hour.addClass("toBeGone")
-        logoutProcess = true
-      }
+      else if (data.registered[i] === "toBeGone") hour.addClass("toBeGone")
       elements.add(hour)
       this.hoursContainer.apd(hour)
     }
 
-    if (!logoutProcess) {
+    if (data.sign === "in") {
       this.list.add({username: data.username, fullName: data.fullName, registered: data.registered})
       await Promise.all([
         elements.anim({translateY: 21}, {duration: 700, easing}),
@@ -336,10 +332,63 @@ export default class EduPanel extends Panel {
       await delay(2500)
       if (this.showHrsCancled) return this.showHrsCancled = false
     }
-    else {
+    else if (data.sign === "out") {
       cardReader.disable()
+      
       let confirmProm: any
       try {
+        let logoutAfter = data.registered.length
+        data.registered.ea((e, i) => {
+          if (e === "toBeGone") return logoutAfter = i
+        })
+
+        if (logoutAfter === data.registered.length) {
+          this.manager.panelIndex.info.updateContents("Note", "You will be signed out <text-hightlight>automatically</text-hightlight> after a unit ends.")
+          await Promise.all([
+            elements.anim({translateY: 21}, {duration: 700, easing}),
+            elements.anim({opacity: 1}, {duration: 700, easing: "linear"}, 100),
+            this.mainCard.anim({translateY: -21}, {duration: 700, easing})
+          ])
+          cardReader.enable()
+          if (this.showHrsCancled) return this.showHrsCancled = false
+          await delay(3000)
+          if (this.showHrsCancled) return this.showHrsCancled = false
+
+          
+          await Promise.all([
+            this.mainCard.anim({translateY: .1}, {duration: 800, easing}),
+            elements.anim({translateY: .1}, {duration: 800, easing}).then(() => {
+              elements.remove()
+            })
+          ])
+          if (this.showHrsCancled) return this.showHrsCancled = false
+
+          this.manager.panelIndex.info.updateContents("LabAuth", "You may sigh into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out register your card again.")
+          
+    
+          return
+        }
+        else {
+          let lastPredetermant = 0
+          data.registered.ea((e, i) => {
+            if (e === "active" || e === "gone") lastPredetermant = i + 1
+          })
+
+          let totalActiveSessions = logoutAfter - lastPredetermant
+
+          if (totalActiveSessions === 0) {
+            this.manager.panelIndex.info.updateContents("Logout", "You are about to sign out of this unit <text-hightlight>right away</text-hightlight>. Are you sure?")
+          }
+          else if (logoutAfter === 1) {
+            this.manager.panelIndex.info.updateContents("Logout", "You are about to sign out after the <text-hightlight>first hour</text-hightlight>. Are you sure?")
+          }
+          else {
+            this.manager.panelIndex.info.updateContents("Logout", "You are about to sign out after the first <text-hightlight>" + logoutAfter + " hours</text-hightlight>. Are you sure?")
+          }
+        }
+        
+        
+
         confirmProm = this.showConfimOptions(async (confirm) => {
           if (confirm) {
             await ajax.post("studentSignOut", {})
@@ -365,6 +414,7 @@ export default class EduPanel extends Panel {
 
 
       cardReader.enable()
+      this.manager.panelIndex.info.updateContents("LabAuth", "You may sigh into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out register your card again.")
 
       let confirm = await confirmProm
 
@@ -420,6 +470,7 @@ export default class EduPanel extends Panel {
     this.mainCard.fullName("Unknown")
     this.mainCard.clearLuckyDay()
     this.mainCard.updatePasscode(0)
+    this.manager.panelIndex.info.updateContents("LabAuth", "You may sigh into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out register your card again.")
 
     await Promise.all([
       this.mainCard.anim({translateY: .1}, {duration: 200, easing}),
@@ -460,12 +511,12 @@ export default class EduPanel extends Panel {
         }
         else {
           // double login teacher
-          await this.logoutAction()
+          await this.logoutTeacherAction()
         }
       }
       else {
         // expected student but got teacher
-        await this.logoutAction()
+        await this.logoutTeacherAction()
       }
     }
     else {
@@ -544,7 +595,7 @@ export default class EduPanel extends Panel {
   
   public subject = "Unknown"
 
-  private async logoutAction() {
+  private async logoutTeacherAction() {
     this.manager.panelIndex.info.updateContents("Logout", "You are about to log out of, hence terminate this session. Are you sure?")
     let confirm = await this.showConfimOptions(async (confirm) => {
       if (confirm) {
