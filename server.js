@@ -40,7 +40,7 @@ app.post("/startUnit", ({ body: param }, res) => {
 
   setTimeout(() => {
     res.send({})
-  }, 10000)
+  }, 600)
 })
 
 app.post("/LDAPAuth", (req, res) => {
