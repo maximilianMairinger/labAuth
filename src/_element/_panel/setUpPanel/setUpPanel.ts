@@ -111,7 +111,7 @@ export default class SetUpPanel extends Panel {
         manager.panelIndex.setUpConfirmationPanel.subject(s as string)
       }),
       new SetUpInput("Please tell us which <highlight-text>classroom</highlight-text> you are teaching in.", "uppercase", (s) => {
-        manager.panelIndex.setUpConfirmationPanel.faculty(s as string)
+        manager.panelIndex.setUpConfirmationPanel.classroom(s as string)
       }),
       new SetUpInput("Please tell us how many <highlight-text>hours</highlight-text> you are teaching for.", "number", (s) => {
         manager.panelIndex.setUpConfirmationPanel.hours(s as string)

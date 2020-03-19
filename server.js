@@ -38,7 +38,9 @@ app.post("/startUnit", ({ body: param }, res) => {
   console.log("classroom", param.classroom)
 
 
-  res.send({})
+  setTimeout(() => {
+    res.send({})
+  }, 10000)
 })
 
 app.post("/LDAPAuth", (req, res) => {

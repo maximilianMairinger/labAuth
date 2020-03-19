@@ -10,9 +10,9 @@ export default class SetUpConfirmationPanel extends Panel {
   public preferedWidth = 20
 
   
-  private subjectElem = this.q("subject-text")
-  private facultyElem = this.q("classroom-text")
-  private hoursElem = this.q("hours-text")
+  private subjectElem = this.q("subject-text").first
+  private classRoomElem = this.q("classroom-text").first
+  private hoursElem = this.q("hours-text").first
 
   private confirmButton: Button
   private abortButton: Button
@@ -42,7 +42,14 @@ export default class SetUpConfirmationPanel extends Panel {
 
     this.confirmButton.addActivationCallback(async () => {
       this.abortButton.disable()
-      await delay(600);
+      await Promise.all([
+        delay(600),
+        ajax.post("startUnit", {
+          hours: +this.hoursElem.text(),
+          subject: this.subjectElem.text(),
+          classroom: this.classRoomElem.text()
+        })
+      ])
     }, () => {
       manager.panelIndex.info.updateContents("LabAuth", "You may sigh into <text-hightlight>" + this.subjectElem.text() + "</text-hightlight> here. To sign out register your card again.")
       manager.panelIndex.edu.subject = this.subjectElem.text()
@@ -65,10 +72,10 @@ export default class SetUpConfirmationPanel extends Panel {
     this.subjectElem.text(s || "no subject")
     this.updateButtonsMaybe()
   }
-  private facultyOK = false
-  faculty(s: string) {
-    this.facultyOK = !!s
-    this.facultyElem.text(s || "no classroom")
+  private classroomOK = false
+  classroom(s: string) {
+    this.classroomOK = !!s
+    this.classRoomElem.text(s || "no classroom")
     this.updateButtonsMaybe()
   }
   private hoursOK = false
@@ -78,7 +85,7 @@ export default class SetUpConfirmationPanel extends Panel {
     this.updateButtonsMaybe()
   }
   private updateButtonsMaybe() {
-    if (this.subjectOK && this.facultyOK && this.hoursOK) this.confirmButton.enable()
+    if (this.subjectOK && this.classroomOK && this.hoursOK) this.confirmButton.enable()
     else this.confirmButton.disable()
   }
   async hightlightConfirmButton() {
