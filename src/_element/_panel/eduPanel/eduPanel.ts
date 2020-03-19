@@ -414,7 +414,7 @@ export default class EduPanel extends Panel {
 
 
       cardReader.enable()
-      this.manager.panelIndex.info.updateContents("LabAuth", "You may sigh into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out register your card again.")
+      this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out register your card again.")
 
       let confirm = await confirmProm
 
@@ -470,7 +470,7 @@ export default class EduPanel extends Panel {
     this.mainCard.fullName("Unknown")
     this.mainCard.clearLuckyDay()
     this.mainCard.updatePasscode(0)
-    this.manager.panelIndex.info.updateContents("LabAuth", "You may sigh into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out register your card again.")
+    this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out register your card again.")
 
     await Promise.all([
       this.mainCard.anim({translateY: .1}, {duration: 200, easing}),
