@@ -40,7 +40,7 @@ export default class LoginPanel extends Panel {
           enable()
         })
 
-        await manager.setPanel("info", "left", true)
+        await manager.setPanel("info", "left")
         this.inputs.ea((input) => {
           input.value = ""
         })

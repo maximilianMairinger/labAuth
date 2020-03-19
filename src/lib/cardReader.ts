@@ -21,6 +21,8 @@ hide.css({
 })
 
 
+let disabled = 0
+
 
 //@ts-ignore
 document.body.append(input, hide)
@@ -59,14 +61,26 @@ export function removeListener(f) {
 }
 
 export function disable() {
-  blurListener.disable()
-  input.tabIndex = -1
+  disabled++;
+  updateState()
 }
 
 disable()
 
 export function enable() {
-  blurListener.enable()
-  input.focus()
-  input.tabIndex = 0
+  if (disabled !== 0) disabled--;
+  updateState()
+}
+
+
+function updateState() {
+  if (disabled === 0) {
+    input.tabIndex = 0
+    blurListener.enable()
+    input.focus()
+  }
+  else {
+    input.tabIndex = -1
+    blurListener.disable()
+  }
 }

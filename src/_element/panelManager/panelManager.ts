@@ -40,7 +40,7 @@ export default class PanelManager extends Element {
     }
   }
 
-  public setPanel(panel: keyof PanelIndex, side: "left" | "right", prevCardReaderEnable: boolean = false) {
+  public setPanel(panel: keyof PanelIndex, side: "left" | "right") {
     (async () => {
       let newPanel = this.panelIndex[panel]
 
@@ -97,8 +97,10 @@ export default class PanelManager extends Element {
         }, 0)
       }
 
-      if (!prevCardReaderEnable && this.right && this.left) {
-        if ((this.right.wantsCardReader || this.left.wantsCardReader) && !this.right.preventFocusInterference && !this.left.preventFocusInterference) cardReader.enable()
+      if (this.right && this.left) {
+        let notExplicitlyPrevented = !this.right.preventFocusInterference && !this.left.preventFocusInterference
+
+        if ((this.right.wantsCardReader || this.left.wantsCardReader) && notExplicitlyPrevented) cardReader.enable()
         else cardReader.disable()
       }
     })();
