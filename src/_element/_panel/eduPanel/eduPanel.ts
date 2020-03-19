@@ -8,6 +8,7 @@ import Button from "./../../_button/_rippleButton/blockButton/blockButton"
 import animatedScrollTo from "animated-scroll-to"
 import PanelManager from "../../panelManager/panelManager";
 import ajax from "../../../lib/ajax";
+import * as cardReader from "./../../../lib/cardReader"
 
 
 type Percent = number
@@ -218,11 +219,9 @@ export default class EduPanel extends Panel {
     
   }
   private async hideScrollDown() {
-    if (this.list.length() !== 0) {
-      this.cardsContainer.css("overflowY", "hidden")
-      await this.arrow.anim({opacity: 0}, 500)
-      this.arrow.hide()
-    }
+    this.cardsContainer.css("overflowY", "hidden")
+    await this.arrow.anim({opacity: 0}, 500)
+    this.arrow.hide()
   }
 
   private async enableTable() {
@@ -293,7 +292,8 @@ export default class EduPanel extends Panel {
   private showHrsCancled = false
   private showingHours = false
   async showHours(data: any) {
-    
+    this.showingHours = true
+
     if (this.cardsContainer.scrollTop !== 0) {
       await animatedScrollTo(0, {
         elementToScroll: this.cardsContainer,
@@ -303,9 +303,6 @@ export default class EduPanel extends Panel {
       await delay(100)
     }
 
-
-    
-    this.showingHours = true
     let elements: ElementList = new ElementList()
 
     let logoutProcess = false
@@ -322,45 +319,63 @@ export default class EduPanel extends Panel {
       this.hoursContainer.apd(hour)
     }
 
+    if (!logoutProcess) {
+      this.list.add({username: data.username, fullName: data.fullName, registered: data.registered})
+      await Promise.all([
+        elements.anim({translateY: 21}, {duration: 700, easing}),
+        elements.anim({opacity: 1}, {duration: 700, easing: "linear"}, 100),
+        this.mainCard.anim({translateY: -21}, {duration: 700, easing})
+      ])
 
-
-    await Promise.all([
-      elements.anim({translateY: 21}, {duration: 700, easing}),
-      elements.anim({opacity: 1}, {duration: 700, easing: "linear"}, 100),
-      this.mainCard.anim({translateY: -21}, {duration: 700, easing})
-    ])
-    if (this.showHrsCancled) return this.showHrsCancled = false
-    
-    if (logoutProcess) {
-      await delay(500)
       if (this.showHrsCancled) return this.showHrsCancled = false
-      let confirm = await this.showConfimOptions(async (confirm) => {
+
+      delay(600).then(() => {
+        if (this.showHrsCancled) return this.showHrsCancled = false
+        if (this.cardsContainer.scrollTop === 0) this.expectStudent()
+      })
+      await delay(2500)
+      if (this.showHrsCancled) return this.showHrsCancled = false
+    }
+    else {
+      cardReader.disable()
+
+      let confirmProm = this.showConfimOptions(async (confirm) => {
         if (confirm) {
           await ajax.post("studentSignOut", {})
           
           let i = -1
-          debugger
           this.list.list((e, ind) => {
-            if (e.current() === data.username) i = ind
+            if (e.current().username.val === data.username) i = ind
           })
           this.list.removeI(i)
+          log("succ rm " + i)
         }
       })
 
+      await Promise.all([
+        elements.anim({translateY: 21}, {duration: 700, easing}),
+        elements.anim({opacity: 1}, {duration: 700, easing: "linear"}, 100),
+        this.mainCard.anim({translateY: -21}, {duration: 700, easing}),
+        confirmProm
+      ])
+      let confirm = await confirmProm
+
+      
+
       log("logout " + (confirm ? "confirm" : "abort"))
 
+      cardReader.enable()
+
+      if (this.showHrsCancled) return this.showHrsCancled = false
+
       delay(600).then(() => {
-        this.expectStudent()
+        if (this.showHrsCancled) return this.showHrsCancled = false
+        if (this.cardsContainer.scrollTop === 0 && this.list.length() !== 0) this.expectStudent()
+        else this.hideScrollDown()
       })
+      
     }
-    else {
-      this.list.add({username: data.username, fullName: data.fullName, registered: data.registered})
-      delay(600).then(() => {
-        this.expectStudent()
-      })
-      await delay(2500)
-    }
-    if (this.showHrsCancled) return this.showHrsCancled = false
+
 
     elements = this.hoursContainer.childs()
 
