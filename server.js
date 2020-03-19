@@ -46,7 +46,7 @@ app.post("/startUnit", ({ body: param }, res) => {
 app.post("/LDAPAuth", (req, res) => {
   setTimeout(() => {
     if (req.body.username === "s") {
-      res.send({valid: true, data: {fullName: "Maximilian Mairinger", username: "mmairinger", employeetype: "student", registered: ["gone", "active", "active", "toBeGone"]}})
+      res.send({valid: true, data: {fullName: "Maximilian Mairinger", username: "mmairinger", employeetype: "student", registered: ["gone", "active", "toBeGone", "toBeGone"]}})
     }
     else if (req.body.username === "t") {
       res.send({valid: true, data: {fullName: "Domenik Dolezal", username: "ddolezal", employeetype: "teacher", sessKey: "sessKeyDummy"}})

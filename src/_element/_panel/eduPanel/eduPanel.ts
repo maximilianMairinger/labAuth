@@ -338,33 +338,46 @@ export default class EduPanel extends Panel {
     }
     else {
       cardReader.disable()
+      let confirmProm: any
+      try {
+        confirmProm = this.showConfimOptions(async (confirm) => {
+          if (confirm) {
+            await ajax.post("studentSignOut", {})
+            
+            let i = -1
+            this.list.list((e, ind) => {
+              if (e.current().username.val === data.username) i = ind
+            })
+            this.list.removeI(i)
+          }
+        })
+  
+        await Promise.all([
+          elements.anim({translateY: 21}, {duration: 700, easing}),
+          elements.anim({opacity: 1}, {duration: 700, easing: "linear"}, 100),
+          this.mainCard.anim({translateY: -21}, {duration: 700, easing}),
+          confirmProm
+        ])
+      }
+      catch(e) {
 
-      let confirmProm = this.showConfimOptions(async (confirm) => {
-        if (confirm) {
-          await ajax.post("studentSignOut", {})
-          
-          let i = -1
-          this.list.list((e, ind) => {
-            if (e.current().username.val === data.username) i = ind
-          })
-          this.list.removeI(i)
-          log("succ rm " + i)
-        }
-      })
+      }
 
-      await Promise.all([
-        elements.anim({translateY: 21}, {duration: 700, easing}),
-        elements.anim({opacity: 1}, {duration: 700, easing: "linear"}, 100),
-        this.mainCard.anim({translateY: -21}, {duration: 700, easing}),
-        confirmProm
-      ])
-      let confirm = await confirmProm
-
-      
-
-      log("logout " + (confirm ? "confirm" : "abort"))
 
       cardReader.enable()
+
+      let confirm = await confirmProm
+
+      if (this.showHrsCancled) return this.showHrsCancled = false
+
+      if (confirm) {
+        await this.hoursContainer.childs(".toBeGone").anim({background: "#D9D9D9"}, 400, 50)
+        await delay(300)
+      }
+      else {
+        await this.hoursContainer.childs(".toBeGone").anim({background: "#79C865"}, 400, 50)
+        await delay(300)
+      }
 
       if (this.showHrsCancled) return this.showHrsCancled = false
 
