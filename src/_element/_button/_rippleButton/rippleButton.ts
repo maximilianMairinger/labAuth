@@ -1,4 +1,5 @@
 import Button from "./../button";
+import * as delay from "delay";
 
 export default abstract class RippleButton extends Button {
   private ripples: HTMLElement;
@@ -15,8 +16,7 @@ export default abstract class RippleButton extends Button {
       this.ripples = ce("button-waves");
       this.apd(this.ripples);
     }
-    public initRipple(e: MouseEvent | KeyboardEvent | "center") {
-      
+    public initRipple(e?: MouseEvent | KeyboardEvent | "center") {
       let r = this.wave.cloneNode() as Element;
       this.ripples.append(r);
 
@@ -60,10 +60,7 @@ export default abstract class RippleButton extends Button {
          marginLeft: x
       });
       let rdyToFade = false;
-      r.anim([{transform: "scale(0)", offset: 0}, {transform: "scale(" + (this.width() / 25 * 2.2) + ")"}], {duration: 350, easing: "linear"}).then(() => {
-        if (rdyToFade) fadeAnim();
-        else rdyToFade = true;
-      });
+      r.anim([{transform: "scale(0)", offset: 0}, {transform: "scale(" + (this.width() / 25 * 2.2) + ")"}], {duration: 350, easing: "linear"}).then(fadeisok);
     }
     stl() {
       return super.stl() + require('./rippleButton.css').toString();

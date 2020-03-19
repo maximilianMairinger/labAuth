@@ -14,14 +14,37 @@ function sendFile(res, p) {
 app.use('/dist', express.static('dist'))
 app.use('/res', express.static('res'))
 
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
   sendFile(res, "index.html")
 });
+
+
+app.post("/studentSignOut", ({ body: param }, res) => {
+  console.log("studentSignOut: ")
+  console.log("sessKey", param.sessKey)
+  console.log("hours", param.hours)
+  console.log("subject", param.subject)
+  console.log("classroom", param.classroom)
+
+
+  res.send({})
+})
+
+app.post("/startUnit", ({ body: param }, res) => {
+  console.log("start Unit: ")
+  console.log("sessKey", param.sessKey)
+  console.log("hours", param.hours)
+  console.log("subject", param.subject)
+  console.log("classroom", param.classroom)
+
+
+  res.send({})
+})
 
 app.post("/LDAPAuth", (req, res) => {
   setTimeout(() => {
     if (req.body.username === "s") {
-      res.send({valid: true, data: {fullName: "Maximilian Mairinger", username: "mmairinger", employeetype: "student", registered: ["gone", "active", "active", "active"]}})
+      res.send({valid: true, data: {fullName: "Maximilian Mairinger", username: "mmairinger", employeetype: "student", registered: ["gone", "active", "active", "toBeGone"]}})
     }
     else if (req.body.username === "t") {
       res.send({valid: true, data: {fullName: "Domenik Dolezal", username: "ddolezal", employeetype: "teacher", sessKey: "sessKeyDummy"}})
@@ -44,7 +67,9 @@ app.post("/cardAuth", (req, res) => {
 })
 
 app.post("/destroySession", (req, res) => {
-  res.send({})
+  setTimeout(() => {
+    res.send({})
+  }, 6000)
 })
 
 
