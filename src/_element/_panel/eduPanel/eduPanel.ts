@@ -53,19 +53,29 @@ export default class EduPanel extends Panel {
     this.cancButton.id = "canc"
     this.confButton = new Button("Confirm")
     this.confButton.id = "conf"
+    this.cancButton.disable()
+    this.confButton.disable()
+    
     this.buttons = new ElementList(this.cancButton, this.confButton)
     const t = this
-    this.buttons.Inner("addActivationCallback", [async () => {
-      this.cancButton.disable()
-      this.confButton.disable()
-      await delay(600)
+    this.buttons.Inner("addActivationCallback", [async function() {
+      t.cancButton.disable()
+      t.confButton.disable()
+      let proms: any = [delay(600)]
+
+      let conf = this === t.confButton
+
+      
+      proms.add(t.buttonLoadingCbs.ea(async (cb) => {
+        await cb(conf)
+      }))
+      await Promise.all(proms)
+      t.buttonLoadingCbs.clear()
+      
     }, async function () {
       if (t.currButtonCb) t.currButtonCb(this === t.confButton)
       delete t.currButtonCb
       await t.hideConfimOptions()
-
-      t.cancButton.enable()
-      t.confButton.enable()
     }])
 
     this.mainBody.apd(this.cancButton, this.confButton)
@@ -164,9 +174,6 @@ export default class EduPanel extends Panel {
 
   private expectedCard: "student" | "teacher"
   public async expectStudent(temporary: boolean = false) {
-
-    if (this.eduExpectedChangeCb) this.eduExpectedChangeCb("student")
-    
     if (!temporary) {
       this.showScrollDown()
       this.enableTable()
@@ -177,6 +184,7 @@ export default class EduPanel extends Panel {
     }
     
     if (this.expectedCard === "student") return
+    if (this.eduExpectedChangeCb) this.eduExpectedChangeCb("student")
     this.mainCard.employeeType("Student")
     this.expectedCard = "student"
     await this.mainCard.expectStudent()
@@ -227,17 +235,35 @@ export default class EduPanel extends Panel {
   private currentlyShowingConfirmOptions = false
   private currButtonPromise: Promise<boolean>
   private currButtonCb: (confirm: boolean) => void
-  showConfimOptions() {
-    if (this.currButtonPromise) return this.currButtonPromise
+  private buttonLoadingCbs: ((confirm: boolean) => void | Promise<void>)[] = []
+  showConfimOptions(loadingCb?: ((confirm: boolean) => void | Promise<void>)) {
+    this.buttonLoadingCbs.add(loadingCb)
+    if (this.currButtonPromise) {
+      return this.currButtonPromise
+    }
     this.currentlyShowingConfirmOptions = true
 
-
     let animProm = (async () => {
-      await animatedScrollTo(0, {
-        elementToScroll: this.cardsContainer,
-        speed: 2000,
-        cancelOnUserAction: false
-      })
+      this.elementBody.css("overflowX", "hidden")
+      //@ts-ignore
+      this.elementBody.css("scrollSnapType", "none")
+      await Promise.all([
+        animatedScrollTo(0, {
+          elementToScroll: this.cardsContainer,
+          speed: 2000,
+          cancelOnUserAction: false
+        }),
+        animatedScrollTo([0, 0], {
+          elementToScroll: this.elementBody,
+          speed: 1000,
+          cancelOnUserAction: false
+          
+        }).then(() => {
+          this.elementBody.css("overflowX", "hidden")
+          //@ts-ignore
+          this.elementBody.css("scrollSnapType", "x mandatory")
+        })
+      ])
 
       this.buttons.Inner("enable", [])
       await this.buttons.show().anim({opacity: 1})
@@ -245,7 +271,10 @@ export default class EduPanel extends Panel {
 
     this.currButtonPromise = new Promise((res) => {
       animProm.then(() => {
-        this.currButtonCb = res
+        this.currButtonCb = (conf) => {
+          this.elementBody.css("overflowX", "auto")
+          res(conf)
+        }
       })
     })
 
@@ -255,6 +284,7 @@ export default class EduPanel extends Panel {
   async hideConfimOptions() {
     this.currentlyShowingConfirmOptions = false
     if (this.currButtonCb) this.currButtonCb(false)
+    this.buttonLoadingCbs.clear()
     delete this.currButtonPromise
     await this.buttons.anim({opacity: 0}).then(() => {this.buttons.hide(); this.buttons.Inner("disable", [])})
 
@@ -262,7 +292,7 @@ export default class EduPanel extends Panel {
 
   private showHrsCancled = false
   private showingHours = false
-  async showHours(registered: ("gone" | "toBeGone" | "active")[]) {
+  async showHours(data: any) {
     
     if (this.cardsContainer.scrollTop !== 0) {
       await animatedScrollTo(0, {
@@ -277,14 +307,22 @@ export default class EduPanel extends Panel {
     
     this.showingHours = true
     let elements: ElementList = new ElementList()
-    for (let i = 0; i < registered.length; i++) {
+
+    let logoutProcess = false
+
+    for (let i = 0; i < data.registered.length; i++) {
       let hour = ce("hour-box")
-      if (registered[i] === "active") hour.addClass("active")
-      else if (registered[i] === "gone") {}
-      else if (registered[i] === "toBeGone") hour.addClass("toBeGone")
+      if (data.registered[i] === "active") hour.addClass("active")
+      else if (data.registered[i] === "gone") {}
+      else if (data.registered[i] === "toBeGone") {
+        hour.addClass("toBeGone")
+        logoutProcess = true
+      }
       elements.add(hour)
       this.hoursContainer.apd(hour)
     }
+
+
 
     await Promise.all([
       elements.anim({translateY: 21}, {duration: 700, easing}),
@@ -293,8 +331,38 @@ export default class EduPanel extends Panel {
     ])
     if (this.showHrsCancled) return this.showHrsCancled = false
     
-    await delay(2500)
+    if (logoutProcess) {
+      await delay(500)
+      if (this.showHrsCancled) return this.showHrsCancled = false
+      let confirm = await this.showConfimOptions(async (confirm) => {
+        if (confirm) {
+          await ajax.post("studentSignOut", {})
+          
+          let i = -1
+          debugger
+          this.list.list((e, ind) => {
+            if (e.current() === data.username) i = ind
+          })
+          this.list.removeI(i)
+        }
+      })
+
+      log("logout " + (confirm ? "confirm" : "abort"))
+
+      delay(600).then(() => {
+        this.expectStudent()
+      })
+    }
+    else {
+      this.list.add({username: data.username, fullName: data.fullName, registered: data.registered})
+      delay(600).then(() => {
+        this.expectStudent()
+      })
+      await delay(2500)
+    }
     if (this.showHrsCancled) return this.showHrsCancled = false
+
+    elements = this.hoursContainer.childs()
 
     await Promise.all([
       this.mainCard.anim({translateY: .1}, {duration: 800, easing}),
@@ -383,11 +451,9 @@ export default class EduPanel extends Panel {
       if (expectedUser === "student") {
         // got and expected student 
         
-        this.list.add({username: data.username, fullName: data.fullName, registered: data.registered})
-        delay(600).then(() => {
-          this.expectStudent()
-        })
-        this.showHours(data.registered)
+        
+        
+        this.showHours(data)
           
       }
       else {
@@ -452,14 +518,16 @@ export default class EduPanel extends Panel {
 
   private async logoutAction() {
     this.manager.panelIndex.info.updateContents("Logout", "You are about to log out of, hence terminate this session. Are you sure?")
-    let confirm = await this.showConfimOptions()
-    if (confirm) {
-      let req = ajax.post("destroySession")
-      while(this.list.length()) {
-        this.list.removeI(0)
+    let confirm = await this.showConfimOptions(async (confirm) => {
+      if (confirm) {
+        await ajax.post("destroySession")
+        while(this.list.length()) {
+          this.list.removeI(0)
+        }
       }
+    })
+    if (confirm) {
 
-      await req
       delete localStorage.sessKey
       this.activeTeacherSession = false
       
