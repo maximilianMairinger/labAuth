@@ -18,7 +18,7 @@ export default class LoginPanel extends Panel {
   private usr = this.inputs.first
   private pwd = this.inputs[1]
 
-  
+  public cardId = ""
 
   constructor(private manager: PanelManager) {
     super()
@@ -29,6 +29,12 @@ export default class LoginPanel extends Panel {
       manager.panelIndex.edu.mainCard.authentication()
       let req = ajax.post("LDAPAuth", {username: this.usr.value, password: this.pwd.value})
 
+      req.fail(async () => {
+        manager.panelIndex.edu.mainCard.doneAuthentication()
+        await manager.setPanel("info", "left")
+        this.inputs.Inner("enable", [])
+      })
+
       await Promise.all([req, delay(1000 + (Math.random() * 1000))])
 
       manager.panelIndex.edu.mainCard.doneAuthentication()
@@ -36,7 +42,7 @@ export default class LoginPanel extends Panel {
       let res = await req
       if (res.valid) {
         disable()
-        manager.panelIndex.edu.registerRequest(res.data).then(() => {
+        manager.panelIndex.edu.registerRequest(res.data, this.cardId).then(() => {
           enable()
         })
 

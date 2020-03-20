@@ -20,22 +20,18 @@ app.get('/', (req, res) => {
 
 
 app.post("/studentSignOut", ({ body: param }, res) => {
+  console.log("")
   console.log("studentSignOut: ")
-  console.log("sessKey", param.sessKey)
-  console.log("hours", param.hours)
-  console.log("subject", param.subject)
-  console.log("classroom", param.classroom)
+  console.log(param)
 
 
   res.send({})
 })
 
 app.post("/startUnit", ({ body: param }, res) => {
+  console.log("")
   console.log("start Unit: ")
-  console.log("sessKey", param.sessKey)
-  console.log("hours", param.hours)
-  console.log("subject", param.subject)
-  console.log("classroom", param.classroom)
+  console.log(param)
 
 
   setTimeout(() => {
@@ -46,7 +42,7 @@ app.post("/startUnit", ({ body: param }, res) => {
 app.post("/LDAPAuth", (req, res) => {
   setTimeout(() => {
     if (req.body.username === "s") {
-      res.send({valid: true, data: {fullName: "Maximilian Mairinger", username: "mmairinger", employeetype: "student", registered: ["active", "active", "active", "active"], sign: "out"}})
+      res.send({valid: true, data: {fullName: "Maximilian Mairinger", username: "mmairinger", employeetype: "student", registered: ["active", "active", "active", "toBeGone"], sign: "out"}})
     }
     else if (req.body.username === "t") {
       res.send({valid: true, data: {fullName: "Domenik Dolezal", username: "ddolezal", employeetype: "teacher", sessKey: "sessKeyDummy"}})
@@ -56,6 +52,9 @@ app.post("/LDAPAuth", (req, res) => {
 })
 
 app.post("/cardAuth", (req, res) => {
+  console.log("")
+  console.log("cardAuth")
+  console.log(req.body)
   if (req.body.cardId === "t") {
     res.send({entry: true, data: {employeetype: "teacher", username: "ddolezal", fullName: "Domenik Dolezal", sessKey: "sessKeyDummy"}})
   }

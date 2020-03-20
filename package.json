@@ -37,10 +37,10 @@
         "webpack-merge": "^4.2.2"
     },
     "dependencies": {
-        "ajaon": "^1.2.1",
+        "ajaon": "^1.4.0",
         "animated-scroll-to": "^2.0.5",
         "delay": "^4.3.0",
-        "extended-dom": "^3.1.8",
+        "extended-dom": "^3.1.9",
         "fast-decode-uri-component": "^1.0.1",
         "front-db": "^1.1.10",
         "nodemon": "^2.0.2",

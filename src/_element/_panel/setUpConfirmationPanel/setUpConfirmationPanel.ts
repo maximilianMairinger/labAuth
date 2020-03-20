@@ -26,7 +26,11 @@ export default class SetUpConfirmationPanel extends Panel {
 
     this.abortButton.addActivationCallback(async () => {
       this.confirmButton.disable()
-      await Promise.all([delay(600), ajax.post("destroySession")])
+      let req = ajax.post("destroySession", {}, undefined, true)
+      req.fail(() => {
+        // Intentionally left empty
+      })
+      await Promise.all([delay(600), req])
       delete localStorage.sessKey
       manager.panelIndex.edu.activeTeacherSession = false
     },
@@ -42,17 +46,22 @@ export default class SetUpConfirmationPanel extends Panel {
 
     this.confirmButton.addActivationCallback(async () => {
       this.abortButton.disable()
-      await Promise.all([
-        delay(600),
-        ajax.post("startUnit", {
-          hours: +this.hoursElem.text(),
-          subject: this.subjectElem.text(),
-          classroom: this.classRoomElem.text()
-        })
-      ])
+
+      let req = ajax.post("startUnit", {
+        hours: +this.hoursElem.text(),
+        subject: this.subjectElem.text(),
+        classroom: this.classRoomElem.text()
+      }, undefined, true)
+      
+      req.fail(() => {
+        // Intentionally left empty
+      })
+
+      await Promise.all([delay(600), req])
     }, () => {
-      manager.panelIndex.info.updateContents("LabAuth", "You may sigh into <text-hightlight>" + this.subjectElem.text() + "</text-hightlight> here. To sign out register your card again.")
+      manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subjectElem.text() + "</text-hightlight> here. To sign out, register your card again.")
       manager.panelIndex.edu.subject = this.subjectElem.text()
+      manager.panelIndex.edu.maxHours = +this.hoursElem.text()
       manager.panelIndex.edu.expectStudent()
       manager.setPanel("info", "left")
       manager.setPanel("edu", "right").then(() => {

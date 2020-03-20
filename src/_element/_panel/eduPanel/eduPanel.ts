@@ -22,6 +22,13 @@ export type Entry = {
   registered: ("gone" | "toBeGone" | "active")[]
 }
 
+function getCurrentHour() {
+  let date = new Date()
+  let h = date.getHours()
+  let min = date.getMinutes()
+  if (min > 30) h++
+  return h
+}
 
 export default class EduPanel extends Panel {
   public preferedWidth: "big" | "small" | Percent
@@ -38,8 +45,39 @@ export default class EduPanel extends Panel {
   private cancButton: Button
   private confButton: Button
 
+
+  private knownTeacherLogins: {
+    cardId: string,
+    data: {
+      username: string,
+      fullName: string
+    }
+  }[] = []
+
+  private knownStudentLogins: {
+    cardId: string,
+    data: Entry & {
+      startOfLastUnit: number
+      sign?: "in" | "out"
+    }
+  }[] = []
+
   constructor(private manager: PanelManager, private list: DataArray<Entry>, public eduExpectedChangeCb?: (edu: "student" | "teacher") => void) {
     super()
+
+
+    window.addEventListener("offline", async () => {
+      await Promise.all([
+        this.cancelShowHours(),
+        this.hideConfimOptions()
+      ])
+
+      if (this.expectedCard === "student") this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. Your card will be synced when online.")
+    })
+
+    window.addEventListener("online", async () => {
+      if (this.expectedCard === "student") this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out, register your card again.")
+    })
 
     this.arrow.on("mousedown", async (e) => {
       if (this.arrow.css("opacity") === 1)
@@ -130,6 +168,7 @@ export default class EduPanel extends Panel {
       })
 
       edu.luckyDay()
+      edu.updatePasscode()
       edu.employeeType("Student")
       this.otherCardsContainer.insertBefore(edu, this.otherCardsContainer.childs()[i])
 
@@ -169,7 +208,11 @@ export default class EduPanel extends Panel {
 
 
 
-    
+    const zoom = .77
+    this.cardsContainer.on("resize", () => {
+      this.mainCard.css("marginTop", ((this.cardsContainer.height() - (this.mainCard.height() * zoom)) / 2) / zoom) 
+    })
+
     
   }
 
@@ -363,7 +406,8 @@ export default class EduPanel extends Panel {
           ])
           if (this.showHrsCancled) return this.showHrsCancled = false
 
-          this.manager.panelIndex.info.updateContents("LabAuth", "You may sigh into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out register your card again.")
+          if (navigator.onLine) this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out, register your card again.")
+          else this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. Your card will be synced when online.")
           
     
           return
@@ -389,16 +433,32 @@ export default class EduPanel extends Panel {
         
         
 
-        confirmProm = this.showConfimOptions(async (confirm) => {
-          if (confirm) {
-            await ajax.post("studentSignOut", {})
-            
-            let i = -1
-            this.list.list((e, ind) => {
-              if (e.current().username.val === data.username) i = ind
-            })
-            this.list.removeI(i)
-          }
+        confirmProm = this.showConfimOptions((confirm) => {
+          return new Promise(async (resAnim) => {
+            if (confirm) {
+              let req = ajax.post("studentSignOut", {username: data.username}, undefined, true)
+              req.fail(() => {
+                let i = -1
+                this.list.list((e, ind) => {
+                  if (e.current().username.val === data.username) i = ind
+                })
+                this.list.removeI(i)
+                cardReader.enable()
+                resAnim()
+              })
+  
+              await req
+              
+              let i = -1
+              this.list.list((e, ind) => {
+                if (e.current().username.val === data.username) i = ind
+              })
+              this.list.removeI(i)
+              resAnim()
+            }
+            else resAnim()
+          })
+          
         })
   
         await Promise.all([
@@ -414,7 +474,8 @@ export default class EduPanel extends Panel {
 
 
       cardReader.enable()
-      this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out register your card again.")
+      if (navigator.onLine) this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out, register your card again.")
+          else this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. Your card will be synced when online.")
 
       let confirm = await confirmProm
 
@@ -423,10 +484,16 @@ export default class EduPanel extends Panel {
       if (confirm) {
         await this.hoursContainer.childs(".toBeGone").anim({background: "#D9D9D9"}, 400, 50)
         await delay(300)
+        data.registered.ea((e, i) => {
+          if (e === "toBeGone") data.registered[i] = "gone"
+        })
       }
       else {
         await this.hoursContainer.childs(".toBeGone").anim({background: "#79C865"}, 400, 50)
         await delay(300)
+        data.registered.ea((e, i) => {
+          if (e === "active") data.registered[i] = "gone"
+        })
       }
 
       if (this.showHrsCancled) return this.showHrsCancled = false
@@ -470,7 +537,8 @@ export default class EduPanel extends Panel {
     this.mainCard.fullName("Unknown")
     this.mainCard.clearLuckyDay()
     this.mainCard.updatePasscode(0)
-    this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out register your card again.")
+    if (navigator.onLine) this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out, register your card again.")
+          else this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. Your card will be synced when online.")
 
     await Promise.all([
       this.mainCard.anim({translateY: .1}, {duration: 200, easing}),
@@ -481,10 +549,19 @@ export default class EduPanel extends Panel {
     this.alreadyCanc = false
   }
 
-  public async registerRequest(data: any) {
+  public async registerRequest(data: any, cardId: string, addToKnown: boolean = true) {
     let expectedUser = this.expectedCard
     if (data.employeetype === "teacher") {
+
       // got user teacher
+
+      if (addToKnown) {
+        this.knownTeacherLogins.add({
+          cardId,
+          data
+        })
+      }
+      
       
       this.mainCard.username(data.username)
       this.mainCard.fullName(data.fullName)
@@ -520,6 +597,20 @@ export default class EduPanel extends Panel {
       }
     }
     else {
+      // Got user student
+
+      
+
+      if (addToKnown) {
+        data.startOfLastUnit = getCurrentHour()
+
+        this.knownStudentLogins.add({
+          cardId,
+          data
+        })
+      }
+
+
       this.mainCard.username(data.username)
       this.mainCard.fullName(data.fullName)
       this.mainCard.luckyDay()
@@ -530,10 +621,8 @@ export default class EduPanel extends Panel {
       if (expectedUser === "student") {
         // got and expected student 
         
-        
-        
         this.showHours(data)
-          
+
       }
       else {
         // expected teacher but got student
@@ -558,8 +647,9 @@ export default class EduPanel extends Panel {
   }
 
   public activeTeacherSession = false
-  async cardReadCallback(cardId: string) {
-    await this.cancelShowHours()
+  cardReadCallback(cardId: string) {
+    return new Promise(async (resCardReadCallback) => {
+      await this.cancelShowHours()
     await animatedScrollTo(0, {
       elementToScroll: this.cardsContainer,
       speed: 2000,
@@ -573,6 +663,106 @@ export default class EduPanel extends Panel {
 
     let req = ajax.post("cardAuth", {
       cardId
+    }, undefined)
+
+    req.fail(async () => {
+      await delay(300)
+      this.mainCard.doneAuthentication()
+
+      if (this.expectedCard === "teacher") {
+        let cardKnown = await this.knownTeacherLogins.ea(async (saved) => {
+          if (saved.cardId === cardId) {
+            await this.registerRequest(saved.data, saved.cardId, false)
+            return true
+          }
+        })
+
+        if (!cardKnown) {
+          this.mainCard.fullName("Unable to authenticate")
+          await delay(2000)
+          this.mainCard.fullName("Unknown")
+        }
+        
+      }
+      else if (this.expectedCard === "student") {
+
+        let cardKnown = await this.knownStudentLogins.ea(async (saved) => {
+          if (saved.cardId === cardId) {
+
+            let regDef = saved.data.registered !== undefined
+
+            let firstInactivefieldAtTheEnd = 0
+            if (regDef) {
+              saved.data.registered.Reverse().ea((e, i) => {
+                if (e !== "gone") return firstInactivefieldAtTheEnd = saved.data.registered.length - i
+              })
+            }
+            
+            
+            if (regDef && saved.data.startOfLastUnit !== undefined && firstInactivefieldAtTheEnd === saved.data.registered.length) {
+              let currTime = getCurrentHour()
+              if (saved.data.startOfLastUnit <= currTime) {
+                saved.data.sign = "out"
+
+                let timeDelta = currTime - saved.data.startOfLastUnit
+
+                for (let i = timeDelta; i < saved.data.registered.length; i++) {
+                  saved.data.registered[i] = "toBeGone"
+                }
+
+                
+              }
+              else {
+                this.mainCard.fullName("Unexpected Error")
+                await delay(2000)
+                this.mainCard.fullName("Unknown")
+                return false
+              }
+            }
+            else {
+              saved.data.sign = "in"
+              saved.data.registered = []
+              for (let i = 0; i < this.maxHours; i++) {
+                saved.data.registered[i] = "active"
+              }
+            }
+            
+
+            await this.registerRequest(saved.data, saved.cardId, false)
+            return true
+          }
+        })
+
+        let recallRequest = req.recall()
+
+        if (!cardKnown) {
+          this.mainCard.fullName("Card saved")
+          await delay(2000)
+          this.mainCard.fullName("Unknown")
+
+          recallRequest.then(async (res) => {
+            if (res.entry) {
+              if (res.data.employeetype === "student") {
+                if (res.data.sign === "in") {
+                  this.list.add({username: res.data.username, fullName: res.data.fullName, registered: res.data.registered})
+                }
+                else if (res.data.sign === "out") {
+                  await ajax.post("studentSignOut", {username: res.data.username})
+            
+                  let i = -1
+                  this.list.list((e, ind) => {
+                    if (e.current().username.val === res.data.username) i = ind
+                  })
+                  this.list.removeI(i)
+                }
+              }
+            }
+          })
+        }
+
+        
+      }
+      resCardReadCallback()
     })
     
     await Promise.all([req, delay(1000 + (Math.random() * 1000))])
@@ -582,18 +772,22 @@ export default class EduPanel extends Panel {
     this.mainCard.doneAuthentication()
 
     if (res.entry) {
-      await this.registerRequest(res.data)
+      await this.registerRequest(res.data, cardId)
     }
     else {
+      this.manager.panelIndex.login.cardId = cardId
       this.manager.setPanel("login", "left")
       this.mainCard.fullName("Unknown")
     }
 
     if (this.expectedCard === "student") this.showScrollDown()
+    resCardReadCallback()
+    })  
   }
 
   
   public subject = "Unknown"
+  public maxHours = 0
 
   private async logoutTeacherAction() {
     this.manager.panelIndex.info.updateContents("Logout", "You are about to log out of, hence terminate this session. Are you sure?")
@@ -603,6 +797,10 @@ export default class EduPanel extends Panel {
         while(this.list.length()) {
           this.list.removeI(0)
         }
+        this.knownStudentLogins.ea((e) => {
+          delete e.data.registered
+          delete e.data.startOfLastUnit
+        })
       }
     })
     if (confirm) {
@@ -616,7 +814,8 @@ export default class EduPanel extends Panel {
     else {
       this.clearMainCard()
       await this.expectStudent()
-      this.manager.panelIndex.info.updateContents("LabAuth", "You may sigh into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out register your card again.")
+      if (navigator.onLine) this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. To sign out, register your card again.")
+      else this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. Your card will be synced when online.")
     }
   }
 

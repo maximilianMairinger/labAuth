@@ -23,7 +23,7 @@ export default class Site extends Element {
 
   private manager = new PanelManager(this.entries, (expectedCard) => {
     if (expectedCard === "student") {
-      this.offlineIndecator.anim({background: "black"})
+      this.offlineIndecator.anim({background: "#bf2612"})
     }
     else if (expectedCard === "teacher") {
       this.offlineIndecator.anim({background: "#1f7eea"})
@@ -102,6 +102,7 @@ export default class Site extends Element {
     
     if (status === "offline" || status === "syncing") {
       proms.add(this.offlineIndecator.anim({opacity: 1, height: 30}))
+      proms.add(this.manager.anim({height: "calc(100% - 30px)"}))
 
       if (status === "syncing") {
         proms.add(delay(3000))
@@ -112,6 +113,7 @@ export default class Site extends Element {
     }
     else if (status === "online") {
       proms.add(delay(2000).then(() => this.offlineIndecator.anim({opacity: 0, height: 0})))
+      proms.add(delay(2000).then(() => this.manager.anim({height: "100%"})))
       proms.add(delay(3000))
     }
 

@@ -60,3 +60,10 @@ offline-indecator > indecator-text {
   overflow: hidden;
   display: inline-block;
 }
+
+c-panel-manager {
+  width: 100%;
+  display: block;
+  height: 100%;
+  position: relative;
+}
