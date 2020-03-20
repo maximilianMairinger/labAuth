@@ -772,6 +772,8 @@ export default class EduPanel extends Panel {
                   })
                   this.list.removeI(i)
                 }
+
+                this.expectStudent()
               }
               else if (res.data.employeetype === "teacher") {
                 await ajax.post("destroySession", {}, undefined, true)

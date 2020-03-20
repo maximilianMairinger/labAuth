@@ -24,15 +24,21 @@ export default class SetUpConfirmationPanel extends Panel {
     this.abortButton.hotkey = "Escape"
     this.confirmButton = new Button("Sure").addClass("confirm")
 
-    this.abortButton.addActivationCallback(async () => {
-      this.confirmButton.disable()
-      let req = ajax.post("destroySession", {}, undefined, true)
-      req.fail(() => {
-        // Intentionally left empty
+    this.abortButton.addActivationCallback(() => {
+      return new Promise(async (resButton) => {
+        this.confirmButton.disable()
+        let req = ajax.post("destroySession", {}, undefined, true)
+        req.fail(() => {
+          delete localStorage.sessKey
+          manager.panelIndex.edu.activeTeacherSession = false
+          delay(500).then(resButton)
+        })
+        await Promise.all([delay(600), req])
+        delete localStorage.sessKey
+        manager.panelIndex.edu.activeTeacherSession = false
+        resButton()
       })
-      await Promise.all([delay(600), req])
-      delete localStorage.sessKey
-      manager.panelIndex.edu.activeTeacherSession = false
+      
     },
     () => {
       manager.panelIndex.info.updateContents("LabAuth", "A teacher may log in with his edu.card to start the session.")
@@ -44,20 +50,24 @@ export default class SetUpConfirmationPanel extends Panel {
       })
     })
 
-    this.confirmButton.addActivationCallback(async () => {
-      this.abortButton.disable()
+    this.confirmButton.addActivationCallback(() => {
+      return new Promise(async (resButton) => {
+        this.abortButton.disable()
 
-      let req = ajax.post("startUnit", {
-        hours: +this.hoursElem.text(),
-        subject: this.subjectElem.text(),
-        classroom: this.classRoomElem.text()
-      }, undefined, true)
-      
-      req.fail(() => {
-        // Intentionally left empty
+        let req = ajax.post("startUnit", {
+          hours: +this.hoursElem.text(),
+          subject: this.subjectElem.text(),
+          classroom: this.classRoomElem.text()
+        }, undefined, true)
+        
+        req.fail(() => {
+          delay(500).then(resButton)
+        })
+  
+        await Promise.all([delay(600), req])
+        resButton()
       })
-
-      await Promise.all([delay(600), req])
+      
     }, () => {
       manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subjectElem.text() + "</text-hightlight> here. To sign out, register your card again.")
       manager.panelIndex.edu.subject = this.subjectElem.text()
