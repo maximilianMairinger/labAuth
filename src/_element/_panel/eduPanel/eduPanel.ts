@@ -67,12 +67,8 @@ export default class EduPanel extends Panel {
 
 
     window.addEventListener("offline", async () => {
-      await Promise.all([
-        this.cancelShowHours(),
-        this.hideConfimOptions()
-      ])
 
-      if (this.expectedCard === "student") this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. Your card will be synced when online.")
+      if (!this.currentlyShowingConfirmOptions) if (this.expectedCard === "student") this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subject + "</text-hightlight> here. Your card will be synced when online.")
     })
 
     window.addEventListener("online", async () => {
@@ -334,7 +330,7 @@ export default class EduPanel extends Panel {
 
   private showHrsCancled = false
   private showingHours = false
-  async showHours(data: any) {
+  async showHours(data: any, cardId: string) {
     this.showingHours = true
 
     if (this.cardsContainer.scrollTop !== 0) {
@@ -434,9 +430,9 @@ export default class EduPanel extends Panel {
         
 
         confirmProm = this.showConfimOptions((confirm) => {
-          return new Promise(async (resAnim) => {
+          return new Promise(async (resButton) => {
             if (confirm) {
-              let req = ajax.post("studentSignOut", {username: data.username}, undefined, true)
+              let req = ajax.post("studentSignOut", {cardId}, undefined, true)
               req.fail(() => {
                 let i = -1
                 this.list.list((e, ind) => {
@@ -444,7 +440,7 @@ export default class EduPanel extends Panel {
                 })
                 this.list.removeI(i)
                 cardReader.enable()
-                resAnim()
+                resButton()
               })
   
               await req
@@ -454,9 +450,9 @@ export default class EduPanel extends Panel {
                 if (e.current().username.val === data.username) i = ind
               })
               this.list.removeI(i)
-              resAnim()
+              resButton()
             }
-            else resAnim()
+            else resButton()
           })
           
         })
@@ -621,7 +617,7 @@ export default class EduPanel extends Panel {
       if (expectedUser === "student") {
         // got and expected student 
         
-        this.showHours(data)
+        this.showHours(data, cardId)
 
       }
       else {
@@ -666,7 +662,7 @@ export default class EduPanel extends Panel {
     }, undefined)
 
     req.fail(async () => {
-      await delay(300)
+      await delay(1200)
       this.mainCard.doneAuthentication()
 
       if (this.expectedCard === "teacher") {
@@ -685,8 +681,11 @@ export default class EduPanel extends Panel {
         
       }
       else if (this.expectedCard === "student") {
+        let recallRequest = req.recall()
 
-        let cardKnown = await this.knownStudentLogins.ea(async (saved) => {
+        // Student
+
+        let cardKnownAsStudent = await this.knownStudentLogins.ea(async (saved) => {
           if (saved.cardId === cardId) {
 
             let regDef = saved.data.registered !== undefined
@@ -703,6 +702,8 @@ export default class EduPanel extends Panel {
               let currTime = getCurrentHour()
               if (saved.data.startOfLastUnit <= currTime) {
                 saved.data.sign = "out"
+
+                recallRequest.abort()
 
                 let timeDelta = currTime - saved.data.startOfLastUnit
 
@@ -733,9 +734,25 @@ export default class EduPanel extends Panel {
           }
         })
 
-        let recallRequest = req.recall()
+        
 
-        if (!cardKnown) {
+        
+
+
+        // Teacher
+
+        let cardKnownAsTeacher = await this.knownTeacherLogins.ea(async (saved) => {
+          if (saved.cardId === cardId) {
+            recallRequest.abort()
+            await this.registerRequest(saved.data, saved.cardId, false)
+            
+
+            return true
+          }
+        })
+
+
+        if (!cardKnownAsStudent && !cardKnownAsTeacher) {
           this.mainCard.fullName("Card saved")
           await delay(2000)
           this.mainCard.fullName("Unknown")
@@ -747,7 +764,7 @@ export default class EduPanel extends Panel {
                   this.list.add({username: res.data.username, fullName: res.data.fullName, registered: res.data.registered})
                 }
                 else if (res.data.sign === "out") {
-                  await ajax.post("studentSignOut", {username: res.data.username})
+                  await ajax.post("studentSignOut", {cardId})
             
                   let i = -1
                   this.list.list((e, ind) => {
@@ -756,11 +773,21 @@ export default class EduPanel extends Panel {
                   this.list.removeI(i)
                 }
               }
+              else if (res.data.employeetype === "teacher") {
+                await ajax.post("destroySession", {}, undefined, true)
+                while(this.list.length()) {
+                  this.list.removeI(0)
+                }
+                this.knownStudentLogins.ea((e) => {
+                  delete e.data.registered
+                  delete e.data.startOfLastUnit
+                })
+                this.expectTeacher()
+              }
             }
           })
         }
 
-        
       }
       resCardReadCallback()
     })
@@ -791,17 +818,34 @@ export default class EduPanel extends Panel {
 
   private async logoutTeacherAction() {
     this.manager.panelIndex.info.updateContents("Logout", "You are about to log out of, hence terminate this session. Are you sure?")
-    let confirm = await this.showConfimOptions(async (confirm) => {
-      if (confirm) {
-        await ajax.post("destroySession")
-        while(this.list.length()) {
-          this.list.removeI(0)
+    let confirm = await this.showConfimOptions((confirm) => {
+      return new Promise(async (resButton) => {
+        if (confirm) {
+          let req = ajax.post("destroySession", {}, undefined, true)
+  
+          req.fail(() => {
+            while(this.list.length()) {
+              this.list.removeI(0)
+            }
+            this.knownStudentLogins.ea((e) => {
+              delete e.data.registered
+              delete e.data.startOfLastUnit
+            })
+            resButton()
+          })
+  
+          await req
+          while(this.list.length()) {
+            this.list.removeI(0)
+          }
+          this.knownStudentLogins.ea((e) => {
+            delete e.data.registered
+            delete e.data.startOfLastUnit
+          })
+          resButton()
         }
-        this.knownStudentLogins.ea((e) => {
-          delete e.data.registered
-          delete e.data.startOfLastUnit
-        })
-      }
+        else resButton()
+      })
     })
     if (confirm) {
 
