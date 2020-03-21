@@ -3,6 +3,7 @@ import PanelManager from "../panelManager/panelManager"
 import { DataBase, Data, DataArray } from "front-db"
 import delay from "delay"
 import { Entry } from "../_panel/eduPanel/eduPanel"
+import { recall } from "ajaon"
 
 
 const textIndex = {
@@ -98,14 +99,14 @@ export default class Site extends Element {
     this.currentlyInAnAnimation = true
 
     
-    let proms = [this.activateIcon(status), this.setText(status)]
+    let proms: Promise<any>[] = [this.activateIcon(status), this.setText(status)]
     
     if (status === "offline" || status === "syncing") {
       proms.add(this.offlineIndecator.anim({opacity: 1, height: 30}))
       proms.add(this.manager.anim({height: "calc(100% - 30px)"}))
 
       if (status === "syncing") {
-        proms.add(delay(3000))
+        proms.add(Promise.all([delay(3000), recall.process]))
       }
       else {
         proms.add(delay(2000))
