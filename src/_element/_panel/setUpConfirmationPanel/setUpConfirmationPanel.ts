@@ -14,8 +14,6 @@ export default class SetUpConfirmationPanel extends Panel {
   private classRoomElem = this.q("classroom-text").first
   private hoursElem = this.q("hours-text").first
 
-  public destroySessionTimout: NodeJS.Timeout
-
   private confirmButton: Button
   private abortButton: Button
   constructor(manager: PanelManager) {
@@ -56,10 +54,8 @@ export default class SetUpConfirmationPanel extends Panel {
       return new Promise(async (resButton) => {
         this.abortButton.disable()
 
-        let hours = +this.hoursElem.text()
-
         let req = ajax.post("startUnit", {
-          hours,
+          hours: +this.hoursElem.text(),
           subject: this.subjectElem.text(),
           classroom: this.classRoomElem.text()
         }, undefined, true)
@@ -69,14 +65,6 @@ export default class SetUpConfirmationPanel extends Panel {
         })
   
         await Promise.all([delay(600), req])
-
-        this.destroySessionTimout = setTimeout(() => {
-          let req = ajax.post("destroySession", {}, undefined, true)
-          delete localStorage.sessKey
-          manager.panelIndex.edu.activeTeacherSession = false
-
-        }, hours * 60 * 60 * 1000)
-
         resButton()
       })
       
