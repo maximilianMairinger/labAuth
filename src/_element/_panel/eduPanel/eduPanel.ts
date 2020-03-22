@@ -39,7 +39,7 @@ function getKnownLogin(of: "student" | "teacher", cardId: string) {
 const knownLogins: {
   student: {
     [encryptedCardId: string]: Entry & {
-      startOfLastUnit: number
+      startOfLastUnit?: number
       sign?: "in" | "out"
     }
   },
