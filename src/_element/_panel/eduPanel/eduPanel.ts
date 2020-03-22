@@ -595,7 +595,7 @@ export default class EduPanel extends Panel {
         if (!this.activeTeacherSession) {
           // Teacher start session
           this.activeTeacherSession = true
-          localStorage.sessKey = data.sessKey
+          if (data.sessKey !== undefined) localStorage.sessKey = data.sessKey
 
           await this.loadingTeacherAnimation()
 
@@ -679,7 +679,6 @@ export default class EduPanel extends Panel {
     
 
 
-
     let req = ajax.post("cardAuth", {
       encryptedCardId
     }, undefined)
@@ -691,6 +690,10 @@ export default class EduPanel extends Panel {
       if (this.expectedCard === "teacher") {
         let cardKnownAsTeacher = !!knownLogins.teacher[encryptedCardId]
         if (cardKnownAsTeacher) {
+          req.recall().then((res) => {
+            localStorage.sessKey = res.data.sessKey
+          })
+
           await this.registerRequest(knownLogins.teacher[encryptedCardId], encryptedCardId)
         }
 
