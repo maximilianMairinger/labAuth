@@ -12,16 +12,14 @@ self.addEventListener("fetch", function (event) {
         (async function() {
             var cache = await caches.open(cacheName);
             var cachedFiles = await cache.match(event.request);
-            if(cachedFiles) {
+            try {
+                var response = await fetch(event.request);
+                await cache.put(event.request, response.clone());
+                console.log("serving network", event.request.url)
+                return response;
+            } catch(e) { 
                 console.log("serving cache", event.request.url)
                 return cachedFiles;
-            } else {
-                console.log("serving network", event.request.url)
-                try {
-                    var response = await fetch(event.request);
-                    await cache.put(event.request, response.clone());
-                    return response;
-                } catch(e) { /* ... */ }
             }
         }())
     )

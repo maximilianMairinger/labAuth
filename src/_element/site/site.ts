@@ -58,6 +58,12 @@ export default class Site extends Element {
     
 
     this.elementBody.apd(this.manager, this.offlineIndecator)
+
+    if (!navigator.onLine) {
+      this.onOnlineStatusChange(navigator.onLine)
+    }
+    
+    
     
   }
 
