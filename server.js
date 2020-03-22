@@ -81,10 +81,10 @@ app.post("/startUnit", async ({ body: param }, res) => {
 app.post("/LDAPAuth", (req, res) => {
   setTimeout(() => {
     if (req.body.username === "s") {
-      res.send({valid: true, data: {fullName: "Maximilian Mairinger", username: "mmairinger", employeetype: "student", registered: ["active", "active", "active", "toBeGone"], sign: "out"}})
+      res.send({valid: true, data: {fullName: "Maximilian Mairinger", username: "mmairinger", employeeType: "student", registered: ["active", "active", "active", "toBeGone"], sign: "out"}})
     }
     else if (req.body.username === "t") {
-      res.send({valid: true, data: {fullName: "Domenik Dolezal", username: "ddolezal", employeetype: "teacher", sessKey: "sessKeyDummy"}})
+      res.send({valid: true, data: {fullName: "Domenik Dolezal", username: "ddolezal", employeeType: "teacher", sessKey: "sessKeyDummy"}})
     }
     else res.send({valid: false})
   }, 300)
@@ -96,10 +96,10 @@ app.post("/cardAuth", async (req, res) => {
   console.log("cardAuth")
   console.log(req.body)
   if (req.body.encryptedCardId === exampleTeacherCardIdEncrypted) {
-    res.send({entry: true, data: {employeetype: "teacher", username: "ddolezal", fullName: "Domenik Dolezal", sessKey: "sessKeyDummy"}})
+    res.send({entry: true, data: {employeeType: "teacher", username: "ddolezal", fullName: "Domenik Dolezal", sessKey: "sessKeyDummy"}})
   }
   else if (req.body.encryptedCardId === exampleStudentCardIdEncrypted) {
-    res.send({entry: true, data: {employeetype: "student", username: "mmairinger", fullName: "Maximilian Mairinger", registered: ["active", "active", "active", "active"], sign: "in"}})
+    res.send({entry: true, data: {employeeType: "student", username: "mmairinger", fullName: "Maximilian Mairinger", registered: ["active", "active", "active", "active"], sign: "in"}})
   }
   else {
     res.send({entry: false})
