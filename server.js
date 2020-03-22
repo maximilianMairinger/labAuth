@@ -19,6 +19,25 @@ app.get('/', (req, res) => {
 });
 
 
+
+app.post("/cardIndex", (req, res) => {
+  res.send({
+    student: {
+      s: {
+        fullName: "Maximilian Mairinger",
+        username: "mmairinger"
+      }
+    },
+    teacher: {
+      t: {
+        fullName: "Domenik Dolezal",
+        username: "ddolezal"
+      }
+    }
+  })
+})
+
+
 app.post("/studentSignOut", ({ body: param }, res) => {
   console.log("")
   console.log("studentSignOut: ")
