@@ -31,10 +31,6 @@ function getCurrentHour() {
   return h
 }
 
-function getKnownLogin(of: "student" | "teacher", cardId: string) {
-  return knownLogins[of][SHA256(cardId).toString()]
-}
-
 
 const knownLogins: {
   student: {
@@ -58,14 +54,26 @@ const knownLogins: {
   }
 }
 
-
+const teacherString = "teacher"
+const studentString = "student"
+const employeeTypeString = "employeeType"
 setTimeout(async () => {
   let res = await ajax.post("cardIndex", {}, undefined, true)
-  res.student.ea(() => {
 
-  })
+  for (let key in res.student) {
+    if (!knownLogins.student[key]) {
+      knownLogins.student[key] = res.student[key]
+      knownLogins.student[key][employeeTypeString] = studentString
+    }
+  }
+  for (let key in res.teacher) {
+    if (!knownLogins.teacher[key]) {
+      knownLogins.teacher[key] = res.teacher[key]
+      knownLogins.teacher[key][employeeTypeString] = teacherString
+    }
+  }
 
-}, 10000)
+}, 0)
 
 export default class EduPanel extends Panel {
   public preferedWidth: "big" | "small" | Percent
@@ -567,7 +575,7 @@ export default class EduPanel extends Panel {
 
   public async registerRequest(data: any, encryptedCardId: string) {
     let expectedUser = this.expectedCard
-    if (data.employeetype === "teacher") {
+    if (data.employeeType === "teacher") {
 
       // got user teacher
 
@@ -765,7 +773,7 @@ export default class EduPanel extends Panel {
 
           recallRequest.then(async (res) => {
             if (res.entry) {
-              if (res.data.employeetype === "student") {
+              if (res.data.employeeType === "student") {
                 if (res.data.sign === "in") {
                   this.list.add({username: res.data.username, fullName: res.data.fullName, registered: res.data.registered})
                 }
@@ -781,7 +789,7 @@ export default class EduPanel extends Panel {
 
                 this.expectStudent()
               }
-              else if (res.data.employeetype === "teacher") {
+              else if (res.data.employeeType === "teacher") {
                 await ajax.post("destroySession", {}, undefined, true)
                 while(this.list.length()) {
                   this.list.removeI(0)
