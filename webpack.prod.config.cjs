@@ -1,5 +1,6 @@
 const merge = require("webpack-merge")
 const commonMod = require("./webpack.common.config.cjs")
+const path = 
 
 module.exports = (env) => {
   const common = commonMod(env);
@@ -12,7 +13,9 @@ module.exports = (env) => {
       rules: [
         {
           test: /\.css$/,
-          use: ['postcss-loader'],
+          use: [
+            {loader: 'postcss-loader', options: {config: {path: "./"}}}
+          ]
         }
       ]
     }

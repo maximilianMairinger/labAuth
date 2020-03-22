@@ -14,17 +14,18 @@ function sendFile(res, p) {
 }
 
 app.use('/dist', express.static('dist'))
+app.use('/', express.static('static'))
 app.use('/res', express.static('res'))
 
 app.get('/', (req, res) => {
-  sendFile(res, "index.html")
+  sendFile(res, "static/index.html")
 });
 
 
 let exampleStudentCardIdEncrypted = crypto.createHash("sha256").update("s").digest("hex")
 let exampleTeacherCardIdEncrypted = crypto.createHash("sha256").update("t").digest("hex")
 
-app.post("/cardIndex", (req, res) => {
+app.get("/cardIndex", (req, res) => {
 
   let msg = {
     student: {

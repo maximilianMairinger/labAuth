@@ -58,7 +58,7 @@ const teacherString = "teacher"
 const studentString = "student"
 const employeeTypeString = "employeeType"
 setTimeout(async () => {
-  let res = await ajax.post("cardIndex", {}, undefined, true)
+  let res = await ajax.get("cardIndex", true)
 
   for (let key in res.student) {
     if (!knownLogins.student[key]) {

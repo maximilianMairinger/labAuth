@@ -6,7 +6,6 @@
         "server-dev": "nodemon server",
         "test": "webpack --config webpack.test.config.cjs"
     },
-    "type": "module",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/Logfro/labRegistrationFrontend.git"
@@ -28,7 +27,7 @@
         "raw-loader": "^4.0.0",
         "terser-webpack-plugin": "^2.3.4",
         "to-string-loader": "^1.1.5",
-        "ts-loader": "^6.2.1",
+        "ts-loader": "^6.2.2",
         "typescript": "^3.6.3",
         "url-loader": "^3.0.0",
         "webpack": "^4.41.0",
@@ -44,7 +43,6 @@
         "extended-dom": "^3.1.9",
         "fast-decode-uri-component": "^1.0.1",
         "front-db": "^1.1.10",
-        "nodemon": "^2.0.2",
         "random-date-generator": "^1.0.2",
         "waapi-easing": "^1.0.0",
         "xrray": "^4.6.4"
