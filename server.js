@@ -40,12 +40,12 @@ app.post("/cardIndex", (req, res) => {
     }
   }
 
-  msg[exampleStudentCardIdEncrypted] = {
+  msg.student[exampleStudentCardIdEncrypted] = {
     fullName: "Maximilian Mairinger",
     username: "mmairinger"
   }
 
-  msg[exampleTeacherCardIdEncrypted] = {
+  msg.teacher[exampleTeacherCardIdEncrypted] = {
     fullName: "Domenik Dolezal",
     username: "ddolezal"
   }
