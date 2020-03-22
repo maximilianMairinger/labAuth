@@ -685,30 +685,25 @@ export default class EduPanel extends Panel {
 
     req.fail(async () => {
       await delay(1200)
+
+      let cardKnownAsStudent = !!knownLogins.student[encryptedCardId]
+      let cardKnownAsTeacher = !!knownLogins.teacher[encryptedCardId]
       this.mainCard.doneAuthentication()
 
       if (this.expectedCard === "teacher") {
-        let cardKnownAsTeacher = !!knownLogins.teacher[encryptedCardId]
         if (cardKnownAsTeacher) {
           req.recall().then((res) => {
-            localStorage.sessKey = res.data.sessKey
+            if (res.data.sessKey) localStorage.sessKey = res.data.sessKey
           })
 
-          await this.registerRequest(knownLogins.teacher[encryptedCardId], encryptedCardId)
-        }
-
-        if (!cardKnownAsTeacher) {
-          this.mainCard.fullName("Unable to authenticate")
-          await delay(2000)
-          this.mainCard.fullName("Unknown")
-        }
-        
+          
+        }       
+        if (cardKnownAsStudent || cardKnownAsTeacher) await this.registerRequest(knownLogins.teacher[encryptedCardId], encryptedCardId) 
       }
       else if (this.expectedCard === "student") {
         let recallRequest = req.recall()
 
         // Student
-        let cardKnownAsStudent = !!knownLogins.student[encryptedCardId]
         if (cardKnownAsStudent) {
           let data = knownLogins.student[encryptedCardId]
           let regDef = data.registered !== undefined
@@ -754,6 +749,7 @@ export default class EduPanel extends Panel {
 
           await this.registerRequest(data, encryptedCardId)
         }
+        else recallRequest.abort()
 
         
 
@@ -762,52 +758,19 @@ export default class EduPanel extends Panel {
 
         // Teacher
 
-        let cardKnownAsTeacher = !!knownLogins.teacher[encryptedCardId]
         if (cardKnownAsTeacher) {
           recallRequest.abort()
           await this.registerRequest(knownLogins.teacher[encryptedCardId], encryptedCardId)
         }
-
-
-        if (!cardKnownAsStudent && !cardKnownAsTeacher) {
-          this.mainCard.fullName("Card saved")
-          await delay(2000)
-          this.mainCard.fullName("Unknown")
-
-          recallRequest.then(async (res) => {
-            if (res.entry) {
-              if (res.data.employeeType === "student") {
-                if (res.data.sign === "in") {
-                  this.list.add({username: res.data.username, fullName: res.data.fullName, registered: res.data.registered})
-                }
-                else if (res.data.sign === "out") {
-                  await ajax.post("studentSignOut", {encryptedCardId})
-            
-                  let i = -1
-                  this.list.list((e, ind) => {
-                    if (e.current().username.val === res.data.username) i = ind
-                  })
-                  this.list.removeI(i)
-                }
-
-                this.expectStudent()
-              }
-              else if (res.data.employeeType === "teacher") {
-                await ajax.post("destroySession", {}, undefined, true)
-                while(this.list.length()) {
-                  this.list.removeI(0)
-                }
-                for (let key in knownLogins.student) {
-                  delete knownLogins.student[key].registered
-                  delete knownLogins.student[key].startOfLastUnit
-                }
-                this.expectTeacher()
-              }
-            }
-          })
-        }
-
+        else recallRequest.abort()
       }
+
+      if (!cardKnownAsStudent && !cardKnownAsTeacher) {
+        this.mainCard.fullName("Unable to authenticate")
+        await delay(2000)
+        this.mainCard.fullName("Unknown")
+      }
+
       resCardReadCallback()
     })
     
