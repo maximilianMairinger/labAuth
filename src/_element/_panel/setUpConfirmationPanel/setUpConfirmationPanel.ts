@@ -14,6 +14,8 @@ export default class SetUpConfirmationPanel extends Panel {
   private classRoomElem = this.q("classroom-text").first
   private hoursElem = this.q("hours-text").first
 
+  public destroySessionTimeout: NodeJS.Timeout
+
   private confirmButton: Button
   private abortButton: Button
   constructor(manager: PanelManager) {
@@ -54,21 +56,57 @@ export default class SetUpConfirmationPanel extends Panel {
       return new Promise(async (resButton) => {
         this.abortButton.disable()
 
+        let hours = +this.hoursElem.text()
+
         let req = ajax.post("startUnit", {
-          hours: +this.hoursElem.text(),
+          hours,
           subject: this.subjectElem.text(),
           classroom: this.classRoomElem.text()
         }, undefined, true)
         
         req.fail(() => {
           delay(500).then(resButton)
-        })
+
+
+          this.destroySessionTimeout = setTimeout(async () => {
+            let req = ajax.post("destroySession", {}, undefined, true)
   
+            manager.panelIndex.info.updateContents("LabAuth", "A teacher may log in with his edu.card to start the session.")
+            manager.panelIndex.edu.expectTeacher()
+            manager.setPanel("info", "left")
+            manager.setPanel("edu", "right")
+  
+            
+            delete localStorage.sessKey
+            manager.panelIndex.edu.activeTeacherSession = false
+  
+  
+          }, hours * 60 * 60 * 1000)
+        })
+
         await Promise.all([delay(600), req])
+
+        this.destroySessionTimeout = setTimeout(async () => {
+          let req = ajax.post("destroySession", {}, undefined, true)
+  
+          manager.panelIndex.info.updateContents("LabAuth", "A teacher may log in with his edu.card to start the session.")
+          manager.panelIndex.edu.expectTeacher()
+          manager.setPanel("info", "left")
+          manager.setPanel("edu", "right")
+  
+          
+          delete localStorage.sessKey
+          manager.panelIndex.edu.activeTeacherSession = false
+  
+  
+        }, hours * 60 * 60 * 1000)
+
+
         resButton()
       })
       
     }, () => {
+
       manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subjectElem.text() + "</text-hightlight> here. To sign out, register your card again.")
       manager.panelIndex.edu.subject = this.subjectElem.text()
       manager.panelIndex.edu.maxHours = +this.hoursElem.text()
@@ -78,6 +116,9 @@ export default class SetUpConfirmationPanel extends Panel {
         this.abortButton.enable()
         manager.panelIndex.setUpPanel.resetInputs()
       })
+
+
+      
     })
 
     this.apd(this.abortButton, this.confirmButton)

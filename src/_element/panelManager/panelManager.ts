@@ -40,9 +40,11 @@ export default class PanelManager extends Element {
     }
   }
 
+
   public setPanel(panel: keyof PanelIndex, side: "left" | "right") {
     (async () => {
       let newPanel = this.panelIndex[panel]
+      if (newPanel === this.left || newPanel === this.right) return
 
       if (side === "left") {
         if (newPanel.preferedWidth === "big") {

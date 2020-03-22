@@ -859,6 +859,8 @@ export default class EduPanel extends Panel {
 
       delete localStorage.sessKey
       this.activeTeacherSession = false
+
+      clearTimeout(this.manager.panelIndex.setUpConfirmationPanel.destroySessionTimeout)
       
       this.clearMainCard()
       this.manager.panelIndex.info.updateContents("LabAuth", "A teacher may log in with his edu.card to start the session.")
