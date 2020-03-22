@@ -1,14 +1,15 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
+import express from "express"
+import bodyParser from "body-parser"
+import * as path from "path"
 const port = 5500;
 const app = express();
+import * as crypto from "crypto"
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 function sendFile(res, p) {
-  res.sendFile(path.join(__dirname + "/" + p));
+  res.sendFile(path.join(path.resolve(path.dirname('')), p));
 }
 
 app.use('/dist', express.static('dist'))
@@ -19,22 +20,39 @@ app.get('/', (req, res) => {
 });
 
 
+let exampleStudentCardIdEncrypted = crypto.createHash("sha256").update("s").digest("hex")
+let exampleTeacherCardIdEncrypted = crypto.createHash("sha256").update("t").digest("hex")
 
 app.post("/cardIndex", (req, res) => {
-  res.send({
+
+  let msg = {
     student: {
-      s: {
-        fullName: "Maximilian Mairinger",
-        username: "mmairinger"
-      }
+      // s: {
+      //   fullName: "Maximilian Mairinger",
+      //   username: "mmairinger"
+      // }
     },
     teacher: {
-      t: {
-        fullName: "Domenik Dolezal",
-        username: "ddolezal"
-      }
+      // t: {
+      //   fullName: "Domenik Dolezal",
+      //   username: "ddolezal"
+      // }
     }
-  })
+  }
+
+  msg[exampleStudentCardIdEncrypted] = {
+    fullName: "Maximilian Mairinger",
+    username: "mmairinger"
+  }
+
+  msg[exampleTeacherCardIdEncrypted] = {
+    fullName: "Domenik Dolezal",
+    username: "ddolezal"
+  }
+
+
+
+  res.send(msg)
 })
 
 
