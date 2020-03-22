@@ -18,7 +18,7 @@ export default class LoginPanel extends Panel {
   private usr = this.inputs.first
   private pwd = this.inputs[1]
 
-  public cardId = ""
+  public encryptedCardId = ""
 
   constructor(private manager: PanelManager) {
     super()
@@ -42,7 +42,7 @@ export default class LoginPanel extends Panel {
       let res = await req
       if (res.valid) {
         disable()
-        manager.panelIndex.edu.registerRequest(res.data, this.cardId).then(() => {
+        manager.panelIndex.edu.registerRequest(res.data, this.encryptedCardId).then(() => {
           enable()
         })
 

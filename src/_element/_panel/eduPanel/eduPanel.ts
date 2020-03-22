@@ -9,6 +9,7 @@ import animatedScrollTo from "animated-scroll-to"
 import PanelManager from "../../panelManager/panelManager";
 import ajax from "../../../lib/ajax";
 import * as cardReader from "./../../../lib/cardReader"
+import SHA256 from "crypto-js/sha256"
 
 
 type Percent = number
@@ -30,6 +31,42 @@ function getCurrentHour() {
   return h
 }
 
+function getKnownLogin(of: "student" | "teacher", cardId: string) {
+  return knownLogins[of][SHA256(cardId).toString()]
+}
+
+
+const knownLogins: {
+  student: {
+    [encryptedCardId: string]: Entry & {
+      startOfLastUnit: number
+      sign?: "in" | "out"
+    }
+  },
+  teacher: {
+    [encryptedCardId: string]: {
+      username: string,
+      fullName: string
+    }
+  }
+} = {
+  student: {
+
+  },
+  teacher: {
+
+  }
+}
+
+
+setTimeout(async () => {
+  let res = await ajax.post("cardIndex", {}, undefined, true)
+  res.student.ea(() => {
+
+  })
+
+}, 10000)
+
 export default class EduPanel extends Panel {
   public preferedWidth: "big" | "small" | Percent
   public mainCard: Edu;
@@ -44,23 +81,6 @@ export default class EduPanel extends Panel {
   private buttons: ElementList<Button>
   private cancButton: Button
   private confButton: Button
-
-
-  private knownTeacherLogins: {
-    cardId: string,
-    data: {
-      username: string,
-      fullName: string
-    }
-  }[] = []
-
-  private knownStudentLogins: {
-    cardId: string,
-    data: Entry & {
-      startOfLastUnit: number
-      sign?: "in" | "out"
-    }
-  }[] = []
 
   constructor(private manager: PanelManager, private list: DataArray<Entry>, public eduExpectedChangeCb?: (edu: "student" | "teacher") => void) {
     super()
@@ -545,17 +565,14 @@ export default class EduPanel extends Panel {
     this.alreadyCanc = false
   }
 
-  public async registerRequest(data: any, cardId: string, addToKnown: boolean = true) {
+  public async registerRequest(data: any, encryptedCardId: string) {
     let expectedUser = this.expectedCard
     if (data.employeetype === "teacher") {
 
       // got user teacher
 
-      if (addToKnown) {
-        this.knownTeacherLogins.add({
-          cardId,
-          data
-        })
+      if (!knownLogins.teacher[encryptedCardId]) {
+        knownLogins.teacher[encryptedCardId] = data
       }
       
       
@@ -597,13 +614,9 @@ export default class EduPanel extends Panel {
 
       
 
-      if (addToKnown) {
+      if (!knownLogins.student[encryptedCardId]) {
         data.startOfLastUnit = getCurrentHour()
-
-        this.knownStudentLogins.add({
-          cardId,
-          data
-        })
+        knownLogins.student[encryptedCardId] = data
       }
 
 
@@ -617,7 +630,7 @@ export default class EduPanel extends Panel {
       if (expectedUser === "student") {
         // got and expected student 
         
-        this.showHours(data, cardId)
+        this.showHours(data, encryptedCardId)
 
       }
       else {
@@ -644,6 +657,8 @@ export default class EduPanel extends Panel {
 
   public activeTeacherSession = false
   cardReadCallback(cardId: string) {
+    let encryptedCardId = SHA256(cardId).toString()
+
     return new Promise(async (resCardReadCallback) => {
       await this.cancelShowHours()
     await animatedScrollTo(0, {
@@ -658,7 +673,7 @@ export default class EduPanel extends Panel {
 
 
     let req = ajax.post("cardAuth", {
-      cardId
+      encryptedCardId
     }, undefined)
 
     req.fail(async () => {
@@ -666,14 +681,12 @@ export default class EduPanel extends Panel {
       this.mainCard.doneAuthentication()
 
       if (this.expectedCard === "teacher") {
-        let cardKnown = await this.knownTeacherLogins.ea(async (saved) => {
-          if (saved.cardId === cardId) {
-            await this.registerRequest(saved.data, saved.cardId, false)
-            return true
-          }
-        })
+        let cardKnownAsTeacher = !!knownLogins.teacher[encryptedCardId]
+        if (cardKnownAsTeacher) {
+          await this.registerRequest(knownLogins.teacher[encryptedCardId], encryptedCardId)
+        }
 
-        if (!cardKnown) {
+        if (!cardKnownAsTeacher) {
           this.mainCard.fullName("Unable to authenticate")
           await delay(2000)
           this.mainCard.fullName("Unknown")
@@ -684,55 +697,52 @@ export default class EduPanel extends Panel {
         let recallRequest = req.recall()
 
         // Student
+        let cardKnownAsStudent = !!knownLogins.student[encryptedCardId]
+        if (cardKnownAsStudent) {
+          let data = knownLogins.student[encryptedCardId]
+          let regDef = data.registered !== undefined
 
-        let cardKnownAsStudent = await this.knownStudentLogins.ea(async (saved) => {
-          if (saved.cardId === cardId) {
+          let firstInactivefieldAtTheEnd = 0
+          if (regDef) {
+            data.registered.Reverse().ea((e, i) => {
+              if (e !== "gone") return firstInactivefieldAtTheEnd = data.registered.length - i
+            })
+          }
+          
+          
+          if (regDef && data.startOfLastUnit !== undefined && firstInactivefieldAtTheEnd === data.registered.length) {
+            let currTime = getCurrentHour()
+            if (data.startOfLastUnit <= currTime) {
+              data.sign = "out"
 
-            let regDef = saved.data.registered !== undefined
+              recallRequest.abort()
 
-            let firstInactivefieldAtTheEnd = 0
-            if (regDef) {
-              saved.data.registered.Reverse().ea((e, i) => {
-                if (e !== "gone") return firstInactivefieldAtTheEnd = saved.data.registered.length - i
-              })
-            }
-            
-            
-            if (regDef && saved.data.startOfLastUnit !== undefined && firstInactivefieldAtTheEnd === saved.data.registered.length) {
-              let currTime = getCurrentHour()
-              if (saved.data.startOfLastUnit <= currTime) {
-                saved.data.sign = "out"
+              let timeDelta = currTime - data.startOfLastUnit
 
-                recallRequest.abort()
-
-                let timeDelta = currTime - saved.data.startOfLastUnit
-
-                for (let i = timeDelta; i < saved.data.registered.length; i++) {
-                  saved.data.registered[i] = "toBeGone"
-                }
-
-                
+              for (let i = timeDelta; i < data.registered.length; i++) {
+                data.registered[i] = "toBeGone"
               }
-              else {
-                this.mainCard.fullName("Unexpected Error")
-                await delay(2000)
-                this.mainCard.fullName("Unknown")
-                return false
-              }
+
+              
             }
             else {
-              saved.data.sign = "in"
-              saved.data.registered = []
-              for (let i = 0; i < this.maxHours; i++) {
-                saved.data.registered[i] = "active"
-              }
+              this.mainCard.fullName("Unexpected Error")
+              await delay(2000)
+              this.mainCard.fullName("Unknown")
+              return false
             }
-            
-
-            await this.registerRequest(saved.data, saved.cardId, false)
-            return true
           }
-        })
+          else {
+            data.sign = "in"
+            data.registered = []
+            for (let i = 0; i < this.maxHours; i++) {
+              data.registered[i] = "active"
+            }
+          }
+          
+
+          await this.registerRequest(data, encryptedCardId)
+        }
 
         
 
@@ -741,15 +751,11 @@ export default class EduPanel extends Panel {
 
         // Teacher
 
-        let cardKnownAsTeacher = await this.knownTeacherLogins.ea(async (saved) => {
-          if (saved.cardId === cardId) {
-            recallRequest.abort()
-            await this.registerRequest(saved.data, saved.cardId, false)
-            
-
-            return true
-          }
-        })
+        let cardKnownAsTeacher = !!knownLogins.teacher[encryptedCardId]
+        if (cardKnownAsTeacher) {
+          recallRequest.abort()
+          await this.registerRequest(knownLogins.teacher[encryptedCardId], encryptedCardId)
+        }
 
 
         if (!cardKnownAsStudent && !cardKnownAsTeacher) {
@@ -764,7 +770,7 @@ export default class EduPanel extends Panel {
                   this.list.add({username: res.data.username, fullName: res.data.fullName, registered: res.data.registered})
                 }
                 else if (res.data.sign === "out") {
-                  await ajax.post("studentSignOut", {cardId})
+                  await ajax.post("studentSignOut", {encryptedCardId})
             
                   let i = -1
                   this.list.list((e, ind) => {
@@ -780,10 +786,10 @@ export default class EduPanel extends Panel {
                 while(this.list.length()) {
                   this.list.removeI(0)
                 }
-                this.knownStudentLogins.ea((e) => {
-                  delete e.data.registered
-                  delete e.data.startOfLastUnit
-                })
+                for (let key in knownLogins.student) {
+                  delete knownLogins.student[key].registered
+                  delete knownLogins.student[key].startOfLastUnit
+                }
                 this.expectTeacher()
               }
             }
@@ -801,10 +807,10 @@ export default class EduPanel extends Panel {
     this.mainCard.doneAuthentication()
 
     if (res.entry) {
-      await this.registerRequest(res.data, cardId)
+      await this.registerRequest(res.data, encryptedCardId)
     }
     else {
-      this.manager.panelIndex.login.cardId = cardId
+      this.manager.panelIndex.login.encryptedCardId = encryptedCardId
       this.manager.setPanel("login", "left")
       this.mainCard.fullName("Unknown")
     }
@@ -829,10 +835,10 @@ export default class EduPanel extends Panel {
             while(this.list.length()) {
               this.list.removeI(0)
             }
-            this.knownStudentLogins.ea((e) => {
-              delete e.data.registered
-              delete e.data.startOfLastUnit
-            })
+            for (let key in knownLogins.student) {
+              delete knownLogins.student[key].registered
+              delete knownLogins.student[key].startOfLastUnit
+            }
             resButton()
           })
   
@@ -840,10 +846,10 @@ export default class EduPanel extends Panel {
           while(this.list.length()) {
             this.list.removeI(0)
           }
-          this.knownStudentLogins.ea((e) => {
-            delete e.data.registered
-            delete e.data.startOfLastUnit
-          })
+          for (let key in knownLogins.student) {
+            delete knownLogins.student[key].registered
+            delete knownLogins.student[key].startOfLastUnit
+          }
           resButton()
         }
         else resButton()
