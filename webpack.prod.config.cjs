@@ -1,7 +1,8 @@
-const merge = require('webpack-merge');
+const merge = require("webpack-merge")
+const commonMod = require("./webpack.common.config.cjs")
 
 module.exports = (env) => {
-  const common = require('./webpack.common.config.js')(env);
+  const common = commonMod(env);
   return merge(common, {
     mode: "production",
     output: {

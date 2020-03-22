@@ -1,13 +1,10 @@
 {
     "scripts": {
-        "build": "webpack --config webpack.prod.config.js --display-modules",
-        "build-electron": "webpack --config webpack.prod.electron.config.js --display-modules && electron-builder -mw",
-        "dev": "webpack --config webpack.dev.config.js",
+        "build": "webpack --config webpack.prod.config.cjs --display-modules",
+        "dev": "webpack --config webpack.dev.config.cjs",
         "server": "node server",
         "server-dev": "nodemon server",
-        "bos": "webpack --config webpack.bos.config.js",
-        "test": "webpack --config webpack.test.config.js",
-        "start": "electron ."
+        "test": "webpack --config webpack.test.config.cjs"
     },
     "type": "module",
     "repository": {
@@ -19,7 +16,7 @@
     "devDependencies": {
         "@types/crypto-js": "^3.1.43",
         "@types/express": "^4.17.3",
-        "@types/node": "^13.9.2",
+        "@types/node": "^13.9.3",
         "body-parser": "^1.19.0",
         "css-loader": "^3.4.2",
         "cssnano": "^4.1.8",
@@ -40,7 +37,7 @@
         "webpack-merge": "^4.2.2"
     },
     "dependencies": {
-        "ajaon": "^1.5.3",
+        "ajaon": "^1.5.4",
         "animated-scroll-to": "^2.0.5",
         "crypto-js": "^4.0.0",
         "delay": "^4.3.0",

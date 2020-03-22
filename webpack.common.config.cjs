@@ -1,4 +1,5 @@
-const InjectPlugin = require('webpack-inject-plugin').default;
+const InjectPlugin = require("webpack-inject-plugin")
+const path = require("path")
 
 module.exports = () => {
     return {
@@ -6,7 +7,7 @@ module.exports = () => {
         output: {
             filename: 'dist/main.bundle.js',
             chunkFilename: 'dist/[name].js',
-            path: __dirname,
+            path: path.resolve(path.dirname('')),
             publicPath: "/"
         },
         resolve: {

@@ -4,6 +4,7 @@ import * as path from "path"
 const port = 5500;
 const app = express();
 import * as crypto from "crypto"
+import delay from "delay";
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -65,7 +66,8 @@ app.post("/studentSignOut", ({ body: param }, res) => {
   res.send({})
 })
 
-app.post("/startUnit", ({ body: param }, res) => {
+app.post("/startUnit", async ({ body: param }, res) => {
+  await delay(200)
   console.log("")
   console.log("start Unit: ")
   console.log(param)
@@ -88,14 +90,15 @@ app.post("/LDAPAuth", (req, res) => {
   }, 300)
 })
 
-app.post("/cardAuth", (req, res) => {
+app.post("/cardAuth", async (req, res) => {
+  await delay(400)
   console.log("")
   console.log("cardAuth")
   console.log(req.body)
-  if (req.body.cardId === "t") {
+  if (req.body.encryptedCardId === exampleTeacherCardIdEncrypted) {
     res.send({entry: true, data: {employeetype: "teacher", username: "ddolezal", fullName: "Domenik Dolezal", sessKey: "sessKeyDummy"}})
   }
-  else if (req.body.cardId === "s") {
+  else if (req.body.encryptedCardId === exampleStudentCardIdEncrypted) {
     res.send({entry: true, data: {employeetype: "student", username: "mmairinger", fullName: "Maximilian Mairinger", registered: ["active", "active", "active", "active"], sign: "in"}})
   }
   else {
