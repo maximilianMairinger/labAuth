@@ -1,15 +1,15 @@
 {
 	"dir" : "ltr",
 	"lang" : "English",
-	"name" : "Lernbüroplaner",
+	"name" : "LabAuth",
 	"scope" : "/",
 	"start_url": "http://127.0.0.1:5500/labAuth",
 	"display" : "standalone",
-	"short_name" : "LBP",
+	"short_name" : "LA",
 	"theme_color" : "white",
 	"description" : "LabAuth is a registration tool for the lab on the TGM",
 	"orientation" : "landscape",
-	"background_color" : "transparent",
+	"background_color" : "white",
 	"icons" : [
 		{
 			"src": "./labAuth_logo.png",

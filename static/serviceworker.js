@@ -10,6 +10,8 @@ self.addEventListener("install", function (event) {
 self.addEventListener("fetch", function (event) {
     event.respondWith(
         (async () => {
+
+            if (event.request.method !== "GET") return await fetch(event.request)
             
 
             let cache = await caches.open(cacheName)
