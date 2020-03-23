@@ -9,18 +9,46 @@ self.addEventListener("install", function (event) {
 
 self.addEventListener("fetch", function (event) {
     event.respondWith(
-        (async function() {
-            var cache = await caches.open(cacheName);
-            var cachedFiles = await cache.match(event.request);
-            try {
-                var response = await fetch(event.request);
-                await cache.put(event.request, response.clone());
-                console.log("serving network", event.request.url)
-                return response;
-            } catch(e) { 
-                console.log("serving cache", event.request.url)
-                return cachedFiles;
-            }
-        }())
+        (async () => {
+            
+
+            let cache = await caches.open(cacheName)
+            
+            let cacheRequest = new Promise(async (res) => {
+                let cached = await cache.match(event.request)
+
+                if (cached) {
+                    res(cached)
+                }
+            })
+
+            let networkRequest = new Promise(async (res) => {
+                try {
+                    let response = await fetch(event.request)
+                    cache.put(event.request, response.clone())
+                    res(response)
+                }
+                catch(e) {
+
+                }
+            })
+
+
+            return await Promise.race([cacheRequest, networkRequest])
+        })()
     )
 });
+
+
+self.addEventListener('activate', function(event) {
+    event.waitUntil(
+        caches.keys().then(function(cacheNames) {
+            return Promise.all(
+                cacheNames.map(function(cacheName) {
+                    return caches.delete(cacheName);
+                })
+            );
+        })
+    );
+  });
+
