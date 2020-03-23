@@ -107,8 +107,11 @@ export default class SetUpConfirmationPanel extends Panel {
       
     }, () => {
 
-      manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + this.subjectElem.text() + "</text-hightlight> here. To sign out, register your card again.")
-      manager.panelIndex.edu.subject = this.subjectElem.text()
+      let subject = this.subjectElem.text()
+
+      if (navigator.onLine) manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + subject + "</text-hightlight> here. To sign out, register your card again.")
+      else manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + subject + "</text-hightlight> here. Your card will be synced when online.")
+      manager.panelIndex.edu.subject = subject
       manager.panelIndex.edu.maxHours = +this.hoursElem.text()
       manager.panelIndex.edu.expectStudent()
       manager.setPanel("info", "left")

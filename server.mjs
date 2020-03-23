@@ -57,6 +57,17 @@ app.get("/cardIndex", (req, res) => {
   res.send(msg)
 })
 
+app.post("/verifySession", ({ body: param }, res) => {
+  console.log("")
+  console.log("studentSignOut: ")
+  console.log(param)
+
+
+  if (param.sessKey === "sessKeyDummy") {
+    res.send({valid: true, classroom: "H927", subject: "MEDT", hours: 4})
+  }
+  else res.send({valid: false})
+})
 
 app.post("/studentSignOut", ({ body: param }, res) => {
   console.log("")

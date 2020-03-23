@@ -4,6 +4,7 @@ import { DataBase, Data, DataArray } from "front-db"
 import delay from "delay"
 import { Entry } from "../_panel/eduPanel/eduPanel"
 import { recall } from "ajaon"
+import ajax from "../../lib/ajax"
 
 
 const textIndex = {
@@ -52,9 +53,33 @@ export default class Site extends Element {
       this.onOnlineStatusChange(false)
     })
 
-    this.manager.setPanel("info", "left")
-    this.manager.setPanel("edu", "right")
-    this.manager.panelIndex.edu.expectTeacher()
+    let validSessReq = ajax.post("verifySession")
+    
+    
+    validSessReq.then((res) => {
+      if (res.valid) {
+        this.manager.setPanel("info", "left")
+        this.manager.setPanel("edu", "right")
+        this.manager.panelIndex.edu.expectStudent()
+        this.manager.panelIndex.edu.subject = res.subject
+        this.manager.panelIndex.edu.maxHours = res.hours
+        if (navigator.onLine) this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + res.subject + "</text-hightlight> here. To sign out, register your card again.")
+        else this.manager.panelIndex.info.updateContents("LabAuth", "You may sign into <text-hightlight>" + res.subject + "</text-hightlight> here. Your card will be synced when online.")
+      }
+      else {
+        this.manager.setPanel("info", "left")
+        this.manager.setPanel("edu", "right")
+        this.manager.panelIndex.edu.expectTeacher()
+      }
+    })
+
+    validSessReq.fail(() => {
+      this.manager.setPanel("info", "left")
+      this.manager.setPanel("edu", "right")
+      this.manager.panelIndex.edu.expectTeacher()
+    })
+
+    
     
 
     this.elementBody.apd(this.manager, this.offlineIndecator)
