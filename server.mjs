@@ -1,7 +1,7 @@
 import express from "express"
 import bodyParser from "body-parser"
 import * as path from "path"
-const port = 5500;
+const port = 5555;
 const app = express();
 import * as crypto from "crypto"
 import delay from "delay";
@@ -124,6 +124,11 @@ app.post("/destroySession", (req, res) => {
     res.send({})
   }, 6000)
 })
+
+
+function sendEmail() {
+  
+}
 
 
 
