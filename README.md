@@ -16,7 +16,7 @@ Watch and build all src files with sourcemaps
  $ npm run dev
 ```
 
-Serve the frontend
+Serve the frontend via a test server
 
 ```
  $ node server
