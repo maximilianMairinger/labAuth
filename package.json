@@ -4,7 +4,8 @@
         "dev": "webpack --config webpack.dev.config.cjs",
         "server": "node server",
         "server-dev": "nodemon server",
-        "test": "webpack --config webpack.test.config.cjs"
+        "test": "webpack --config webpack.test.config.cjs",
+        "start": "node server.mjs"
     },
     "repository": {
         "type": "git",
