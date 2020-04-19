@@ -1,6 +1,6 @@
 node_modules
 test.js
-# dist/
+dist/
 .DS_Store
 electron-source/dist/
 electron-source/assets/
