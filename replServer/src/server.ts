@@ -1,6 +1,13 @@
-console.log("qwe")
+import liveReloadServer from "./liveRealoadServer"
+import * as bodyParser from "body-parser"
 
-import xrray from "xrray"
-xrray(Array)
+let app = liveReloadServer()
+
+
+
+app.get("/", (req, res) => {
+  res.send("Hellow")
+})
+
 
 

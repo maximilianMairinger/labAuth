@@ -12,7 +12,7 @@
   },
   "transpileOnly": true,
   "include": [
-    "./replServer"
+    "./replServer/src"
   ],
   "exclude": [
     "./replServer/dist",

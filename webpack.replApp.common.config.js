@@ -16,6 +16,10 @@ module.exports = () => {
         module: {
             rules: [
                 {
+                    test: /([a-zA-Z0-9\s_\\.\-\(\):])+\.static\.([a-zA-Z0-9])+$/,
+                    use: 'raw-loader',
+                },
+                {
                     test: /\.tsx?$/,
                     exclude: /node_modules/,
                     use: {
