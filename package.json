@@ -1,8 +1,8 @@
 {
     "scripts": {
-        "devApp": "    concurrently \"npm run buildDevReplServer\" \"npm run watchReplServer\"  \"npm run buildDevApp\"     \"npm run buildDevSw\"  -n \"serv,node,app_,sewo\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
-        "devServer": " concurrently \"npm run buildDevServer\"     \"npm run watchServer\"      \"npm run buildDevReplApp\"                         -n \"serv,node,app_\"      -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
-        "dev": "       concurrently \"npm run buildDevServer\"     \"npm run watchServer\"      \"npm run buildDevApp\"     \"npm run buildDevSw\"  -n \"serv,node,app_,sewo\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
+        "devApp": "    concurrently \"npm run buildDevReplServer\" \"npm run watchReplServer\"  \"npm run buildDevApp\"     \"npm run buildDevSw\"  -n \"serv,node,_app,sewo\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
+        "devServer": " concurrently \"npm run buildDevServer\"     \"npm run watchServer\"      \"npm run buildDevReplApp\"                         -n \"serv,node,_app\"      -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
+        "dev": "       concurrently \"npm run buildDevServer\"     \"npm run watchServer\"      \"npm run buildDevApp\"     \"npm run buildDevSw\"  -n \"serv,node,_app,sewo\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
 
         "watchReplServer": "wait-on replServer/dist && nodemon ./replServer/dist/server.js --watch ./replServer/dist",
         "watchServer": "wait-on server/dist && nodemon ./replServer/dist/server.js --watch ./replServer/dist",
