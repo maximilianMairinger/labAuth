@@ -9,6 +9,7 @@ import delay from "delay";
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+
 function sendFile(res, p) {
   res.sendFile(path.join(path.resolve(path.dirname('')), p));
 }

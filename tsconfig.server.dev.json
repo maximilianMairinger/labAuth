@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "outDir": "./server/dist/",
+    "module": "commonjs",
+    "target": "esnext",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "watch": true,
+    "skipLibCheck": true
+  },
+  "transpileOnly": true,
+  "exclude": [
+    "./*.json",
+    "./*.js",
+    "./*.ts",
+    "./node_modules",
+    "./test",
+    "./repl",
+    "./server/dist",
+    "./serviceWorker",
+    "./app",
+    "./public",
+  ]
+}

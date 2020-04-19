@@ -4,8 +4,15 @@
         "dev": "webpack --config webpack.dev.config.cjs",
         "server": "node server",
         "server-dev": "nodemon server",
-        "test": "webpack --config webpack.test.config.cjs",
-        "start": "node server.mjs"
+        "start": "node server.mjs",
+
+
+        "buildSw": "webpack --config webpack.sw.prod.config.js" ,
+        "buildServer": "tsc --project tsconfig.server.prod.json",
+        "buildApp": "webpack --config webpack.app.prod.config.js",
+        "devSw": "webpack --config webpack.sw.dev.config.js" ,
+        "devServer": "tsc --project tsconfig.server.dev.json",
+        "devApp": "webpack --config webpack.app.dev.config.js"
     },
     "repository": {
         "type": "git",
