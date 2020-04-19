@@ -5,8 +5,8 @@ module.exports = () => {
     return {
         entry: './replApp/index.ts',
         output: {
-            filename: 'public/dist/app/replApp.js',
-            chunkFilename: 'public/dist/app/replApp.[name].js',
+            filename: 'public/dist/app/app.js',
+            chunkFilename: 'public/dist/app/[name].js',
             path: path.resolve(path.dirname('')),
             publicPath: "/"
         },
