@@ -16,6 +16,7 @@
     "./node_modules",
     "./test",
     "./repl",
+    "./replApp",
     "./replServer/dist",
     "./server",
     "./serviceWorker",

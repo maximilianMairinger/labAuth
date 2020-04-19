@@ -1,21 +1,23 @@
 {
     "scripts": {
-        "devApp": "start \"\" npm run buildDevReplServer & start \"\" npm run buildDevApp",
+        "devApp": "concurrently \"npm run buildDevReplServer\" \"npm run buildDevApp\"     -n \"ser,app\" -c \"bgBlue.bold,bgGreen.bold\"",
+        "devServer": "concurrently \"npm run buildDevServer\" \"npm run buildDevReplApp\"     -n \"ser,app\" -c \"bgBlue.bold,bgGreen.bold\"",
+        
 
 
 
 
 
-        "buildProdSw": "webpack --config webpack.sw.prod.config.js" ,
+        "buildProdSw": "webpack --config webpack.sw.prod.config.js",
         "buildProdServer": "tsc --project tsconfig.server.prod.json",
         "buildProdApp": "webpack --config webpack.app.prod.config.js",
+        "buildProdReplApp": "webpack --config webpack.replApp.prod.config.js",
         "buildProdReplServer": "tsc --project tsconfig.replServer.prod.json",
-        "buildDevSw": "webpack --config webpack.sw.dev.config.js" ,
+        "buildDevSw": "webpack --config webpack.sw.dev.config.js",
         "buildDevServer": "tsc --project tsconfig.server.dev.json",
         "buildDevApp": "webpack --config webpack.app.dev.config.js",
+        "buildDevReplApp": "webpack --config webpack.replApp.dev.config.js",
         "buildDevReplServer": "tsc --project tsconfig.replServer.dev.json"
-
-        
     },
     "repository": {
         "type": "git",
@@ -28,6 +30,7 @@
         "@types/express": "^4.17.3",
         "@types/node": "^13.9.3",
         "body-parser": "^1.19.0",
+        "concurrently": "^5.1.0",
         "css-loader": "^3.4.2",
         "cssnano": "^4.1.8",
         "express": "^4.17.1",

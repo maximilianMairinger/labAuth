@@ -15,6 +15,7 @@
     "./*.js",
     "./*.ts",
     "./node_modules",
+    "./replApp",
     "./test",
     "./repl",
     "./replServer",
