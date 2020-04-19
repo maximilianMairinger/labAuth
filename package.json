@@ -1,7 +1,16 @@
 {
     "scripts": {
-        "devApp": "concurrently \"npm run buildDevReplServer\" \"npm run buildDevApp\"     -n \"ser,app\" -c \"bgBlue.bold,bgGreen.bold\"",
-        "devServer": "concurrently \"npm run buildDevServer\" \"npm run buildDevReplApp\"     -n \"ser,app\" -c \"bgBlue.bold,bgGreen.bold\"",
+        "devApp": "   concurrently \"npm run buildDevReplServer\" \"npm run watchReplServer\"  \"npm run buildDevApp\"         -n \"ser,nod,app\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold\"",
+        "devServer": "concurrently \"npm run buildDevServer\"     \"npm run watchServer\"      \"npm run buildDevReplApp\"     -n \"ser,nod,app\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold\"",
+
+
+        "watchReplServer": "wait-on replServer/dist && nodemon ./replServer/dist/server.js --watch ./replServer/dist",
+        "watchServer": "wait-on server/dist && nodemon ./replServer/dist/server.js --watch ./replServer/dist",
+
+
+
+
+        
         "buildProdSw": "webpack --config webpack.sw.prod.config.js",
         "buildProdServer": "tsc --project tsconfig.server.prod.json",
         "buildProdApp": "webpack --config webpack.app.prod.config.js",
@@ -28,6 +37,7 @@
         "css-loader": "^3.5.2",
         "cssnano": "^4.1.8",
         "express": "^4.17.1",
+        "nodemon": "^2.0.3",
         "postcss-loader": "^3.0.0",
         "pug": "^2.0.4",
         "pug-html-loader": "^1.1.5",
@@ -38,6 +48,7 @@
         "ts-loader": "^6.2.2",
         "typescript": "^3.6.3",
         "url-loader": "^3.0.0",
+        "wait-on": "^4.0.2",
         "webpack": "^4.42.1",
         "webpack-cli": "^3.3.9",
         "webpack-inject-plugin": "^1.5.3",
