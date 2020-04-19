@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "devApp": "npm run buildDevReplServer & npm run buildDevApp",
+        "devApp": "start \"\" npm run buildDevReplServer & start \"\" npm run buildDevApp",
 
 
 
