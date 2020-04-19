@@ -49,8 +49,7 @@ function formatPath (path: string) {
   return localPath
 }
 
-
-const swInjection = fs.readFileSync(pth.join(__dirname, "./../res/sw-inject.js")).toString()
+const swInjection = fs.readFileSync(pth.join(__dirname, "./../res/live-reload-inject.js")).toString()
 console.log(swInjection)
 
 
