@@ -11,18 +11,10 @@
     "skipLibCheck": true
   },
   "transpileOnly": true,
+  "include": [
+    "./replServer"
+  ],
   "exclude": [
-    "./*.json",
-    "./*.js",
-    "./*.ts",
-    "./node_modules",
-    "./replApp",
-    "./test",
-    "./repl",
     "./replServer/dist",
-    "./server",
-    "./serviceWorker",
-    "./app",
-    "./public",
   ]
 }

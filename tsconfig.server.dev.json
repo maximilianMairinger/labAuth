@@ -10,18 +10,10 @@
     "watch": true,
     "skipLibCheck": true
   },
+  "include": [
+    "./server"
+  ],
   "exclude": [
-    "./*.json",
-    "./*.js",
-    "./*.ts",
-    "./node_modules",
-    "./replApp",
-    "./test",
-    "./repl",
-    "./replServer",
     "./server/dist",
-    "./serviceWorker",
-    "./app",
-    "./public",
   ]
 }
