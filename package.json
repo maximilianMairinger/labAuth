@@ -2,12 +2,6 @@
     "scripts": {
         "devApp": "concurrently \"npm run buildDevReplServer\" \"npm run buildDevApp\"     -n \"ser,app\" -c \"bgBlue.bold,bgGreen.bold\"",
         "devServer": "concurrently \"npm run buildDevServer\" \"npm run buildDevReplApp\"     -n \"ser,app\" -c \"bgBlue.bold,bgGreen.bold\"",
-        
-
-
-
-
-
         "buildProdSw": "webpack --config webpack.sw.prod.config.js",
         "buildProdServer": "tsc --project tsconfig.server.prod.json",
         "buildProdApp": "webpack --config webpack.app.prod.config.js",
@@ -26,25 +20,25 @@
     "author": "Maximilian Mairinger",
     "license": "ISC",
     "devDependencies": {
-        "@types/crypto-js": "^3.1.43",
-        "@types/express": "^4.17.3",
-        "@types/node": "^13.9.3",
+        "@types/crypto-js": "^3.1.44",
+        "@types/express": "^4.17.6",
+        "@types/node": "^13.13.0",
         "body-parser": "^1.19.0",
         "concurrently": "^5.1.0",
-        "css-loader": "^3.4.2",
+        "css-loader": "^3.5.2",
         "cssnano": "^4.1.8",
         "express": "^4.17.1",
         "postcss-loader": "^3.0.0",
         "pug": "^2.0.4",
         "pug-html-loader": "^1.1.5",
         "pug-loader": "^2.4.0",
-        "raw-loader": "^4.0.0",
+        "raw-loader": "^4.0.1",
         "terser-webpack-plugin": "^2.3.4",
         "to-string-loader": "^1.1.5",
         "ts-loader": "^6.2.2",
         "typescript": "^3.6.3",
         "url-loader": "^3.0.0",
-        "webpack": "^4.41.0",
+        "webpack": "^4.42.1",
         "webpack-cli": "^3.3.9",
         "webpack-inject-plugin": "^1.5.3",
         "webpack-merge": "^4.2.2"
@@ -59,6 +53,6 @@
         "front-db": "^1.1.10",
         "random-date-generator": "^1.0.2",
         "waapi-easing": "^1.0.0",
-        "xrray": "^4.6.4"
+        "xrray": "^4.6.5"
     }
 }
