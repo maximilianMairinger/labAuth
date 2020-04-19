@@ -1,18 +1,21 @@
 {
     "scripts": {
-        "build": "webpack --config webpack.prod.config.cjs --display-modules",
-        "dev": "webpack --config webpack.dev.config.cjs",
-        "server": "node server",
-        "server-dev": "nodemon server",
-        "start": "node server.mjs",
+        "devApp": "npm run buildDevReplServer & npm run buildDevApp",
 
 
-        "buildSw": "webpack --config webpack.sw.prod.config.js" ,
-        "buildServer": "tsc --project tsconfig.server.prod.json",
-        "buildApp": "webpack --config webpack.app.prod.config.js",
-        "devSw": "webpack --config webpack.sw.dev.config.js" ,
-        "devServer": "tsc --project tsconfig.server.dev.json",
-        "devApp": "webpack --config webpack.app.dev.config.js"
+
+
+
+        "buildProdSw": "webpack --config webpack.sw.prod.config.js" ,
+        "buildProdServer": "tsc --project tsconfig.server.prod.json",
+        "buildProdApp": "webpack --config webpack.app.prod.config.js",
+        "buildProdReplServer": "tsc --project tsconfig.replServer.prod.json",
+        "buildDevSw": "webpack --config webpack.sw.dev.config.js" ,
+        "buildDevServer": "tsc --project tsconfig.server.dev.json",
+        "buildDevApp": "webpack --config webpack.app.dev.config.js",
+        "buildDevReplServer": "tsc --project tsconfig.replServer.dev.json"
+
+        
     },
     "repository": {
         "type": "git",

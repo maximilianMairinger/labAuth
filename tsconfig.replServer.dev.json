@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./server/dist/",
+    "outDir": "./replServer/dist/",
     "module": "commonjs",
     "target": "esnext",
     "moduleResolution": "node",
@@ -10,6 +10,7 @@
     "watch": true,
     "skipLibCheck": true
   },
+  "transpileOnly": true,
   "exclude": [
     "./*.json",
     "./*.js",
@@ -17,8 +18,8 @@
     "./node_modules",
     "./test",
     "./repl",
-    "./replServer",
-    "./server/dist",
+    "./replServer/dist",
+    "./server",
     "./serviceWorker",
     "./app",
     "./public",
