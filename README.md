@@ -1,42 +1,43 @@
-# labAuth
+# LabAuth
 
 ## Contribute
 
-Fistly install all dependencies
+The frontend / client is refered as app. The backend as server.
+
+### Development env
+
+#### Develop app
+
+The source of the app can be found in `/app` and the serviceworker's in `/serviceWorker`.
 
 ```
- $ npm i
+ $ npm run devApp
 ```
 
-### Develop commands
+Builds the app on save & spins up a live (notifies client to reload on change) repl server, whose source can be found in `/replServer/src`.
 
-Watch and build all src files with sourcemaps
+#### Develop server
 
-```
- $ npm run dev
-```
-
-Serve the frontend via a test server
+Source found in `/server/src`.
 
 ```
- $ node server
+ $ npm run devServer
 ```
+
+Builds the server & a replApp on save. The source of the replApp can be found under `/replApp`
 
 ### Deploy
 
-Build src to dist
+#### Build scripts
+
+Build everything for production
 
 ```
  $ npm run build
 ```
 
-Then copy the following files to a webserver: 
- * Everything in `/dist` (into `/dist`)
- * index.html (to `/`)
- * server.js (to `/`)
- 
-Finally start `server.js` on the webserver
+Start the server
 
 ```
- $ node server
+ $ npm start --port 443
 ```
