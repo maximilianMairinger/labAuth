@@ -5,9 +5,9 @@ module.exports = () => {
     return {
         entry: './serviceWorker/index.ts',
         output: {
-            filename: 'public/dist/sw/sw.js',
-            chunkFilename: 'dist/[name].js',
-            path: path.resolve(path.dirname('')),
+            filename: 'dist/sw/sw.js',
+            chunkFilename: 'dist/sw/[name].js',
+            path: path.resolve(path.dirname(''), "public"),
             publicPath: "/"
         },
         resolve: {

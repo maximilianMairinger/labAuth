@@ -1,14 +1,16 @@
 const InjectPlugin = require("webpack-inject-plugin")
 const path = require("path")
 
+
+
 module.exports = () => {
     return {
         entry: './app/index.ts',
         output: {
-            filename: 'public/dist/app/app.js',
-            chunkFilename: 'public/dist/app/[name].js',
-            path: path.resolve(path.dirname('')),
-            publicPath: "/"
+            filename: 'dist/app/app.js',
+            chunkFilename: 'dist/app/[name].js',
+            path: path.resolve(path.dirname(''), "public"),
+            publicPath: "/",
         },
         resolve: {
             extensions: ['.ts', '.js']
@@ -34,7 +36,6 @@ module.exports = () => {
                     use: ['to-string-loader', 'css-loader'],
                 },
                 {
-                    
                     test: /\.(png|jpg|gif|jpeg|woff|woff2|eot|ttf|svg)$/,
                     loader: 'url-loader?limit=100000'
                 },
