@@ -16,7 +16,7 @@ const serverEntryFileName = "server.js"
 let dev = args.dev
 let watchDir;
 
-if (dev === "app") watchDir = "./replServer/dist"
+if (dev === "repl") watchDir = "./replServer/dist"
 else watchDir = "./server/dist";
 
 
