@@ -50,14 +50,21 @@ function formatPath (path: string) {
 }
 
 const swInjection = fs.readFileSync(pth.join(__dirname, "./../res/live-reload-inject.js")).toString()
-console.log(swInjection)
 
 
 
-export default function init(path: string = "./public", url: string = "/updateStream") {
+export default function init(path: string = "./public", indexUrl: string = "/", streamUrl: string = "/updateStream") {
   //@ts-ignore
   let sse = new SSE()
 
+  const swInjUrl = `<!-- Code Injected By the live server -->
+<script>
+(() => {
+let url = "${streamUrl}";
+${swInjection}}
+)()
+</script>`
+  
 
   let app = express()
 
@@ -71,7 +78,7 @@ export default function init(path: string = "./public", url: string = "/updateSt
 
 
 
-  app.get(url, sse.init)
+  app.get(streamUrl, sse.init)
 
 
   chokidar.watch(path, { ignoreInitial: true }).on("all", (event, path) => {
@@ -79,7 +86,7 @@ export default function init(path: string = "./public", url: string = "/updateSt
 
     console.log("Change: " + path)
     //@ts-ignore
-    sse.send("hellow");
+    sse.send("reloadPlease");
   })
 
 
@@ -107,16 +114,24 @@ export default function init(path: string = "./public", url: string = "/updateSt
       res.old_sendFile = res.sendFile
       res.sendFile = (path: string) => {
         let ext = pth.extname(path)
-        if (ext === "html" || ext === "htm") {
+        if (ext === ".html" || ext === ".htm") {
           let file = fs.readFileSync(path).toString()
           let injectAt = file.lastIndexOf("</body>") - 1
-          file.splice(injectAt, swInjection)
+          res.send(file.splice(injectAt, swInjUrl))
         }
-        res.old_sendFile(pth.join(pth.resolve(""), path))
+        else res.old_sendFile(pth.join(pth.resolve(""), path))
       }
       cb(req, res)
     })
   }
+
+  
+
+  app.get(indexUrl, (req, res) => {
+    res.sendFile("./public/index.html")
+  })
+
+  app.use(express.static(path))
 
 
   

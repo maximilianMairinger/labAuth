@@ -51,9 +51,9 @@ else watchDir = "./server/dist";
 
   server.on("restart", (e) => {
     console.log("")
-    console.log("----------------")
-    console.log("Server restaring")
-    console.log("----------------")
+    console.log("-----------------")
+    console.log("Server restarting")
+    console.log("-----------------")
     console.log("")
   })
 
