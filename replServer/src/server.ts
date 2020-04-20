@@ -4,8 +4,6 @@ let app = liveReloadServer()
 
 
 
-app.get("/", (req, res) => {
-  res.send("Hellwow")
-})
+
 
 
