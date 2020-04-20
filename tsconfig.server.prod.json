@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "outDir": "./server/dist/",
+    "module": "commonjs",
+    "target": "esnext",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "./server/src"
+  ],
+  "exclude": [
+    "./server/dist",
+  ]
+}

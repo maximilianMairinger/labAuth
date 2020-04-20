@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "outDir": "./replServer/dist/",
+    "module": "commonjs",
+    "target": "esnext",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "watch": true,
+    "skipLibCheck": true
+  },
+  "transpileOnly": true,
+  "include": [
+    "./replServer/src"
+  ],
+  "exclude": [
+    "./replServer/dist",
+  ]
+}
