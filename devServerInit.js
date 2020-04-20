@@ -34,10 +34,6 @@ let appEntryPath = path.join(appDir, appEntryFileName);
 
 
 (async (wantedPort = 6500) => {
-  if (!fs.existsSync(serverEntryPath)) return console.log("No entry found under \"" + serverEntryPath + "\"")
-
-
-
 
 
   await Promise.all([
