@@ -1,6 +1,16 @@
-console.log("qwe")
+const args = require("yargs").argv
+const port = args.port === undefined ? console.log("Serving on port 443") as undefined || 443 : args.port;
 
-import xrray from "xrray"
-xrray(Array)
+import * as express from "express"
+import * as bodyParser from "body-parser"
+import xrray from "xrray"; xrray(Array);
+
+const app = express()
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.listen(port)
+
+
+
 
 
