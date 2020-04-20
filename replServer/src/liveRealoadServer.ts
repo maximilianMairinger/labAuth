@@ -84,7 +84,7 @@ ${swInjection}}
   chokidar.watch(path, { ignoreInitial: true }).on("all", (event, path) => {
     path = formatPath(path)
 
-    console.log("Change: " + path)
+    console.log("Change at: \"" + path + "\"; Restaring app.")
     //@ts-ignore
     sse.send("reloadPlease");
   })
@@ -131,7 +131,8 @@ ${swInjection}}
     res.sendFile("./public/index.html")
   })
 
-  app.use(express.static(path))
+
+  app.use(express.static(pth.join(pth.resolve(""), path)))
 
 
   

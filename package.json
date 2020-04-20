@@ -1,10 +1,8 @@
 {
     "scripts": {
-        "devApp": "    concurrently \"npm run buildDevReplServer\" \"npm run watchReplServer\"  \"npm run buildDevApp\"     \"npm run buildDevSw\"  -n \"serv,node,_app,sewo\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
-        "devServer": " concurrently \"npm run buildDevServer\"     \"npm run watchServer\"      \"npm run buildDevReplApp\"                         -n \"serv,node,_app\"      -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
-        "dev": "       concurrently \"npm run buildDevServer\"     \"npm run watchServer\"      \"npm run buildDevApp\"     \"npm run buildDevSw\"  -n \"serv,node,_app,sewo\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
-        "watchReplServer": "wait-on replServer/dist && node devServerInit.js --dev repl",
-        "watchServer": "wait-on server/dist && node devServerInit.js --dev server",
+        "devApp": "    concurrently \"npm run buildDevReplServer\" \"node devServerInit.js --dev repl\"  \"npm run buildDevApp\"     \"npm run buildDevSw\"  -n \"serv,node,_app,sewo\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
+        "devServer": " concurrently \"npm run buildDevServer\"     \"node devServerInit.js --dev server\"      \"npm run buildDevReplApp\"                         -n \"serv,node,_app\"      -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
+        "dev": "       concurrently \"npm run buildDevServer\"     \"node devServerInit.js --dev server\"      \"npm run buildDevApp\"     \"npm run buildDevSw\"  -n \"serv,node,_app,sewo\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
         "build": "concurrently \"npm run buildProdApp\" \"npm run buildProdServer\" \"npm run buildProdSw\" \"npm run buildProdReplApp\" \"npm run buildProdReplServer\" -n \"prodApp,prodServer,prodSw,ProdReplApp,prodReplServer\"",
         "start": "wait-on server/dist && node ./server/dist/server.js",
         "startRepl": "wait-on replServer/dist && node ./replServer/dist/server.js",
@@ -35,6 +33,7 @@
         "concurrently": "^5.1.0",
         "css-loader": "^3.5.2",
         "cssnano": "^4.1.8",
+        "del": "^5.1.0",
         "detect-port": "^1.3.0",
         "express": "^4.17.1",
         "express-sse": "^0.5.3",

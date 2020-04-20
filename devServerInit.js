@@ -4,26 +4,52 @@ const args = require("yargs").argv;
 const path = require("path")
 const fs = require("fs")
 const open = require("open")
+const waitOn = require("wait-on")
+const del = require("del")
 
 // configureable
 const serverEntryFileName = "server.js"
+const appEntryFileName = "app/app.js"
 
 
 
 
 
 
-let dev = args.dev
-let watchDir;
+let serverDir = "./server/dist";
+let appDir = "./public/dist";
 
-if (dev === "repl") watchDir = "./replServer/dist"
-else watchDir = "./server/dist";
+if (args.dev === "repl") {
+  serverDir = "./replServer/dist"
+}
+else if (args.dev === "server") {
+  serverDir = "./server/dist";
+}
 
+
+let serverEntryPath = path.join(serverDir, serverEntryFileName)
+let appEntryPath = path.join(appDir, appEntryFileName);
 
 
 
 
 (async (wantedPort = 6500) => {
+
+  await Promise.all([
+    del(appDir).then(() => console.log("Deleted \"" + appDir + "\".")),
+    del(serverDir).then(() => console.log("Deleted \"" + serverDir + "\"."))
+  ])
+
+
+
+  await waitOn({
+    resources: [
+      serverEntryPath
+    ]
+  })
+
+
+
   let gotPort;
   try {
     gotPort = await detectPort(wantedPort)
@@ -34,18 +60,18 @@ else watchDir = "./server/dist";
 
 
 
-  let entryPath = path.join(watchDir, serverEntryFileName)
   
   
-  if (!fs.existsSync(entryPath)) return console.log("No entry found under \"" + entryPath + "\"")
+  
+  if (!fs.existsSync(serverEntryPath)) return console.log("No entry found under \"" + serverEntryPath + "\"")
 
 
 
 
   
   let server = nodemon({
-    watch: watchDir,
-    script: entryPath,
+    watch: serverDir,
+    script: serverEntryPath,
     args: ["--port", gotPort]
   })
 
@@ -67,7 +93,13 @@ else watchDir = "./server/dist";
   if (gotPort !== wantedPort) console.log(`Port ${wantedPort} was occupied, falling back to: ${gotPort}.\n----------------------------------------------\n`)
   else console.log(`Serving on port ${gotPort}.\n---------------------\n`)
 
-  
+  console.log("Waiting for build to finish before starting browser...")
+  await waitOn({
+    resources: [
+      appEntryPath
+    ]
+  })
+  console.log("Starting Browser")
   open(`http://127.0.0.1:${gotPort}`)
   
   
