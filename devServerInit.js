@@ -34,20 +34,27 @@ let appEntryPath = path.join(appDir, appEntryFileName);
 
 
 (async (wantedPort = 6500) => {
+  if (!fs.existsSync(serverEntryPath)) return console.log("No entry found under \"" + serverEntryPath + "\"")
+
+
+
+
 
   await Promise.all([
     del(appDir).then(() => console.log("Deleted \"" + appDir + "\".")),
     del(serverDir).then(() => console.log("Deleted \"" + serverDir + "\"."))
   ])
 
+  
 
 
   await waitOn({
-    resources: [
-      serverEntryPath
-    ]
+    resources: [serverEntryPath, appEntryPath]
   })
 
+
+
+  console.log("Waiting for build to finish, before starting the server...")
 
 
   let gotPort;
@@ -57,17 +64,6 @@ let appEntryPath = path.join(appDir, appEntryFileName);
   catch(e) {
     console.error(e)
   }
-
-
-
-  
-  
-  
-  if (!fs.existsSync(serverEntryPath)) return console.log("No entry found under \"" + serverEntryPath + "\"")
-
-
-
-
   
   let server = nodemon({
     watch: serverDir,
@@ -87,18 +83,14 @@ let appEntryPath = path.join(appDir, appEntryFileName);
   
   
   
-
-
+  console.log("")
+  console.log("")
 
   if (gotPort !== wantedPort) console.log(`Port ${wantedPort} was occupied, falling back to: ${gotPort}.\n----------------------------------------------\n`)
   else console.log(`Serving on port ${gotPort}.\n---------------------\n`)
 
-  console.log("Waiting for build to finish before starting browser...")
-  await waitOn({
-    resources: [
-      appEntryPath
-    ]
-  })
+  
+  
   console.log("Starting Browser")
   open(`http://127.0.0.1:${gotPort}`)
   
