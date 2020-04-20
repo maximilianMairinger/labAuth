@@ -9,5 +9,8 @@ electron-build/
 
 package-lock.json
 
+public/sw.js
+public/sw.*.js
+
 
 deploy.zip
