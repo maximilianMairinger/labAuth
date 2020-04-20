@@ -1,4 +1,4 @@
-import liveReloadServer from "./liveRealoadServer"
+import liveReloadServer from "./liveReloadServer"
 let app = liveReloadServer()
 
 
