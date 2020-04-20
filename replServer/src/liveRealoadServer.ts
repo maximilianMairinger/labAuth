@@ -53,7 +53,7 @@ const swInjection = fs.readFileSync(pth.join(__dirname, "./../res/live-reload-in
 
 
 
-export default function init(path: string = "./public", indexUrl: string = "/", streamUrl: string = "/updateStream") {
+export default function init(publicPath: string = "./public", indexUrl: string = "/", streamUrl: string = "/updateStream") {
   //@ts-ignore
   let sse = new SSE()
 
@@ -81,7 +81,7 @@ ${swInjection}}
   app.get(streamUrl, sse.init)
 
 
-  chokidar.watch(path, { ignoreInitial: true }).on("all", (event, path) => {
+  chokidar.watch(publicPath, { ignoreInitial: true }).on("all", (event, path) => {
     path = formatPath(path)
 
     console.log("Change at: \"" + path + "\"; Restaring app.")
@@ -132,7 +132,8 @@ ${swInjection}}
   })
 
 
-  app.use(express.static(pth.join(pth.resolve(""), path)))
+  app.use(express.static(pth.join(pth.resolve(""), publicPath)))
+  
 
 
   

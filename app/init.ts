@@ -14,7 +14,7 @@ export async function init() {
     if (navigator.serviceWorker.controller) {
       console.log("[SW - LabAuth] Found Service worker")
     } else {
-      await navigator.serviceWorker.register("./serviceworker.js", {scope: "./"}).then(function(reg){
+      await navigator.serviceWorker.register("./sw.js", {scope: "./"}).then(function(reg){
         console.log("[SW - LabAuth] Service worker installed with scope: " + reg.scope)
       })
     }
