@@ -3,7 +3,8 @@
 	"lang" : "English",
 	"name" : "LabAuth",
 	"scope" : "/",
-	"start_url": "http://127.0.0.1:5500/labAuth",
+	"start_url": "/",
+
 	"display" : "standalone",
 	"short_name" : "LA",
 	"theme_color" : "white",
@@ -12,12 +13,12 @@
 	"background_color" : "white",
 	"icons" : [
 		{
-			"src": "./labAuth_logo.png",
+			"src": "./labAuth_logo_180x180.png",
 			"sizes": "180x180",
 			"type": "image/png"
 		},
 		{
-			"src": "./labAuth_logo_big.png",
+			"src": "./labAuth_logo_1600x1600.png",
 			"sizes": "1600x1600",
 			"type": "image/png"
 		}
