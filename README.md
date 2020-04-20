@@ -24,7 +24,7 @@ Source found in `/server/src`.
  $ npm run devServer
 ```
 
-Builds the server & a replApp on save. The source of the replApp can be found under `/replApp`
+Builds the server & replApp on save. The source of the replApp can be found under `/replApp`. No live reloading avalible, since its the prod server.
 
 #### Develop server & app
 
