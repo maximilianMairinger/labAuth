@@ -53,7 +53,8 @@ let appEntryPath = path.join(appDir, appEntryFileName);
   })
 
 
-
+  console.log("")
+  console.log("")
   console.log("Waiting for build to finish, before starting the server...")
 
 
