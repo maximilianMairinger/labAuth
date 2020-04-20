@@ -52,7 +52,7 @@ app.get("/cardIndex", (req, res) => {
 
 app.post("/verifySession", ({ body: param }, res) => {
   console.log("")
-  console.log("studentSignOut: ")
+  console.log("verifySession: ")
   console.log(param)
 
 
