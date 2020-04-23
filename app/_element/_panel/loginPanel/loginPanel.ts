@@ -18,7 +18,7 @@ export default class LoginPanel extends Panel {
   private usr = this.inputs.first
   private pwd = this.inputs[1]
 
-  public encryptedCardId = ""
+  public hashedCardId = ""
 
   constructor(private manager: PanelManager) {
     super()
@@ -27,7 +27,7 @@ export default class LoginPanel extends Panel {
     let submitCb = async () => {
       this.inputs.Inner("disable", [])
       manager.panelIndex.edu.mainCard.authentication()
-      let req = ajax.post("LDAPAuth", {username: this.usr.value, password: this.pwd.value})
+      let req = ajax.post("LDAPAuth", {username: this.usr.value, password: this.pwd.value, hashedCardId: this.hashedCardId})
 
       req.fail(async () => {
         manager.panelIndex.edu.mainCard.doneAuthentication()
@@ -42,7 +42,7 @@ export default class LoginPanel extends Panel {
       let res = await req
       if (res.valid) {
         disable()
-        manager.panelIndex.edu.registerRequest(res.data, this.encryptedCardId).then(() => {
+        manager.panelIndex.edu.registerRequest(res.data, this.hashedCardId).then(() => {
           enable()
         })
 
