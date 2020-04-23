@@ -1,10 +1,8 @@
-const merge = require("webpack-merge")
-const commonMod = require("./webpack.replServer.common.config")
-const path = 
+import merge from "webpack-merge"
+import commonMod from "./rollup.server.common.config"
+import rollupPluginTerser from "rollup-plugin-terser"
 
-module.exports = (env) => {
-  const common = commonMod(env);
-  return merge(common, {
-    mode: "production"
-  })
-};
+
+export default merge(commonMod, {
+  plugins: [rollupPluginTerser()]
+})

@@ -1,11 +1,10 @@
-const merge = require("webpack-merge")
-const commonMod = require("./webpack.replServer.common.config")
+import merge from "webpack-merge"
+import commonMod from "./rollup.server.common.config"
 
-module.exports = (env) => {
-  const common = commonMod(env);
-  return merge(common, {
-    watch: true,
-    devtool: 'inline-source-map',
-    mode: "development"
-  })
-};
+
+export default merge(commonMod, {
+  watch: {
+    include: 'server/src/**',
+    exclude: 'node_modules/**'
+  }
+})
