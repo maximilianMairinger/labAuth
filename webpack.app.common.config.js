@@ -5,7 +5,7 @@ const path = require("path")
 
 module.exports = () => {
     return {
-        entry: './app/index.ts',
+        entry: './app/app.ts',
         output: {
             filename: 'dist/app/app.js',
             chunkFilename: 'dist/app/[name].js',
