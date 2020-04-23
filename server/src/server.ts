@@ -1,5 +1,5 @@
 import generateSalt from "crypto-random-string"
-import * as express from "express"
+import express from "express"
 import * as bodyParser from "body-parser"
 import xrray from "xrray"; xrray(Array);
 import initLib from "./lib/lib"
