@@ -3,7 +3,7 @@ const path = require("path")
 
 module.exports = () => {
     return {
-        entry: './serviceWorker/index.ts',
+        entry: './serviceWorker/app.ts',
         output: {
             filename: 'sw.js',
             chunkFilename: 'sw.[name].js',
