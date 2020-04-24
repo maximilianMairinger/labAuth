@@ -68,7 +68,7 @@ Here is a list of all recognised cli options:
 | :---------------------------------------------------- | ------------------------------------------------------------ | ----------- |
 | -- port: `number`                                     | Port on which the Server should be served on                 | 443         |
 | -- authKeyForRegistration: `string`                   | Authentication key sent with each call to the attendance registration Server. | N/A         |
-| -- outageReciliance: `"strong" | "onDemand" | "weak"` | - **strong**: Store all student entries into local Database<br /> - **onDemand**: Only store student entries when connection to remote auth server fails<br />- **weak**: Never ever store student entries locally, all entries registered when unable to connect to remote are lost forever | strong      |
-| -- securityLevel: `"paranoid" | "casual"`             | - **paranoid**: Store as little data as possible on clients, destroys offline support<br />- **casual**: Store hashed cardIDs on clients for offline registration. | casual      |
+| -- outageReciliance: `"strong" \| "onDemand" \| "weak"` | - **strong**: Store all student entries into local Database<br /> - **onDemand**: Only store student entries when connection to remote auth server fails<br />- **weak**: Never ever store student entries locally, all entries registered when unable to connect to remote are lost forever | strong      |
+| -- securityLevel: `"paranoid" \| "casual"`             | - **paranoid**: Store as little data as possible on clients, destroys offline support<br />- **casual**: Store hashed cardIDs on clients for offline registration. | casual      |
 | -- salt: `string`                                     | Salt for session keys                                        | generated   |
 
