@@ -7,11 +7,11 @@ import * as MongoDB from "mongodb";
 const MongoClient = MongoDB.MongoClient
 
 const args = require("yargs").argv
-const port = args.port === undefined ? console.log("Serving on port 443") as undefined || 443 : args.port;
-const salt = args.salt === undefined ? generateSalt({length: 15}) : args.salt
-const securityLevel: "paranoid" | "casual" = ["paranoid", "casual"].includes(args.securityLevel) ? console.warn("Unable to find \"securityLevel\" as valid command line option (only \"paranoid\" | \"casual\" allowed). Defaulting to \"casual\"") as undefined || "casual" : args.securityLevel
-const outageReciliance: "strong" | "onDemand" | "weak" = ["strong", "onDemand", "weak"].includes(args.outageReciliance) ? console.warn("Unable to find \"outageReciliance\" as valid command line option (only \"strong\" | \"onDemand\" | \"weak\" allowed). Defaulting to \"strong\"") as undefined || "strong" : args.outageReciliance
-const authKeyForRegistration = args.authKeyForRegistration === undefined ? console.warn("Unable to find \"authKeyForRegistration\" as command line option. As outageResiliance is " + outageReciliance === "strong" || outageReciliance === "onDemand" ? "enabled, attendance will be stored here." : "disabled, attendance cannot be stored anywhere. Shuting down...") as undefined || undefined : args.authKeyForRegistration
+const port = args.port !== undefined ? args.port : console.log("Serving on port 443\n") as undefined || 443
+const salt = args.salt !== undefined ? args.salt : generateSalt({length: 15})
+const securityLevel: "paranoid" | "casual" = ["paranoid", "casual"].includes(args.securityLevel) ? args.securityLevel : console.warn("Unable to find \"securityLevel\" as valid command line option (only \"paranoid\" | \"casual\" allowed). Defaulting to \"casual\"\n") as undefined || "casual"
+const outageReciliance: "strong" | "onDemand" | "weak" = ["strong", "onDemand", "weak"].includes(args.outageReciliance) ? args.outageReciliance : console.warn("Unable to find \"outageReciliance\" as valid command line option (only \"strong\" | \"onDemand\" | \"weak\" allowed). Defaulting to \"strong\"\n") as undefined || "strong"
+const authKeyForRegistration = args.authKeyForRegistration !== undefined ? args.authKeyForRegistration : console.warn("Unable to find \"authKeyForRegistration\" as command line option. As outageResiliance is " + outageReciliance === "strong" || outageReciliance === "onDemand" ? "enabled, attendance will be stored here." : "disabled, attendance cannot be stored anywhere. Shuting down...\n") as undefined || undefined
 
 
 console.log("")
