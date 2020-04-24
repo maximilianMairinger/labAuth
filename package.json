@@ -11,11 +11,11 @@
         "buildProdApp": "webpack --config webpack.app.prod.config.js",
         "buildProdReplApp": "webpack --config webpack.replApp.prod.config.js",
         "buildProdReplServer": "rollup --config rollup.replServer.prod.config.js",
-        "buildDevSw": "rollup --config rollup.sw.dev.config.js",
-        "buildDevServer": "rollup --config rollup.server.dev.config.js",
+        "buildDevSw": "rollup --config rollup.sw.dev.config.js -w",
+        "buildDevServer": "rollup --config rollup.server.dev.config.js -w",
         "buildDevApp": "webpack --config webpack.app.dev.config.js",
         "buildDevReplApp": "webpack --config webpack.replApp.dev.config.js",
-        "buildDevReplServer": "rollup --config rollup.replServer.dev.config.js"
+        "buildDevReplServer": "rollup --config rollup.replServer.dev.config.js -w"
     },
     "repository": {
         "type": "git",
