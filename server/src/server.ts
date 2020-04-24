@@ -11,7 +11,7 @@ const port = args.port !== undefined ? args.port : console.log("Serving on port 
 const salt = args.salt !== undefined ? args.salt : generateSalt({length: 15})
 const securityLevel: "paranoid" | "casual" = ["paranoid", "casual"].includes(args.securityLevel) ? args.securityLevel : console.warn("Unable to find \"securityLevel\" as valid command line option (only \"paranoid\" | \"casual\" allowed). Defaulting to \"casual\"\n") as undefined || "casual"
 const outageReciliance: "strong" | "onDemand" | "weak" = ["strong", "onDemand", "weak"].includes(args.outageReciliance) ? args.outageReciliance : console.warn("Unable to find \"outageReciliance\" as valid command line option (only \"strong\" | \"onDemand\" | \"weak\" allowed). Defaulting to \"strong\"\n") as undefined || "strong"
-const authKeyForRegistration = args.authKeyForRegistration !== undefined ? args.authKeyForRegistration : console.warn("Unable to find \"authKeyForRegistration\" as command line option. As outageResiliance is " + outageReciliance === "strong" || outageReciliance === "onDemand" ? "enabled, attendance will be stored here." : "disabled, attendance cannot be stored anywhere. Shuting down...\n") as undefined || undefined
+const authKeyForRegistration = args.authKeyForRegistration !== undefined ? args.authKeyForRegistration : console.warn("Unable to find \"authKeyForRegistration\" as command line option. As outageResiliance is " + (outageReciliance === "strong" || outageReciliance === "onDemand" ? "enabled, attendance will be stored locally." : "disabled, attendance cannot be stored anywhere. Shuting down...") + "\n") as undefined || undefined
 
 
 console.log("")
