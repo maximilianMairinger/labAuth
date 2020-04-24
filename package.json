@@ -1,9 +1,9 @@
 {
     "scripts": {
-        "devApp": "    concurrently \"npm run buildDevReplServer\" \"node devServerInit.js --dev repl\"        \"npm run buildDevApp\"     \"npm run buildDevSw\"  -n \"serv,node,_app,sewo\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
-        "devServer": " concurrently \"npm run buildDevServer\"     \"node devServerInit.js --dev server\"      \"npm run buildDevReplApp\"                         -n \"serv,node,_app\"      -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
-        "dev": "       concurrently \"npm run buildDevServer\"     \"node devServerInit.js --dev server\"      \"npm run buildDevApp\"      \"npm run buildDevSw\" -n \"serv,node,_app,sewo\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
-        "build": "     concurrently \"npm run buildProdServer\"    \"npm run buildProdApp\"                    \"npm run buildProdSw\"                             -n \"serv,_app,sewo\"      -c \"bgBlue.bold,bgGreen.bold,bgCyan.bold\"",
+        "devApp": "    concurrently \"npm run buildDevReplServer\" \"node devServerInit.js --dev repl\"        \"npm run buildDevApp\"      \"npm run buildDevSw\"          -n \"serv,node,_app,sewo\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
+        "devServer": " concurrently \"npm run buildDevServer\"     \"node devServerInit.js --dev server\"      \"npm run buildDevReplApp\"                                  -n \"serv,node,_app\"      -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
+        "dev": "       concurrently \"npm run buildDevServer\"     \"node devServerInit.js --dev server\"      \"npm run buildDevApp\"      \"npm run buildDevSw\"          -n \"serv,node,_app,sewo\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
+        "build": "     concurrently \"npm run buildProdServer\"    \"npm run buildProdApp\"                    \"npm run buildProdSw\"      \"npm run buildProdReplServer\" -n \"serv,_app,sewo,rese\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold,bgCyan.bold\"",
         "start": "wait-on server/dist && node ./server/dist/server.js",
         "startRepl": "wait-on replServer/dist && node ./replServer/dist/server.js",
         "buildProdSw": "rollup --config rollup.sw.prod.config.js",
