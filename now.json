@@ -5,5 +5,6 @@
       "src": "replServer/dist/server.js",
       "use": "@now/node-server"
     }
-  ]
+  ],
+  "routes": [{"src": "replServer/src/server.js", "dest": "replServer/dist/server.js"}]
 }
