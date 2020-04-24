@@ -1,10 +1,10 @@
-# LabAuth
 
-<h6 align="center">
+
+<h1 align="center">
   <img src="/public/res/img/labAuth_logo_1000x1000.png" width="250"/>
   <br>
-  
-</h6>
+  LabAuth
+</h1>
 
 ## Contribute
 
