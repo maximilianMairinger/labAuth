@@ -11,7 +11,7 @@ export default {
     format: 'cjs'
   },
   plugins: [
-    typescript({tsconfig: "./tsconfig.server.json"}), 
+    typescript({tsconfig: "./tsconfig.server.json", noEmitOnError: false}), 
     resolve({modulesOnly: true}),
     commonJS({
       include: 'node_modules/**'
