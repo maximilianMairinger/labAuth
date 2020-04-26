@@ -6,21 +6,8 @@ on:
     - master
 
 jobs:
-  CI:
 
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@master
-    - uses: actions/setup-node@master
-      with:
-        node-version: '14.x'
-    - run: npm i
-    - run: npm run build
-
-    
   CD:
-    needs: CI
     runs-on: ubuntu-latest
 
     steps: 
