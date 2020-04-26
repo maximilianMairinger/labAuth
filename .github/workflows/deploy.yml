@@ -6,7 +6,7 @@ on:
     - master
 
 jobs:
-  test:
+  CI:
 
     runs-on: ubuntu-latest
 
@@ -15,7 +15,7 @@ jobs:
     - uses: actions/setup-node@master
       with:
         node-version: '14.x'
-    - run: npm install
+    - run: npm ci
     - run: npm run build
     - uses: appleboy/ssh-action@master
       with:
@@ -23,7 +23,7 @@ jobs:
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
-  deploy:
+  CD:
     needs: test
     runs-on: ubuntu-latest
 
