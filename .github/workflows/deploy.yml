@@ -17,12 +17,8 @@ jobs:
         node-version: '14.x'
     - run: npm i
     - run: npm run build
-    - uses: appleboy/ssh-action@master
-      with:
-        args: deploy --only hosting
-      env:
-        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
+    
   CD:
     needs: CI
     runs-on: ubuntu-latest
