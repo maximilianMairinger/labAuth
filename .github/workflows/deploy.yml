@@ -24,7 +24,7 @@ jobs:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
   CD:
-    needs: test
+    needs: CI
     runs-on: ubuntu-latest
 
     steps: 
