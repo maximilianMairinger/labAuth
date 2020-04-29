@@ -1,16 +1,11 @@
-import * as express from "express"
-//@ts-ignore
-import * as SSE from "express-sse"
-import * as chokidar from "chokidar"
-//@ts-ignore
-import * as yargs from "yargs"
-//@ts-ignore
+import express from "express"
+import SSE from "express-sse"
+import chokidar from "chokidar"
+import yargs from "yargs"
 const args = yargs.argv
-
-import * as pth from "path"
-
-import * as bodyParser from "body-parser"
-import * as fs from "fs"
+import pth from "path"
+import bodyParser from "body-parser"
+import fs from "fs"
 
 
 
