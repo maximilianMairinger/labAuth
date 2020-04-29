@@ -20,5 +20,4 @@ jobs:
         script: |
           cd /var/www/html/labauth.maximilian.mairinger.com
           git pull
-          which pm2 > abc
-          pm2 reload ecosystem.config.js
+          /root/.nvm/versions/node/v14.0.0/bin/pm2 reload ecosystem.config.js
