@@ -21,4 +21,3 @@ jobs:
           cd /var/www/html/labauth.maximilian.mairinger.com
           git pull
           sudo pm2 reload ecosystem.config.js
-
