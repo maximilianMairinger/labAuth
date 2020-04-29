@@ -12,7 +12,7 @@ export default {
   },
   plugins: [
     typescript({tsconfig: "./tsconfig.server.json", noEmitOnError: false}), 
-    resolve({modulesOnly: true}),
+    resolve({modulesOnly: true, preferBuiltins: true}),
     commonJS({
       include: 'node_modules/**'
     }),

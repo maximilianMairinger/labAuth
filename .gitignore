@@ -12,6 +12,8 @@ package-lock.json
 public/sw.js
 public/sw.*.js
 
+ecosystem.config.js
+
 
 deploy.zip
 .now
