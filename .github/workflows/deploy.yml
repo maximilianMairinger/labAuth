@@ -20,5 +20,5 @@ jobs:
         script: |
           cd /var/www/html/labauth.maximilian.mairinger.com
           git pull
-          whoami
-          sudo pm2 reload ecosystem.config.js
+          whoami > abc
+          pm2 reload ecosystem.config.js
