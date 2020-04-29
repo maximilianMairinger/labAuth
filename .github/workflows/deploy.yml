@@ -20,5 +20,5 @@ jobs:
         script: |
           cd /var/www/html/labauth.maximilian.mairinger.com
           git pull
-          nvn use 14.0.0
+          nvm use 14.0.0
           pm2 reload ecosystem.config.js
