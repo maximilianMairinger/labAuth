@@ -20,5 +20,6 @@ jobs:
         script: |
           cd /var/www/html/labauth.maximilian.mairinger.com
           git pull
+          whereis pm2
           pm2 reload ecosystem.config.js
 
