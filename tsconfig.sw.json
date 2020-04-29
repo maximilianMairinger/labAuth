@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "esnext",
     "target": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "classic",
     "allowJs": true,
     "sourceMap": true,
     "allowSyntheticDefaultImports": true
