@@ -7,9 +7,9 @@
 </h1>
 
 
-<h1 align="center">
+<h5 align="center">
   <img src="/preview.png" width="75%"/>
-</h1>
+</h5>
 
 ## Contribute
 
