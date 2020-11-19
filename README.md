@@ -8,7 +8,7 @@
 
 
 <h1 align="center">
-  <img src="/preview.png" width="250"/>
+  <img src="/preview.png" width="100%"/>
 </h1>
 
 ## Contribute
